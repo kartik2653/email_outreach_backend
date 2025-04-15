@@ -55,7 +55,7 @@ def send_email():
         image_src = f"https://email-outreach-backend-wmc3.onrender.com/pixel-image/{data['id']}"
         html_body = f"""
         <p>{formatted_body}</p>
-        <img src={image_src} alt="Email Image" style="margin-top: 20px; width: 300px;">
+        <img src={image_src} alt="Email Image" style="margin-top: 20px; width: 1px; height: 1px; display:hidden">
         """
 
         # Prepare email
