@@ -51,14 +51,10 @@ def send_email():
 
         # Create HTML body
         plain_body = data["body"]
+        formatted_body = plain_body.replace('\n', '<br>')
         html_body = f"""
-               <html>
-                   <body>
-                       <p>{plain_body.replace('\n', '<br>')}</p>
-                       <img src=f"/pixel-image/{data['id']}" alt="Email Image" style="margin-top: 20px; width: 300px;">
-                   </body>
-               </html>
-               """
+        <p>{formatted_body}</p>
+        """
 
         # Prepare email
         msg = EmailMessage()
