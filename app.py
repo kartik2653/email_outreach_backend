@@ -114,4 +114,4 @@ def track_email(email_key):
     return send_file("./tracking-images/tracking-img.png", mimetype='image/png')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
