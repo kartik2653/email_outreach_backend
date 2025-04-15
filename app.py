@@ -54,6 +54,7 @@ def send_email():
         formatted_body = plain_body.replace('\n', '<br>')
         html_body = f"""
         <p>{formatted_body}</p>
+        <img src=f'https://email-outreach-backend-wmc3.onrender.com/pixel-image/{data['id']}' alt="Email Image" style="margin-top: 20px; width: 300px;">
         """
 
         # Prepare email
