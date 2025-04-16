@@ -163,7 +163,7 @@ def send_bulk_emails():
         responses = []
         for recipient_email in recipient_emails:
             email_id = f"email-{uuid.uuid4()}"
-            image_src = f"https://email-outreach-backend-wmc3.onrender.com/pixel-image/{data["campaignId"]}/{recipient_email['email']}"
+            image_src = f"https://email-outreach-backend-wmc3.onrender.com/pixel-image/{data['campaignId']}/{recipient_email['email']}"
             html_body = f"""
             <p>{formatted_body}</p>
             <img src="{image_src}" alt="Tracking Image" style="margin-top: 20px; width: 100px; height: 100px;">
@@ -215,7 +215,7 @@ def send_email():
         # Create HTML body
         plain_body = data["body"]
         formatted_body = plain_body.replace('\n', '<br>')
-        image_src = f"https://email-outreach-backend-wmc3.onrender.com/pixel-image/{data['id']}"
+        image_src = f"https://email-outreach-backend-wmc3.onrender.com/pixel-image/{data['campaign_id']}/{data['recipientId']}"
         html_body = f"""
         <p>{formatted_body}</p>
         <img src={image_src} alt="Email Image" style="margin-top: 20px; width: 1px; height: 1px; display:hidden">
