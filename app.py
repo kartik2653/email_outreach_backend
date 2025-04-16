@@ -249,30 +249,45 @@ def get_sent_emails():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/pixel-image/<campaign_id>/<email_key>")
-def track_email(campaign_id,email_key):
-    try:
-        # Update the document where id == email_id
-        result = sent_emails_collection.update_one(
-            {"recipientId": email_key,"campaign_id":campaign_id},
-            {
-                "$set": {
-                    "isRead": True
-                }
-            }
-        )
 
-        # Optionally log if update was successful
-        if result.modified_count > 0:
-            print(f"Email {email_key} marked as read.")
+@app.route("/pixel-image/<campaign_id>/<email_key>")
+def track_email(campaign_id, email_key):
+    try:
+        # Find the unread email document
+        email_doc = sent_emails_collection.find_one({
+            "recipientId": email_key,
+            "campaignId": campaign_id,
+            "isRead": False
+        })
+
+        if email_doc:
+            # Mark as read
+            sent_emails_collection.update_one(
+                {"_id": email_doc["_id"]},
+                {"$set": {"isRead": True}}
+            )
+
+            # Update read and unread counts in campaign collection
+            campaign_collection.update_one(
+                {"campaignId": campaign_id},
+                {
+                    "$inc": {
+                        "readCount": 1,
+                        "unreadCount": -1
+                    }
+                }
+            )
+
+            print(f"✅ Email '{email_key}' marked as read. Updated campaign counts.")
         else:
-            print(f"No email found with id {email_key}.")
+            print(f"ℹ️ Email already read or not found for '{email_key}'.")
 
     except Exception as e:
-        print(f"Error updating email read status: {str(e)}")
+        print(f"❌ Error updating read status: {str(e)}")
 
     # Always return the tracking image
     return send_file("./tracking-images/tracking-img.png", mimetype='image/png')
+
 
 @app.route('/sent-emails/<campaign_id>', methods=['GET'])
 def get_sent_emails_by_campaign(campaign_id):
