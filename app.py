@@ -163,7 +163,7 @@ def send_bulk_emails():
         responses = []
         for recipient_email in recipient_emails:
             email_id = f"email-{uuid.uuid4()}"
-            image_src = f"https://email-outreach-backend-wmc3.onrender.com/pixel-image/{email_id}"
+            image_src = f"https://email-outreach-backend-wmc3.onrender.com/pixel-image/{data["campaignId"]}/{recipient_email['email']}"
             html_body = f"""
             <p>{formatted_body}</p>
             <img src="{image_src}" alt="Tracking Image" style="margin-top: 20px; width: 100px; height: 100px;">
@@ -249,12 +249,12 @@ def get_sent_emails():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/pixel-image/<email_key>")
-def track_email(email_key):
+@app.route("/pixel-image/<campaign_id>/<email_key>")
+def track_email(campaign_id,email_key):
     try:
         # Update the document where id == email_id
         result = sent_emails_collection.update_one(
-            {"id": email_key},
+            {"recipientId": email_key,"campaign_id":campaign_id},
             {
                 "$set": {
                     "isRead": True
