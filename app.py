@@ -166,7 +166,7 @@ def send_bulk_emails():
             image_src = f"https://email-outreach-backend-wmc3.onrender.com/pixel-image/{email_id}"
             html_body = f"""
             <p>{formatted_body}</p>
-            <img src="{image_src}" alt="Tracking Image" style="margin-top: 20px; width: 1px; height: 1px; display: none;">
+            <img src="{image_src}" alt="Tracking Image" style="margin-top: 20px; width: 100px; height: 100px;">
             """
 
             msg = EmailMessage()
@@ -296,4 +296,4 @@ def get_sent_emails_by_campaign(campaign_id):
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
