@@ -285,7 +285,7 @@ def track_email(campaign_id, email_key):
         # Find the unread email document
         email_doc = sent_emails_collection.find_one({
             "recipientId": email_key,
-            "campaign_id": campaign_id,
+            "campaignId": campaign_id,
             "isRead": False
         })
         print(email_doc,'email_doc')
