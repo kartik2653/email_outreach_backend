@@ -1,7 +1,8 @@
 import json
 import smtplib
 from email.message import EmailMessage
-
+import itertools
+import time
 from flask import Flask, render_template, jsonify, request, send_file
 from pymongo import MongoClient
 import os
@@ -10,6 +11,7 @@ from bson.json_util import dumps
 import openpyxl
 import uuid
 from datetime import datetime
+import threading
 
 
 
@@ -87,7 +89,7 @@ def create_campaign():
 @app.route('/get-all-campaigns', methods=['GET'])
 def get_all_campaigns():
     try:
-        campaigns_cursor = campaign_collection.find()
+        campaigns_cursor = campaign_collection.find().sort("createdAt", -1)
 
         campaigns = []
         for campaign in campaigns_cursor:
@@ -140,33 +142,36 @@ def get_emails():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route('/send-bulk-emails', methods=['POST'])
-def send_bulk_emails():
-    try:
-        data = request.get_json()
-        sender_info = json.loads(data["senderEmail"])
-        sender_email = sender_info["email_id"]
-        app_password = sender_info["app_password"]
 
+def send_bulk_emails_background(data):
+    try:
+        sender_email_list = data.get("senderEmails", [])
         subject = data["subject"]
         plain_body = data["body"]
         formatted_body = plain_body.replace('\n', '<br>')
         sent_at = data.get("sentAt", datetime.utcnow().isoformat())
-
         recipient_emails = data.get("recipientEmails", [])
-        if not recipient_emails:
-            return jsonify({"error": "recipientEmails array is required"}), 400
 
-        smtp = smtplib.SMTP_SSL("smtp.gmail.com", 465)
-        smtp.login(sender_email, app_password)
+        sender_cycle = itertools.cycle(sender_email_list)
+        smtp_sessions = {}
 
-        responses = []
         for recipient_email in recipient_emails:
+            sender_info = next(sender_cycle)
+            sender_email = sender_info["email_id"]
+            app_password = sender_info["app_password"]
+
+            if sender_email not in smtp_sessions:
+                smtp = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+                smtp.login(sender_email, app_password)
+                smtp_sessions[sender_email] = smtp
+            else:
+                smtp = smtp_sessions[sender_email]
+
             email_id = f"email-{uuid.uuid4()}"
             image_src = f"https://email-outreach-backend-wmc3.onrender.com/pixel-image/{data['campaignId']}/{recipient_email['email']}"
             html_body = f"""
             <p>{formatted_body}</p>
-            <img src="{image_src}" alt="Tracking Image" style="margin-top: 20px; width: 100px; height: 100px;">
+            <img src="{image_src}" alt="Tracking Image" style="margin-top: 20px; width: 1px; height: 1px; display: hidden;">
             """
 
             msg = EmailMessage()
@@ -186,17 +191,41 @@ def send_bulk_emails():
                     "body": plain_body,
                     "sentAt": sent_at,
                     "isRead": False,
-                    "senderEmail": data["senderEmail"],
+                    "senderEmail": json.dumps(sender_info),
                     "recipient": recipient_email,
-                    "campaign_id": data["campaignId"]
+                    "campaignId": data["campaignId"]
                 }
                 sent_emails_collection.insert_one(email_data)
-                responses.append({"recipient": recipient_email, "status": "sent"})
+                print(f"[✅] Sent email to: {recipient_email['email']}")
+                time.sleep(5)
             except Exception as send_err:
-                responses.append({"recipient": recipient_email, "status": "failed", "error": str(send_err)})
+                print(f"[❌] Failed to send to {recipient_email['email']}: {send_err}")
 
-        smtp.quit()
-        return jsonify({"results": responses}), 200
+        for smtp in smtp_sessions.values():
+            smtp.quit()
+
+    except Exception as e:
+        print(f"[ERROR] Background job failed: {str(e)}")
+
+@app.route('/send-bulk-emails', methods=['POST'])
+def send_bulk_emails():
+    try:
+        data = request.get_json()
+
+        sender_email_list = data.get("senderEmails", [])
+        recipient_emails = data.get("recipientEmails", [])
+
+        if not sender_email_list:
+            return jsonify({"error": "senderEmails array is required"}), 400
+
+        if not recipient_emails:
+            return jsonify({"error": "recipientEmails array is required"}), 400
+
+        # Start background thread
+        threading.Thread(target=send_bulk_emails_background, args=(data,)).start()
+
+        # Return immediately
+        return jsonify({"message": "Bulk email sending started in background"}), 202
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -312,4 +341,4 @@ def get_sent_emails_by_campaign(campaign_id):
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
