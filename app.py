@@ -323,7 +323,7 @@ def track_email(campaign_id, email_key):
 def get_sent_emails_by_campaign(campaign_id):
     try:
         # Find all emails where campaignId matches
-        emails_cursor = sent_emails_collection.find({"campaign_id": campaign_id})
+        emails_cursor = sent_emails_collection.find({"campaignId": campaign_id})
 
         # Convert cursor to list and format ObjectIds
         emails = []
