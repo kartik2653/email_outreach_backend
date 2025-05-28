@@ -9,11 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { LogIn, Eye, EyeOff } from "lucide-react";
 import FeatureCarousel from "@/components/FeatureCarousel";
 import { signupSchema, type SignupFormData } from "@/schemas/authSchemas";
-import {
-  signupUser,
-  loginWithGoogle,
-  loginWithLinkedIn,
-} from "@/services/authApi";
+import { authService } from "@/services/api/authService";
 
 const Signup = () => {
   const { toast } = useToast();
@@ -54,7 +50,7 @@ const Signup = () => {
 
   const onSubmit = async (data: SignupFormData) => {
     try {
-      const response = await signupUser(data);
+      const response = await authService.signupUser(data);
 
       if (response.success) {
         toast({
@@ -77,9 +73,9 @@ const Signup = () => {
       let response;
 
       if (provider === "Google") {
-        response = await loginWithGoogle();
+        // response = await loginWithGoogle();
       } else if (provider === "LinkedIn") {
-        response = await loginWithLinkedIn();
+        // response = await loginWithLinkedIn();
       }
 
       if (response?.redirectUrl) {
