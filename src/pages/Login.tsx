@@ -184,7 +184,7 @@ const Login = () => {
 
               <Button
                 type="submit"
-                className="w-full bg-black hover:bg-gray-800 text-white py-3"
+                className="w-full bg-black hover:bg-gray-800 text-white py-3 rounded-[1rem] h-12"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Logging in..." : "LOGIN"}
@@ -216,7 +216,7 @@ const Login = () => {
             </div>
 
             {/* Sign Up Link */}
-            <div className="text-center">
+            <div>
               <span className="text-gray-600">Don't have an account? </span>
               <Link
                 to="/signup"

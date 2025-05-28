@@ -195,7 +195,7 @@ const Signup = () => {
                 <Button
                   variant="outline"
                   onClick={() => handleSocialSignup("LinkedIn")}
-                  className="flex items-center justify-center space-x-2"
+                  className="flex items-center justify-center space-x-2 rounded-[1rem]"
                 >
                   <LogIn className="w-4 h-4" />
                   <span>LinkedIn</span>
@@ -204,8 +204,8 @@ const Signup = () => {
             </div>
 
             {/* Login Link */}
-            <div className="text-center">
-              <span className="text-gray-600">Have a account? </span>
+            <div>
+              <span className="text-gray-600">Have an account? </span>
               <Link
                 to="/login"
                 className="text-black font-semibold hover:underline"
