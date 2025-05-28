@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { LogIn } from "lucide-react";
 import FeatureCarousel from "@/components/FeatureCarousel";
 import { signupSchema, type SignupFormData } from "@/schemas/authSchemas";
+import { signupUser, loginWithGoogle, loginWithLinkedIn } from "@/services/authApi";
 
 const Signup = () => {
   const { toast } = useToast();
@@ -44,21 +44,51 @@ const Signup = () => {
   ];
 
   const onSubmit = async (data: SignupFormData) => {
-    // Simulate signup process
-    setTimeout(() => {
+    try {
+      const response = await signupUser(data);
+      
+      if (response.success) {
+        toast({
+          title: "Account created successfully!",
+          description: response.message || "Welcome to SpotBoi",
+        });
+        navigate("/");
+      }
+    } catch (error: any) {
       toast({
-        title: "Account created successfully!",
-        description: "Welcome to SpotBoi",
+        title: "Signup failed",
+        description: error.message || "Please try again",
+        variant: "destructive",
       });
-      navigate("/");
-    }, 1000);
+    }
   };
 
-  const handleSocialSignup = (provider: string) => {
-    toast({
-      title: `${provider} signup`,
-      description: `${provider} authentication would be implemented here`,
-    });
+  const handleSocialSignup = async (provider: string) => {
+    try {
+      let response;
+      
+      if (provider === "Google") {
+        response = await loginWithGoogle();
+      } else if (provider === "LinkedIn") {
+        response = await loginWithLinkedIn();
+      }
+      
+      if (response?.redirectUrl) {
+        window.location.href = response.redirectUrl;
+      } else if (response?.success) {
+        toast({
+          title: `${provider} signup successful!`,
+          description: "Welcome to SpotBoi",
+        });
+        navigate("/");
+      }
+    } catch (error: any) {
+      toast({
+        title: `${provider} signup failed`,
+        description: error.message || `${provider} authentication failed`,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
