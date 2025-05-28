@@ -8,7 +8,11 @@ import { useToast } from "@/hooks/use-toast";
 import { LogIn } from "lucide-react";
 import FeatureCarousel from "@/components/FeatureCarousel";
 import { signupSchema, type SignupFormData } from "@/schemas/authSchemas";
-import { signupUser, loginWithGoogle, loginWithLinkedIn } from "@/services/authApi";
+import {
+  signupUser,
+  loginWithGoogle,
+  loginWithLinkedIn,
+} from "@/services/authApi";
 
 const Signup = () => {
   const { toast } = useToast();
@@ -27,26 +31,29 @@ const Signup = () => {
       title: "your AI social media team",
       subtitle: "Complete automation",
       hashtag: "#Automate",
-      description: "From content creation to community management, let AI handle your entire social media presence while you focus on growing your business."
+      description:
+        "From content creation to community management, let AI handle your entire social media presence while you focus on growing your business.",
     },
     {
       title: "viral content made easy",
       subtitle: "AI-powered creativity",
       hashtag: "#Create",
-      description: "Create engaging posts, stories, and campaigns that resonate with your audience using advanced AI that understands trends and engagement."
+      description:
+        "Create engaging posts, stories, and campaigns that resonate with your audience using advanced AI that understands trends and engagement.",
     },
     {
       title: "scale your social presence",
-      subtitle: "Growth optimization", 
+      subtitle: "Growth optimization",
       hashtag: "#Grow",
-      description: "Optimize posting times, hashtags, and content strategy with AI insights that drive real engagement and follower growth."
-    }
+      description:
+        "Optimize posting times, hashtags, and content strategy with AI insights that drive real engagement and follower growth.",
+    },
   ];
 
   const onSubmit = async (data: SignupFormData) => {
     try {
       const response = await signupUser(data);
-      
+
       if (response.success) {
         toast({
           title: "Account created successfully!",
@@ -66,13 +73,13 @@ const Signup = () => {
   const handleSocialSignup = async (provider: string) => {
     try {
       let response;
-      
+
       if (provider === "Google") {
         response = await loginWithGoogle();
       } else if (provider === "LinkedIn") {
         response = await loginWithLinkedIn();
       }
-      
+
       if (response?.redirectUrl) {
         window.location.href = response.redirectUrl;
       } else if (response?.success) {
@@ -92,100 +99,113 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex p-8">
       {/* Left Side - Signup Form */}
-      <div className="flex-1 flex items-center justify-center bg-white p-8">
-        <div className="w-full max-w-md space-y-8">
-          {/* Logo */}
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold">
-              Spot<span className="bg-lime-400 text-black px-1 rounded">BOI</span>
-              <span className="text-xs bg-lime-400 text-black px-1 rounded ml-1">AI</span>
-            </h1>
+      <div className="flex-1 flex items-center justify-center">
+        <div className="max-w-xl w-full relative h-full flex items-center justify-center">
+          <h1 className="text-3xl font-bold absolute top-0 left-0 text-gray-900">
+            SpotBOI
+            <span className="text-xs bg-lime-400 text-black px-1 rounded ml-1">
+              AI
+            </span>
+          </h1>
+          <div className="w-full space-y-8">
+            {/* Logo */}
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold text-gray-900">Hey there!</h2>
-              <h3 className="text-2xl font-bold text-gray-900">Welcome to Spotboi.ai</h3>
-              <p className="text-gray-600">Our AI powered Social Media Platform!</p>
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold text-gray-900">Hey there!</h2>
+                <h3 className="text-2xl font-bold text-gray-900">
+                  Welcome to Spotboi.ai
+                </h3>
+                <p className="text-gray-600">
+                  Our AI powered Social Media Platform!
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Signup Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Signup Form */}
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your work email"
+                    {...register("email")}
+                    className="mt-1"
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-red-600 mt-1">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Create your password"
+                    {...register("password")}
+                    className="mt-1"
+                  />
+                  {errors.password && (
+                    <p className="text-sm text-red-600 mt-1">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                className="h-12 rounded-[1rem] w-full bg-black hover:bg-gray-800 text-white py-3"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Creating account..." : "SIGNUP"}
+              </Button>
+            </form>
+
+            {/* Social Signup */}
             <div className="space-y-4">
-              <div>
-                <Label htmlFor="email">Enter your work email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your work email"
-                  {...register("email")}
-                  className="mt-1"
-                />
-                {errors.email && (
-                  <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
-                )}
-              </div>
-              
-              <div>
-                <Label htmlFor="password">Create your password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Create your password"
-                  {...register("password")}
-                  className="mt-1"
-                />
-                {errors.password && (
-                  <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
-                )}
+              <div className="text-center text-gray-500">Or continue with</div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <Button
+                  variant="outline"
+                  onClick={() => handleSocialSignup("Google")}
+                  className="flex items-center justify-center space-x-2"
+                >
+                  <span>Google</span>
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={() => handleSocialSignup("LinkedIn")}
+                  className="flex items-center justify-center space-x-2"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>LinkedIn</span>
+                </Button>
               </div>
             </div>
 
-            <Button
-              type="submit"
-              className="w-full bg-black hover:bg-gray-800 text-white py-3"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Creating account..." : "SIGNUP"}
-            </Button>
-          </form>
-
-          {/* Social Signup */}
-          <div className="space-y-4">
-            <div className="text-center text-gray-500">Or continue with</div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <Button
-                variant="outline"
-                onClick={() => handleSocialSignup("Google")}
-                className="flex items-center justify-center space-x-2"
+            {/* Login Link */}
+            <div className="text-center">
+              <span className="text-gray-600">Have a account? </span>
+              <Link
+                to="/login"
+                className="text-black font-semibold hover:underline"
               >
-                <span>Google</span>
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={() => handleSocialSignup("LinkedIn")}
-                className="flex items-center justify-center space-x-2"
-              >
-                <LogIn className="w-4 h-4" />
-                <span>LinkedIn</span>
-              </Button>
+                Login
+              </Link>
             </div>
-          </div>
-
-          {/* Login Link */}
-          <div className="text-center">
-            <span className="text-gray-600">Have a account? </span>
-            <Link to="/login" className="text-black font-semibold hover:underline">
-              Login
-            </Link>
           </div>
         </div>
       </div>
 
       {/* Right Side - Feature Carousel */}
-      <div className="flex-1 bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600">
+      <div className="flex-[0.7] bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 rounded-[1rem]">
         <FeatureCarousel slides={carouselSlides} />
       </div>
     </div>
