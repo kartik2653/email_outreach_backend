@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,13 +8,19 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { LogIn } from "lucide-react";
 import FeatureCarousel from "@/components/FeatureCarousel";
+import { loginSchema, type LoginFormData } from "@/schemas/authSchemas";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
 
   const carouselSlides = [
     {
@@ -36,26 +43,14 @@ const Login = () => {
     }
   ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
+  const onSubmit = async (data: LoginFormData) => {
     // Simulate login process
     setTimeout(() => {
-      if (email && password) {
-        toast({
-          title: "Login successful!",
-          description: "Welcome back to SpotBoi",
-        });
-        navigate("/");
-      } else {
-        toast({
-          title: "Login failed",
-          description: "Please enter valid credentials",
-          variant: "destructive",
-        });
-      }
-      setIsLoading(false);
+      toast({
+        title: "Login successful!",
+        description: "Welcome back to SpotBoi",
+      });
+      navigate("/");
     }, 1000);
   };
 
@@ -86,7 +81,7 @@ const Login = () => {
           </div>
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-4">
               <div>
                 <Label htmlFor="email">Enter your work email</Label>
@@ -94,11 +89,12 @@ const Login = () => {
                   id="email"
                   type="email"
                   placeholder="Enter your work email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...register("email")}
                   className="mt-1"
-                  required
                 />
+                {errors.email && (
+                  <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
+                )}
               </div>
               
               <div>
@@ -107,11 +103,12 @@ const Login = () => {
                   id="password"
                   type="password"
                   placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  {...register("password")}
                   className="mt-1"
-                  required
                 />
+                {errors.password && (
+                  <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
+                )}
                 <div className="text-right mt-2">
                   <Link to="#" className="text-sm text-gray-600 hover:text-gray-900">
                     Forgot password?
@@ -123,9 +120,9 @@ const Login = () => {
             <Button
               type="submit"
               className="w-full bg-black hover:bg-gray-800 text-white py-3"
-              disabled={isLoading}
+              disabled={isSubmitting}
             >
-              {isLoading ? "Logging in..." : "LOGIN"}
+              {isSubmitting ? "Logging in..." : "LOGIN"}
             </Button>
           </form>
 

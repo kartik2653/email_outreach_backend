@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,13 +8,19 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { LogIn } from "lucide-react";
 import FeatureCarousel from "@/components/FeatureCarousel";
+import { signupSchema, type SignupFormData } from "@/schemas/authSchemas";
 
 const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+  });
 
   const carouselSlides = [
     {
@@ -36,26 +43,14 @@ const Signup = () => {
     }
   ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
+  const onSubmit = async (data: SignupFormData) => {
     // Simulate signup process
     setTimeout(() => {
-      if (email && password) {
-        toast({
-          title: "Account created successfully!",
-          description: "Welcome to SpotBoi",
-        });
-        navigate("/");
-      } else {
-        toast({
-          title: "Signup failed",
-          description: "Please fill in all fields",
-          variant: "destructive",
-        });
-      }
-      setIsLoading(false);
+      toast({
+        title: "Account created successfully!",
+        description: "Welcome to SpotBoi",
+      });
+      navigate("/");
     }, 1000);
   };
 
@@ -85,7 +80,7 @@ const Signup = () => {
           </div>
 
           {/* Signup Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-4">
               <div>
                 <Label htmlFor="email">Enter your work email</Label>
@@ -93,11 +88,12 @@ const Signup = () => {
                   id="email"
                   type="email"
                   placeholder="Enter your work email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...register("email")}
                   className="mt-1"
-                  required
                 />
+                {errors.email && (
+                  <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
+                )}
               </div>
               
               <div>
@@ -106,20 +102,21 @@ const Signup = () => {
                   id="password"
                   type="password"
                   placeholder="Create your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  {...register("password")}
                   className="mt-1"
-                  required
                 />
+                {errors.password && (
+                  <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
+                )}
               </div>
             </div>
 
             <Button
               type="submit"
               className="w-full bg-black hover:bg-gray-800 text-white py-3"
-              disabled={isLoading}
+              disabled={isSubmitting}
             >
-              {isLoading ? "Creating account..." : "SIGNUP"}
+              {isSubmitting ? "Creating account..." : "SIGNUP"}
             </Button>
           </form>
 
