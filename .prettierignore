@@ -1,0 +1,32 @@
+node_modules
+dist
+build
+.vite
+.cache
+.env
+*.log
+.vscode
+.idea
+.DS_Store
+coverage
+public/*
+# Project config files to skip
+package.json
+.prettierrc
+.prettierrc.*
+.eslintrc
+.eslintrc.*
+vite.config.*
+tsconfig.json
+# Project config files to skip
+package.json
+.prettierrc
+.prettierrc.*
+.eslintrc
+.eslintrc.*
+vite.config.*
+tsconfig.json
+tailwind.config.ts
+tsconfig.app.json
+tsconfig.node.json
+

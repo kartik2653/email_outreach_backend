@@ -10,6 +10,7 @@ import { LogIn, Eye, EyeOff } from "lucide-react";
 import FeatureCarousel from "@/components/FeatureCarousel";
 import { signupSchema, type SignupFormData } from "@/schemas/authSchemas";
 import { authService } from "@/services/api/authService";
+import logo from "@/assests/svg/appLogo.svg";
 
 const Signup = () => {
   const { toast } = useToast();
@@ -102,22 +103,19 @@ const Signup = () => {
       <div className="flex-1 flex items-center justify-center">
         <div className="max-w-xl w-full relative h-full flex items-center justify-center">
           <h1 className="text-3xl font-bold absolute top-0 left-0 text-gray-900">
-            SpotBOI
-            <span className="text-xs bg-lime-400 text-black px-1 rounded ml-1">
-              AI
-            </span>
+            <img src={logo} alt="Logo" />
           </h1>
           <div className="w-full space-y-8">
             {/* Logo */}
             <div className="space-y-2">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold text-gray-900">Hey there!</h2>
-                <h3 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl font-bold text-gray-900 font-bricolage-grotesque">
+                  Hey there!
+                </h2>
+                <h3 className="text-5xl font-bold text-gray-900 font-bricolage-grotesque">
                   Welcome to Spotboi.ai
                 </h3>
-                <p className="text-gray-600">
-                  Our AI powered Social Media Platform!
-                </p>
+                <p className="text-gray-600">Our AI powered Social Media Platform!</p>
               </div>
             </div>
 
@@ -133,9 +131,7 @@ const Signup = () => {
                     className="mt-1"
                   />
                   {errors.email && (
-                    <p className="text-sm text-red-600 mt-1">
-                      {errors.email.message}
-                    </p>
+                    <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
                   )}
                 </div>
 
@@ -152,16 +148,10 @@ const Signup = () => {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                   >
-                    {showPassword ? (
-                      <EyeOff className="w-4 h-4" />
-                    ) : (
-                      <Eye className="w-4 h-4" />
-                    )}
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                   {errors.password && (
-                    <p className="text-sm text-red-600 mt-1">
-                      {errors.password.message}
-                    </p>
+                    <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
                   )}
                 </div>
               </div>
@@ -183,7 +173,7 @@ const Signup = () => {
                 <Button
                   variant="outline"
                   onClick={() => handleSocialSignup("Google")}
-                  className="flex items-center justify-center space-x-2"
+                  className="flex items-center justify-center space-x-2 rounded-[1rem]"
                 >
                   <span>Google</span>
                 </Button>
@@ -202,10 +192,7 @@ const Signup = () => {
             {/* Login Link */}
             <div>
               <span className="text-gray-600">Have an account? </span>
-              <Link
-                to="/login"
-                className="text-black font-semibold hover:underline"
-              >
+              <Link to="/login" className="text-black font-semibold hover:underline">
                 Login
               </Link>
             </div>

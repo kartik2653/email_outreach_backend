@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 
 interface CarouselSlide {
@@ -45,7 +44,8 @@ const FeatureCarousel = ({ slides }: FeatureCarouselProps) => {
                 </div>
               </div>
               <p className="text-sm text-gray-700 mb-3">
-                From strategy to reporting - SpotBoi is the first AI Social Media Agent that takes care of everything, so you can shine in the spotlight! 🌟
+                From strategy to reporting - SpotBoi is the first AI Social Media Agent that takes
+                care of everything, so you can shine in the spotlight! 🌟
                 <span className="text-blue-500"> #DigitalHarmony</span>
               </p>
               <div className="text-xs text-gray-500">See translation</div>
@@ -54,32 +54,29 @@ const FeatureCarousel = ({ slides }: FeatureCarouselProps) => {
             {/* Feature Highlight */}
             <div className="space-y-4">
               <div className="flex items-center justify-center space-x-4">
-                <span className={`px-4 py-2 rounded-full text-black font-semibold ${
-                  slide.hashtag === '#Automate' ? 'bg-lime-400' : 
-                  slide.hashtag === '#Create' ? 'bg-pink-400' : 'bg-green-400'
-                }`}>
+                <span
+                  className={`px-4 py-2 rounded-full text-black font-semibold ${
+                    slide.hashtag === "#Automate"
+                      ? "bg-lime-400"
+                      : slide.hashtag === "#Create"
+                        ? "bg-pink-400"
+                        : "bg-green-400"
+                  }`}
+                >
                   {slide.hashtag}
                 </span>
-                <span className="bg-gray-800 text-white px-4 py-2 rounded-full">
-                  Meet
-                </span>
+                <span className="bg-gray-800 text-white px-4 py-2 rounded-full">Meet</span>
               </div>
-              
-              <h3 className="text-2xl font-bold text-white">
-                {slide.title}
-              </h3>
-              
-              <p className="text-white/90 text-lg">
-                {slide.subtitle}
-              </p>
+
+              <h3 className="text-2xl font-bold text-white">{slide.title}</h3>
+
+              <p className="text-white/90 text-lg">{slide.subtitle}</p>
             </div>
 
             {/* Key Features Section */}
             <div className="bg-lime-300 rounded-xl p-6 max-w-sm w-full">
               <h4 className="text-2xl font-bold text-gray-800 mb-4">Key features</h4>
-              <p className="text-gray-700">
-                {slide.description}
-              </p>
+              <p className="text-gray-700">{slide.description}</p>
               <div className="flex space-x-2 mt-4">
                 <div className="w-8 h-2 bg-gray-800 rounded"></div>
                 <div className="w-2 h-2 bg-gray-400 rounded"></div>
@@ -88,7 +85,7 @@ const FeatureCarousel = ({ slides }: FeatureCarouselProps) => {
           </div>
         </div>
       ))}
-      
+
       {/* Slide Indicators */}
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
         {slides.map((_, index) => (

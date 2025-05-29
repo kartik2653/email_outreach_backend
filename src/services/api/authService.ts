@@ -20,7 +20,7 @@ export interface SocialAuthResponse extends AuthResponse {
 export const authService = {
   loginUser: async (credentials: LoginFormData): Promise<AuthResponse> => {
     try {
-      const response: any = await apiClient.post("/user/login", credentials);
+      const response: any = await apiClient.post("/auth/user/login", credentials);
 
       if (response?.data?.token) {
         localStorage.setItem("authToken", response.data.token);
@@ -33,7 +33,7 @@ export const authService = {
   },
   signupUser: async (userData: SignupFormData): Promise<AuthResponse> => {
     try {
-      const response: any = await apiClient.post("/user/login", userData);
+      const response: any = await apiClient.post("/auth/user/create-user", userData);
 
       if (response.data.token) {
         localStorage.setItem("authToken", response.data.token);
@@ -46,7 +46,7 @@ export const authService = {
   },
   logoutUser: async (): Promise<void> => {
     try {
-      await apiClient.post("/user/login", {});
+      await apiClient.post("/auth/user/login", {});
       localStorage.removeItem("authToken");
     } catch (error: any) {
       // Still remove token even if API call fails

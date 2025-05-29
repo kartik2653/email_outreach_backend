@@ -17,6 +17,7 @@ class ApiClient {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     });
   }
 
@@ -41,11 +42,7 @@ class ApiClient {
     }
   }
 
-  async post<T>(
-    endpoint: string,
-    data: any,
-    options?: RequestOptions
-  ): Promise<T> {
+  async post<T>(endpoint: string, data: any, options?: RequestOptions): Promise<T> {
     try {
       const config: AxiosRequestConfig = {
         headers: options?.headers,
@@ -66,11 +63,7 @@ class ApiClient {
     }
   }
 
-  async put<T>(
-    endpoint: string,
-    data: any,
-    options?: RequestOptions
-  ): Promise<T> {
+  async put<T>(endpoint: string, data: any, options?: RequestOptions): Promise<T> {
     try {
       const config: AxiosRequestConfig = {
         headers: options?.headers,
@@ -91,11 +84,7 @@ class ApiClient {
     }
   }
 
-  async delete<T>(
-    endpoint: string,
-    data?: any,
-    options?: RequestOptions
-  ): Promise<T> {
+  async delete<T>(endpoint: string, data?: any, options?: RequestOptions): Promise<T> {
     try {
       const config: AxiosRequestConfig = {
         headers: options?.headers,

@@ -10,6 +10,7 @@ import { LogIn, Eye, EyeOff } from "lucide-react";
 import FeatureCarousel from "@/components/FeatureCarousel";
 import { loginSchema, type LoginFormData } from "@/schemas/authSchemas";
 import { authService } from "@/services/api/authService";
+import logo from "@/assests/svg/appLogo.svg";
 
 const Login = () => {
   const { toast } = useToast();
@@ -62,8 +63,7 @@ const Login = () => {
     } catch (error: any) {
       toast({
         title: "Login failed",
-        description:
-          error.message || "Please check your credentials and try again",
+        description: error.message || "Please check your credentials and try again",
         variant: "destructive",
       });
     }
@@ -103,16 +103,13 @@ const Login = () => {
       <div className="flex-1 flex items-center justify-center bg-white ">
         <div className="max-w-xl w-full relative h-full flex items-center justify-center">
           <h1 className="text-3xl font-bold absolute top-0 left-0 text-gray-900">
-            SpotBOI
-            <span className="text-xs bg-lime-400 text-black px-1 rounded ml-1">
-              AI
-            </span>
+            <img src={logo} alt="Logo" />
           </h1>
           <div className="w-full  space-y-8">
             {/* Logo */}
             <div className="space-y-2">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold text-gray-900">
+                <h2 className="text-5xl font-bold text-gray-900 font-bricolage-grotesque">
                   Welcome back!
                 </h2>
                 <p className="text-gray-600">
@@ -125,7 +122,6 @@ const Login = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="email">Enter your work email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -134,14 +130,11 @@ const Login = () => {
                     className="mt-1"
                   />
                   {errors.email && (
-                    <p className="text-sm text-red-600 mt-1">
-                      {errors.email.message}
-                    </p>
+                    <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <Label htmlFor="password">Enter your password</Label>
                   <div className="relative">
                     <Input
                       id="password"
@@ -155,23 +148,14 @@ const Login = () => {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                     >
-                      {showPassword ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                   {errors.password && (
-                    <p className="text-sm text-red-600 mt-1">
-                      {errors.password.message}
-                    </p>
+                    <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
                   )}
                   <div className="text-right mt-2">
-                    <Link
-                      to="#"
-                      className="text-sm text-gray-600 hover:text-gray-900"
-                    >
+                    <Link to="#" className="text-sm text-gray-600 hover:text-gray-900">
                       Forgot password?
                     </Link>
                   </div>
@@ -195,7 +179,7 @@ const Login = () => {
                 <Button
                   variant="outline"
                   onClick={() => handleSocialLogin("Google")}
-                  className="flex items-center justify-center space-x-2"
+                  className="flex items-center justify-center space-x-2 rounded-[1rem]"
                 >
                   <span>Google</span>
                 </Button>
@@ -203,7 +187,7 @@ const Login = () => {
                 <Button
                   variant="outline"
                   onClick={() => handleSocialLogin("LinkedIn")}
-                  className="flex items-center justify-center space-x-2"
+                  className="flex items-center justify-center space-x-2 rounded-[1rem]"
                 >
                   <LogIn className="w-4 h-4" />
                   <span>LinkedIn</span>
@@ -214,10 +198,7 @@ const Login = () => {
             {/* Sign Up Link */}
             <div>
               <span className="text-gray-600">Don't have an account? </span>
-              <Link
-                to="/signup"
-                className="text-black font-semibold hover:underline"
-              >
+              <Link to="/signup" className="text-black font-semibold hover:underline">
                 Sign up
               </Link>
             </div>
