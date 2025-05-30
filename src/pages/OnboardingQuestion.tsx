@@ -1,0 +1,177 @@
+
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { onboardingService, type OnboardingResponse } from "@/services/api/onboardingService";
+import logo from "@/assests/svg/appLogo.svg";
+
+const OnboardingQuestion = () => {
+  const { questionId } = useParams<{ questionId: string }>();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
+  const [questionData, setQuestionData] = useState<OnboardingResponse["data"] | null>(null);
+  const [selectedResponseId, setSelectedResponseId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const currentQuestion = questionId ? parseInt(questionId) : 1;
+  const totalQuestions = 4;
+
+  useEffect(() => {
+    const fetchQuestion = async () => {
+      try {
+        setIsLoading(true);
+        const response = await onboardingService.getQuestion(currentQuestion);
+        setQuestionData(response.data);
+        
+        // Set previously selected answer if exists
+        if (response.data.response) {
+          setSelectedResponseId(response.data.response.responseId);
+        }
+      } catch (error: any) {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to load question",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchQuestion();
+  }, [currentQuestion, toast]);
+
+  const handleSubmit = async () => {
+    if (!selectedResponseId || !questionData) return;
+
+    try {
+      setIsSubmitting(true);
+      await onboardingService.submitAnswer({
+        questionId: questionData.questionId,
+        responseId: selectedResponseId,
+      });
+
+      // Navigate to next question or dashboard
+      if (currentQuestion < totalQuestions) {
+        navigate(`/onboarding-questions/${currentQuestion + 1}`);
+      } else {
+        // For the 4th question, redirect to appropriate dashboard based on selection
+        const dashboardRoutes = {
+          1: "/dashboard/personal",
+          2: "/dashboard/professional", 
+          3: "/dashboard/agency"
+        };
+        
+        // Use first 3 response IDs for dashboard routing, fallback to personal
+        const dashboardRoute = dashboardRoutes[selectedResponseId as keyof typeof dashboardRoutes] || "/dashboard/personal";
+        navigate(dashboardRoute);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to submit answer",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!questionData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">Question not found</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex p-8">
+      {/* Left Side - Question */}
+      <div className="flex-1 flex items-center justify-center">
+        <div className="max-w-xl w-full relative h-full flex items-center justify-center">
+          <h1 className="text-3xl font-bold absolute top-0 left-0 text-gray-900">
+            <img src={logo} alt="Logo" />
+          </h1>
+          
+          <div className="w-full space-y-8">
+            {/* Progress Indicator */}
+            <div className="space-y-2">
+              <p className="text-sm text-gray-600">Step {currentQuestion} of {totalQuestions}</p>
+              <div className="flex space-x-2">
+                {Array.from({ length: totalQuestions }).map((_, index) => (
+                  <div
+                    key={index}
+                    className={`h-2 flex-1 rounded ${
+                      index < currentQuestion 
+                        ? "bg-gray-800" 
+                        : index === currentQuestion - 1 
+                        ? "bg-gray-800" 
+                        : "bg-gray-200"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Question */}
+            <div className="space-y-4">
+              <h2 className="text-4xl font-bold text-gray-900 font-bricolage-grotesque">
+                {questionData.questionText}
+              </h2>
+              <p className="text-gray-600">
+                {questionData.promptText}
+              </p>
+            </div>
+
+            {/* Options */}
+            <div className="space-y-3">
+              {questionData.responseOptions.map((option) => (
+                <button
+                  key={option.responseId}
+                  onClick={() => setSelectedResponseId(option.responseId)}
+                  className={`w-full p-4 text-left rounded-xl border-2 transition-colors ${
+                    selectedResponseId === option.responseId
+                      ? "border-gray-800 bg-gray-50"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
+                >
+                  {option.responseText}
+                </button>
+              ))}
+            </div>
+
+            {/* Next Button */}
+            <Button
+              onClick={handleSubmit}
+              disabled={!selectedResponseId || isSubmitting}
+              className="w-full bg-lime-400 hover:bg-lime-500 text-black py-3 rounded-xl h-12 font-semibold"
+            >
+              {isSubmitting ? "Submitting..." : currentQuestion === totalQuestions ? "FINISH" : "NEXT"}
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Side - Static Image */}
+      <div className="flex-[0.7] bg-gray-600 rounded-xl flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="w-full h-full bg-gray-600 rounded-xl"></div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default OnboardingQuestion;

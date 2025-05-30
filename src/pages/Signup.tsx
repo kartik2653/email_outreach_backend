@@ -1,3 +1,4 @@
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
@@ -58,7 +59,8 @@ const Signup = () => {
           title: "Account created successfully!",
           description: response.message || "Welcome to SpotBoi",
         });
-        navigate("/");
+        // Redirect to onboarding flow instead of home
+        navigate("/onboarding-questions/1");
       }
     } catch (error: any) {
       toast({
