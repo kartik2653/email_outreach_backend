@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
@@ -54,14 +53,11 @@ const PersonalDashboard = () => {
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="min-h-screen flex w-full bg-gray-50">
-        <DashboardSidebar 
-          activeItem={activeSection} 
-          onItemSelect={setActiveSection} 
-        />
-        <div className="flex-1 flex flex-col">
+      <div className="min-h-screen flex w-full bg-cloud">
+        <DashboardSidebar activeItem={activeSection} onItemSelect={setActiveSection} />
+        <div className="flex-1 flex flex-col px-48">
           <DashboardHeader />
-          {renderContent()}
+          <div className="bg-white rounded-3xl">{renderContent()}</div>
         </div>
       </div>
     </SidebarProvider>

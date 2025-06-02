@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,7 +7,7 @@ import { Label } from "@/components/ui/label";
 
 const toneOptions = [
   "Friendly",
-  "Authoritative", 
+  "Authoritative",
   "Inspirational",
   "Quirky",
   "Professional",
@@ -16,13 +15,13 @@ const toneOptions = [
   "Bold",
   "Playful",
   "Minimalist",
-  "Socratic"
+  "Socratic",
 ];
 
 const variantOptions = [
   { value: "1", label: "One" },
+  { value: "2", label: "Two" },
   { value: "3", label: "Three" },
-  { value: "5", label: "Five" }
 ];
 
 const ContentCreation = () => {
@@ -40,10 +39,10 @@ const ContentCreation = () => {
   };
 
   return (
-    <div className="flex-1 p-8 max-w-4xl mx-auto">
+    <div className="flex-1 p-8 ">
       <div className="space-y-8">
         <h1 className="text-4xl font-bold text-gray-900">Let's Create</h1>
-        
+
         {/* Step 1: Prompt Input */}
         <div className="space-y-4">
           <h2 className="text-lg font-medium text-gray-700">What do you want to post about?</h2>
@@ -56,7 +55,7 @@ const ContentCreation = () => {
             />
             <Button
               onClick={handleMagicPrompt}
-              className="absolute bottom-4 right-4 bg-yellow-300 hover:bg-yellow-400 text-black font-medium px-4 py-2 rounded-lg"
+              className="absolute bottom-4 right-4 bg-yellow-green hover:bg-yellow-400 text-black font-medium px-4 py-2 rounded-lg"
             >
               Magic Prompt
             </Button>
@@ -95,7 +94,7 @@ const ContentCreation = () => {
             {variantOptions.map((option) => (
               <div key={option.value} className="flex items-center space-x-2">
                 <RadioGroupItem value={option.value} id={option.value} />
-                <Label 
+                <Label
                   htmlFor={option.value}
                   className={`cursor-pointer px-4 py-2 rounded-lg transition-colors ${
                     variants === option.value
@@ -114,7 +113,7 @@ const ContentCreation = () => {
         <div className="pt-4">
           <Button
             onClick={handleGenerate}
-            className="w-full bg-black hover:bg-gray-800 text-white font-medium py-4 rounded-lg text-lg"
+            className="px-20 bg-black hover:bg-gray-800 text-white font-medium py-4 rounded-3xl text-lg"
           >
             GENERATE
           </Button>

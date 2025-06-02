@@ -1,36 +1,48 @@
-
-import { Calendar, FileText, PenTool, Settings, Star, User } from "lucide-react";
-import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import { Settings, User } from "lucide-react";
+import createLogo from "@/assests/svg/create.svg";
+import calendarLogo from "@/assests/svg/calendar.svg";
+import postPitLogo from "@/assests/svg/postpit.svg";
+import spotplanLogo from "@/assests/svg/spotplan.svg";
+import profileLogo from "@/assests/svg/profile.svg";
+import settingsLogo from "@/assests/svg/settings.svg";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import { set } from "date-fns";
 
 const sidebarItems = [
   {
     title: "Profile View",
-    icon: User,
+    icon: profileLogo,
     id: "profile",
   },
   {
     title: "Create",
-    icon: PenTool,
+    icon: createLogo,
     id: "create",
   },
   {
     title: "Calendar",
-    icon: Calendar,
+    icon: calendarLogo,
     id: "calendar",
   },
   {
     title: "Spot Plan",
-    icon: Star,
+    icon: spotplanLogo,
     id: "spot-plan",
   },
   {
     title: "Drafts",
-    icon: FileText,
+    icon: postPitLogo,
     id: "drafts",
   },
   {
     title: "Settings",
-    icon: Settings,
+    icon: settingsLogo,
     id: "settings",
   },
 ];
@@ -46,19 +58,19 @@ const DashboardSidebar = ({ activeItem, onItemSelect }: DashboardSidebarProps) =
       <SidebarContent className="flex flex-col items-center py-8">
         <SidebarMenu className="space-y-6">
           {sidebarItems.map((item) => (
-            <SidebarMenuItem key={item.id}>
+            <SidebarMenuItem key={item.id} className="flex flex-col items-center">
               <SidebarMenuButton
                 onClick={() => onItemSelect(item.id)}
                 className={`w-16 h-16 flex flex-col items-center justify-center rounded-full transition-all ${
                   activeItem === item.id
-                    ? "bg-yellow-400 text-black shadow-lg"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    ? "bg-yellow-green text-black shadow-lg"
+                    : "bg-black text-gray-600 hover:bg-gray-200"
                 }`}
                 tooltip={item.title}
               >
-                <item.icon className="w-6 h-6 mb-1" />
-                <span className="text-xs font-medium">{item.title}</span>
+                <img src={item?.icon} />
               </SidebarMenuButton>
+              <span className="text-xs font-medium">{item.title}</span>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
