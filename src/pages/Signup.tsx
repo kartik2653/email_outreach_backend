@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
@@ -114,9 +113,7 @@ const Signup = () => {
               {...register("email")}
               className="mt-1"
             />
-            {errors.email && (
-              <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>}
           </div>
 
           <PasswordInput
@@ -144,11 +141,7 @@ const Signup = () => {
       />
 
       {/* Login Link */}
-      <AuthLink
-        text="Have an account?"
-        linkText="Login"
-        to="/login"
-      />
+      <AuthLink text="Have an account?" linkText="Login" to="/login" />
     </AuthLayout>
   );
 };

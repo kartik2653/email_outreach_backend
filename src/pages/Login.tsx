@@ -55,15 +55,12 @@ const Login = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await authService.loginUser(data);
-
-      if (response.success) {
-        toast({
-          title: "Login successful!",
-          description: response.message || "Welcome back to SpotBoi",
-        });
-        // Redirect to onboarding flow instead of home
-        navigate("/onboarding-questions/1");
-      }
+      toast({
+        title: "Login successful!",
+        description: response.message || "Welcome back to SpotBoi",
+      });
+      // Redirect to onboarding flow instead of home
+      navigate("/onboarding-questions/1");
     } catch (error: any) {
       toast({
         title: "Login failed",
@@ -119,9 +116,7 @@ const Login = () => {
               {...register("email")}
               className="mt-1"
             />
-            {errors.email && (
-              <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>}
           </div>
 
           <div>
@@ -156,11 +151,7 @@ const Login = () => {
       />
 
       {/* Sign Up Link */}
-      <AuthLink
-        text="Don't have an account?"
-        linkText="Sign up"
-        to="/signup"
-      />
+      <AuthLink text="Don't have an account?" linkText="Sign up" to="/signup" />
     </AuthLayout>
   );
 };

@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -19,18 +18,18 @@ const PersonalDashboard = () => {
             Logout
           </Button>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white p-6 rounded-lg border">
             <h3 className="text-xl font-semibold mb-4">Content Creation</h3>
             <p className="text-gray-600">Create engaging content for your personal brand</p>
           </div>
-          
+
           <div className="bg-white p-6 rounded-lg border">
             <h3 className="text-xl font-semibold mb-4">Analytics</h3>
             <p className="text-gray-600">Track your personal content performance</p>
           </div>
-          
+
           <div className="bg-white p-6 rounded-lg border">
             <h3 className="text-xl font-semibold mb-4">Scheduling</h3>
             <p className="text-gray-600">Schedule posts across your platforms</p>

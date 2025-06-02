@@ -24,6 +24,7 @@ export default {
         sans: ["Manrope", "sans-serif"],
       },
       colors: {
+        "yellow-green":'#D3F26B',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

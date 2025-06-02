@@ -1,4 +1,3 @@
-
 import apiClient from "./apiClient";
 
 export interface OnboardingResponse {
@@ -32,7 +31,9 @@ export interface SubmitAnswerPayload {
 export const onboardingService = {
   getQuestion: async (questionId: number): Promise<OnboardingResponse> => {
     try {
-      const response = await apiClient.get<OnboardingResponse>(`/onboarding-questions/${questionId}`);
+      const response = await apiClient.get<OnboardingResponse>(
+        `/onboarding-questions/${questionId}`
+      );
       return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Failed to fetch question");
@@ -41,7 +42,7 @@ export const onboardingService = {
 
   submitAnswer: async (payload: SubmitAnswerPayload): Promise<any> => {
     try {
-      const response = await apiClient.post(`/onboarding-questions/${payload.questionId}`, payload);
+      const response = await apiClient.put(`/onboarding-questions/${payload.questionId}`, payload);
       return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Failed to submit answer");

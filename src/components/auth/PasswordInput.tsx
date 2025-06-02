@@ -1,4 +1,3 @@
-
 import { useState, forwardRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
@@ -30,9 +29,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
-        {error && (
-          <p className="text-sm text-red-600 mt-1">{error}</p>
-        )}
+        {error && <p className="text-sm text-red-600 mt-1">{error}</p>}
       </div>
     );
   }

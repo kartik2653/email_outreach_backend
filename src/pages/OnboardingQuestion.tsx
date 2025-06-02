@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,7 @@ const OnboardingQuestion = () => {
   const { questionId } = useParams<{ questionId: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   const [questionData, setQuestionData] = useState<OnboardingResponse["data"] | null>(null);
   const [selectedResponseId, setSelectedResponseId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,7 +24,7 @@ const OnboardingQuestion = () => {
         setIsLoading(true);
         const response = await onboardingService.getQuestion(currentQuestion);
         setQuestionData(response.data);
-        
+
         // Set previously selected answer if exists
         if (response.data.response) {
           setSelectedResponseId(response.data.response.responseId);
@@ -61,12 +60,14 @@ const OnboardingQuestion = () => {
         // For the 4th question, redirect to appropriate dashboard based on selection
         const dashboardRoutes = {
           1: "/dashboard/personal",
-          2: "/dashboard/professional", 
-          3: "/dashboard/agency"
+          2: "/dashboard/professional",
+          3: "/dashboard/agency",
         };
-        
+
         // Use first 3 response IDs for dashboard routing, fallback to personal
-        const dashboardRoute = dashboardRoutes[selectedResponseId as keyof typeof dashboardRoutes] || "/dashboard/personal";
+        const dashboardRoute =
+          dashboardRoutes[selectedResponseId as keyof typeof dashboardRoutes] ||
+          "/dashboard/personal";
         navigate(dashboardRoute);
       }
     } catch (error: any) {
@@ -104,21 +105,23 @@ const OnboardingQuestion = () => {
           <h1 className="text-3xl font-bold absolute top-0 left-0 text-gray-900">
             <img src={logo} alt="Logo" />
           </h1>
-          
+
           <div className="w-full space-y-8">
             {/* Progress Indicator */}
             <div className="space-y-2">
-              <p className="text-sm text-gray-600">Step {currentQuestion} of {totalQuestions}</p>
+              <p className="text-sm text-gray-600">
+                Step {currentQuestion} of {totalQuestions}
+              </p>
               <div className="flex space-x-2">
                 {Array.from({ length: totalQuestions }).map((_, index) => (
                   <div
                     key={index}
                     className={`h-2 flex-1 rounded ${
-                      index < currentQuestion 
-                        ? "bg-gray-800" 
-                        : index === currentQuestion - 1 
-                        ? "bg-gray-800" 
-                        : "bg-gray-200"
+                      index < currentQuestion
+                        ? "bg-gray-800"
+                        : index === currentQuestion - 1
+                          ? "bg-gray-800"
+                          : "bg-gray-200"
                     }`}
                   />
                 ))}
@@ -130,9 +133,7 @@ const OnboardingQuestion = () => {
               <h2 className="text-4xl font-bold text-gray-900 font-bricolage-grotesque">
                 {questionData.questionText}
               </h2>
-              <p className="text-gray-600">
-                {questionData.promptText}
-              </p>
+              <p className="text-gray-600">{questionData.promptText}</p>
             </div>
 
             {/* Options */}
@@ -156,9 +157,9 @@ const OnboardingQuestion = () => {
             <Button
               onClick={handleSubmit}
               disabled={!selectedResponseId || isSubmitting}
-              className="w-full bg-lime-400 hover:bg-lime-500 text-black py-3 rounded-xl h-12 font-semibold"
+              className="bg-yellow-green hover:bg-lime-500 text-black py-3 px-10 rounded-3xl h-12 font-semibold"
             >
-              {isSubmitting ? "Submitting..." : currentQuestion === totalQuestions ? "FINISH" : "NEXT"}
+              {isSubmitting ? "Submitting..." : "NEXT"}
             </Button>
           </div>
         </div>

@@ -1,4 +1,3 @@
-
 import { ReactNode } from "react";
 import FeatureCarousel from "@/components/FeatureCarousel";
 import logo from "@/assests/svg/appLogo.svg";
@@ -16,7 +15,13 @@ interface AuthLayoutProps {
   }>;
 }
 
-const AuthLayout = ({ children, title, subtitle, description, carouselSlides }: AuthLayoutProps) => {
+const AuthLayout = ({
+  children,
+  title,
+  subtitle,
+  description,
+  carouselSlides,
+}: AuthLayoutProps) => {
   return (
     <div className="min-h-screen flex p-8">
       {/* Left Side - Auth Form */}

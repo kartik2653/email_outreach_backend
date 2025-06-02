@@ -21,12 +21,11 @@ export const authService = {
   loginUser: async (credentials: LoginFormData): Promise<AuthResponse> => {
     try {
       const response: any = await apiClient.post("/auth/user/login", credentials);
-
-      if (response?.data?.token) {
-        localStorage.setItem("authToken", response.data.token);
+      if (response?.data?.accessToken) {
+        localStorage.setItem("accessToken", response?.data?.accessToken);
       }
 
-      return response.data;
+      return response?.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Login failed");
     }
@@ -35,8 +34,8 @@ export const authService = {
     try {
       const response: any = await apiClient.post("/auth/user/create-user", userData);
 
-      if (response.data.token) {
-        localStorage.setItem("authToken", response.data.token);
+      if (response.data.accessToken) {
+        localStorage.setItem("accessToken", response?.data?.accessToken);
       }
 
       return response.data;
