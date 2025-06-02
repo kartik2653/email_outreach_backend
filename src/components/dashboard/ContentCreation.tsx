@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -7,7 +6,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 
 const toneOptions = [
@@ -30,8 +36,14 @@ const variantOptions = [
 ];
 
 const contentCreationSchema = z.object({
-  prompt: z.string().min(10, "Prompt must be at least 10 characters long").max(500, "Prompt cannot exceed 500 characters"),
-  selectedTones: z.array(z.string()).min(1, "Please select at least one tone").max(3, "You can select up to 3 tones"),
+  prompt: z
+    .string()
+    .min(10, "Prompt must be at least 10 characters long")
+    .max(500, "Prompt cannot exceed 500 characters"),
+  selectedTones: z
+    .array(z.string())
+    .min(1, "Please select at least one tone")
+    .max(3, "You can select up to 3 tones"),
   variants: z.enum(["1", "2", "3"], {
     required_error: "Please select the number of variants",
   }),
@@ -41,7 +53,7 @@ type ContentCreationFormData = z.infer<typeof contentCreationSchema>;
 
 const ContentCreation = () => {
   const { toast } = useToast();
-  
+
   const form = useForm<ContentCreationFormData>({
     resolver: zodResolver(contentCreationSchema),
     defaultValues: {
@@ -61,7 +73,7 @@ const ContentCreation = () => {
       });
       return;
     }
-    
+
     // Placeholder for magic prompt functionality
     console.log("Magic prompt clicked for:", currentPrompt);
     toast({
@@ -161,9 +173,9 @@ const ContentCreation = () => {
                     Number of variants
                   </FormLabel>
                   <FormControl>
-                    <RadioGroup 
-                      value={field.value} 
-                      onValueChange={field.onChange} 
+                    <RadioGroup
+                      value={field.value}
+                      onValueChange={field.onChange}
                       className="flex gap-4"
                     >
                       {variantOptions.map((option) => (
