@@ -42,18 +42,22 @@ interface DashboardSidebarProps {
 
 const DashboardSidebar = ({ activeItem, onItemSelect }: DashboardSidebarProps) => {
   return (
-    <Sidebar className="w-16">
-      <SidebarContent className="flex flex-col items-center py-6">
-        <SidebarMenu className="space-y-4">
+    <Sidebar className="w-20 bg-white border-r border-gray-200">
+      <SidebarContent className="flex flex-col items-center py-8">
+        <SidebarMenu className="space-y-6">
           {sidebarItems.map((item) => (
             <SidebarMenuItem key={item.id}>
               <SidebarMenuButton
                 onClick={() => onItemSelect(item.id)}
-                isActive={activeItem === item.id}
-                className="w-12 h-12 flex items-center justify-center"
+                className={`w-16 h-16 flex flex-col items-center justify-center rounded-full transition-all ${
+                  activeItem === item.id
+                    ? "bg-yellow-400 text-black shadow-lg"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
                 tooltip={item.title}
               >
-                <item.icon className="w-6 h-6" />
+                <item.icon className="w-6 h-6 mb-1" />
+                <span className="text-xs font-medium">{item.title}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
