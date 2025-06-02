@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { onboardingService, type OnboardingResponse } from "@/services/api/onboardingService";
 import logo from "@/assests/svg/appLogo.svg";
+import { Check } from "lucide-react";
 
 const OnboardingQuestion = () => {
   const { questionId } = useParams<{ questionId: string }>();
@@ -118,9 +119,9 @@ const OnboardingQuestion = () => {
                     key={index}
                     className={`h-2 flex-1 rounded ${
                       index < currentQuestion
-                        ? "bg-gray-800"
+                        ? "bg-yellow-green"
                         : index === currentQuestion - 1
-                          ? "bg-gray-800"
+                          ? "bg-yellow-green"
                           : "bg-gray-200"
                     }`}
                   />
@@ -142,13 +143,30 @@ const OnboardingQuestion = () => {
                 <button
                   key={option.responseId}
                   onClick={() => setSelectedResponseId(option.responseId)}
-                  className={`w-full p-4 text-left rounded-xl border-2 transition-colors ${
-                    selectedResponseId === option.responseId
-                      ? "border-gray-800 bg-gray-50"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
+                  className={`w-full 
+                    ${
+                      selectedResponseId === option.responseId
+                        ? "border-[3px] border-yellow-green bg-gray-50"
+                        : "border-gray-200"
+                    }
+                    p-4 
+                    text-left 
+                    rounded-[60px] 
+                    border-2 
+                    transition-colors
+                    hover:border-yellow-green
+                    hover:bg-light-yellow-green`}
                 >
-                  {option.responseText}
+                  <div className="flex items-center">
+                    {option.responseText}
+                    {selectedResponseId === option.responseId && (
+                      <Check
+                        color="#000"
+                        size={24}
+                        className="ml-auto bg-yellow-green rounded-full p-1"
+                      />
+                    )}
+                  </div>
                 </button>
               ))}
             </div>
