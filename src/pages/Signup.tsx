@@ -123,9 +123,9 @@ const Signup = () => {
             error={errors.password?.message}
           />
           <PasswordInput
-            id="confirm-password"
+            id="confirmPassword"
             placeholder="Re-enter your password"
-            {...register("confirm-password")}
+            {...register("confirmPassword")}
             error={errors?.["confirm-password"]?.message}
           />
         </div>
