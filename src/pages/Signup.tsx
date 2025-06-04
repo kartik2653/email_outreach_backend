@@ -51,13 +51,11 @@ const Signup = () => {
     try {
       const response = await authService.signupUser(data);
 
-      if (response.success) {
-        toast({
-          title: "Account created successfully!",
-          description: response.message || "Welcome to SpotBoi",
-        });
-        navigate("/onboarding-questions/1");
-      }
+      toast({
+        title: "Account created successfully!",
+        description: response.message || "Welcome to SpotBoi",
+      });
+      navigate("/onboarding-questions/1");
     } catch (error: any) {
       toast({
         title: "Signup failed",
