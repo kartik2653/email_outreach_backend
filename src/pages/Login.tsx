@@ -100,7 +100,7 @@ const Login = () => {
 
   return (
     <AuthLayout
-      title="Welcome back!"
+      title=""
       subtitle="Welcome back!"
       description="Let's get you back to creating scroll-stopping content!"
       carouselSlides={carouselSlides}
@@ -136,10 +136,10 @@ const Login = () => {
 
         <Button
           type="submit"
-          className="w-full bg-black hover:bg-gray-800 text-white py-3 rounded-[1rem] h-12"
+          className="w-full bg-black hover:bg-gray-800 text-white py-3 rounded-standard h-12"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Logging in..." : "LOGIN"}
+          {isSubmitting ? "Logging in..." : "Login"}
         </Button>
       </form>
 

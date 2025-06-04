@@ -18,7 +18,7 @@ const SocialAuthButtons = ({ onGoogleAuth, onLinkedInAuth, mode }: SocialAuthBut
         <Button
           variant="outline"
           onClick={onGoogleAuth}
-          className="flex items-center justify-center space-x-2 rounded-[1rem]"
+          className="flex items-center justify-center space-x-2 rounded-standard"
         >
           <span>Google</span>
         </Button>
@@ -26,7 +26,7 @@ const SocialAuthButtons = ({ onGoogleAuth, onLinkedInAuth, mode }: SocialAuthBut
         <Button
           variant="outline"
           onClick={onLinkedInAuth}
-          className="flex items-center justify-center space-x-2 rounded-[1rem]"
+          className="flex items-center justify-center space-x-2 rounded-standard"
         >
           <LogIn className="w-4 h-4" />
           <span>LinkedIn</span>

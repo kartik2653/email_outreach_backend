@@ -16,7 +16,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
            hover:border-yellow-green
            hover:bg-light-yellow-green
            font-manrope flex h-12 w-full 
-           rounded-[1rem] 
+           rounded-standard
            px-3 
            py-2 
            disabled:opacity-50 

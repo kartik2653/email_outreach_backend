@@ -175,9 +175,9 @@ const OnboardingQuestion = () => {
             <Button
               onClick={handleSubmit}
               disabled={!selectedResponseId || isSubmitting}
-              className="bg-yellow-green hover:bg-lime-500 text-black py-3 px-10 rounded-3xl h-12 font-semibold"
+              className="bg-black text-white py-3 px-10 rounded-3xl h-12 font-semibold"
             >
-              {isSubmitting ? "Submitting..." : "NEXT"}
+              {"Next"}
             </Button>
           </div>
         </div>

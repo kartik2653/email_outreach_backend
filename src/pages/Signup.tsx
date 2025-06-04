@@ -122,14 +122,20 @@ const Signup = () => {
             {...register("password")}
             error={errors.password?.message}
           />
+          <PasswordInput
+            id="confirm-password"
+            placeholder="Re-enter your password"
+            {...register("confirm-password")}
+            error={errors?.["confirm-password"]?.message}
+          />
         </div>
 
         <Button
           type="submit"
-          className="h-12 rounded-[1rem] w-full bg-black hover:bg-gray-800 text-white py-3"
+          className="h-12 rounded-standard w-full bg-black hover:bg-gray-800 text-white py-3"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Creating account..." : "SIGNUP"}
+          {isSubmitting ? "Creating account..." : "Sign Up"}
         </Button>
       </form>
 
