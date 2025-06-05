@@ -1,0 +1,17 @@
+stages:
+  - push_dev
+  - push_test
+  
+push_dev:
+  stage: push_dev
+  only:
+    - dev
+  script:
+    - ssh workverse-backend@$WORKVERSE_EMAIL "cd /home/workverse-backend/server/dev/spotboi-frontend/ && git fetch && git reset --hard origin/dev && npm install --force && npm run build && cp -Rf dist/* /var/www/html/spotboi-frontend/dev"
+
+push_test:
+  stage: push_test
+  only:
+    - test
+  script:
+    - ssh workverse-backend@$WORKVERSE_EMAIL "cd /home/workverse-backend/server/test/spotboi-frontend/ && git fetch && git reset --hard origin/test && npm install --force && npm run build && cp -Rf dist/* /var/www/html/spotboi-frontend/test"
