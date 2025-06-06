@@ -3,7 +3,6 @@ import createLogo from "@/assests/svg/create.svg";
 import calendarLogo from "@/assests/svg/calendar.svg";
 import postPitLogo from "@/assests/svg/postpit.svg";
 import spotplanLogo from "@/assests/svg/spotplan.svg";
-import profileLogo from "@/assests/svg/profile.svg";
 import settingsLogo from "@/assests/svg/settings.svg";
 import { HelpCircle } from "lucide-react";
 import {
@@ -35,11 +34,6 @@ const sidebarItems = [
     icon: postPitLogo,
     id: "drafts",
   },
-  {
-    title: "Settings",
-    icon: settingsLogo,
-    id: "settings",
-  },
 ];
 
 interface DashboardSidebarProps {
@@ -49,35 +43,64 @@ interface DashboardSidebarProps {
 
 const DashboardSidebar = ({ activeItem, onItemSelect }: DashboardSidebarProps) => {
   return (
-    <Sidebar className="w-20 bg-white border-r border-gray-100">
-      <SidebarContent className="flex flex-col items-center py-6 justify-between h-full">
-        <SidebarMenu className="space-y-6">
-          {sidebarItems.map((item) => (
-            <SidebarMenuItem key={item.id} className="flex flex-col items-center">
-              <SidebarMenuButton
-                onClick={() => onItemSelect(item.id)}
-                className={`w-14 h-14 flex flex-col items-center justify-center rounded-xl transition-all hover:bg-gray-50 border-2 ${
-                  activeItem === item.id
-                    ? "bg-yellow-400 border-yellow-400 shadow-md"
-                    : "bg-white border-gray-200 hover:border-gray-300"
-                }`}
-                tooltip={item.title}
-              >
-                <img src={item?.icon} className="w-7 h-7" alt={item.title} />
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
+    <Sidebar className="w-64 bg-white border-r border-gray-100">
+      <SidebarContent className="flex flex-col py-6 h-full">
+        {/* Logo */}
+        <div className="px-6 mb-8">
+          <div className="flex items-center">
+            <span className="text-2xl font-bold text-black">SpotBOI</span>
+            <div className="ml-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+              <span className="text-xs font-bold text-black">AI</span>
+            </div>
+          </div>
+        </div>
 
-        {/* Support at bottom */}
-        <SidebarMenuItem className="flex flex-col items-center">
-          <SidebarMenuButton
-            className="w-14 h-14 flex flex-col items-center justify-center rounded-xl transition-all hover:bg-gray-50 border-2 border-gray-200 hover:border-gray-300"
-            tooltip="Support"
-          >
-            <HelpCircle className="w-7 h-7 text-gray-600" />
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+        {/* Main Menu Items */}
+        <div className="flex-1">
+          <SidebarMenu className="space-y-2 px-4">
+            {sidebarItems.map((item) => (
+              <SidebarMenuItem key={item.id}>
+                <SidebarMenuButton
+                  onClick={() => onItemSelect(item.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all ${
+                    activeItem === item.id
+                      ? "bg-yellow-400 text-black font-medium"
+                      : "text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  <img src={item.icon} className="w-5 h-5" alt={item.title} />
+                  <span className="text-sm">{item.title}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </div>
+
+        {/* Bottom Menu Items */}
+        <div className="px-4 space-y-2">
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() => onItemSelect("settings")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all ${
+                activeItem === "settings"
+                  ? "bg-yellow-400 text-black font-medium"
+                  : "text-gray-700 hover:bg-gray-50"
+              }`}
+            >
+              <img src={settingsLogo} className="w-5 h-5" alt="Settings" />
+              <span className="text-sm">Settings</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all text-gray-700 hover:bg-gray-50"
+            >
+              <HelpCircle className="w-5 h-5" />
+              <span className="text-sm">Support</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </div>
       </SidebarContent>
     </Sidebar>
   );
