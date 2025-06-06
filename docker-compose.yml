@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  frontend-app:
+    build: .
+    container_name: spotboi-frontend
+    ports:
+      - "5002:80"
+    restart: always
+    networks:
+      - spotboi-network  # same network as backend
+
+networks:
+  spotboi-network:
+    driver: bridge
