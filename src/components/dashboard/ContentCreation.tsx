@@ -56,7 +56,7 @@ const ContentCreation = () => {
     resolver: zodResolver(contentCreationSchema),
     defaultValues: {
       prompt: "",
-      selectedTones: ["Authoritative", "Friendly"],
+      selectedTones: [],
       variants: "3",
     },
   });
@@ -101,7 +101,7 @@ const ContentCreation = () => {
   };
 
   return (
-    <div className="flex-1 p-8 max-w-4xl">
+    <div className="flex-1 p-8 max-w-4xl bg-gray-50">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           {/* Step 1: Prompt Input */}
@@ -110,7 +110,7 @@ const ContentCreation = () => {
             name="prompt"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-lg font-medium text-gray-900">
+                <FormLabel className="text-lg font-semibold text-gray-900 mb-4 block">
                   What do you want to post about?
                 </FormLabel>
                 <FormControl>
@@ -118,14 +118,14 @@ const ContentCreation = () => {
                     <Textarea
                       {...field}
                       placeholder="AR is reshaping design in 2025. Explore the latest trends, challenges, and real-world applications in our latest infographic. Stay ahead in the evolving world of design."
-                      className="min-h-[120px] text-gray-600 resize-none border border-gray-200 rounded-lg p-4 pr-32"
+                      className="min-h-[140px] text-gray-700 resize-none border-2 border-gray-200 rounded-xl p-6 pr-36 text-base leading-relaxed bg-white focus:border-yellow-400 focus:ring-0"
                     />
                     <Button
                       type="button"
                       onClick={handleMagicPrompt}
-                      className="absolute bottom-4 right-4 bg-yellow-green hover:bg-yellow-400 text-black font-medium px-4 py-2 rounded-full text-sm"
+                      className="absolute bottom-4 right-4 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-6 py-2 rounded-full text-sm shadow-sm"
                     >
-                      Magic Prompt
+                      ✨ Magic Prompt
                     </Button>
                   </div>
                 </FormControl>
@@ -140,46 +140,56 @@ const ContentCreation = () => {
             name="selectedTones"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-lg font-medium text-gray-900">
-                  Select your Tone .
+                <FormLabel className="text-lg font-semibold text-gray-900 mb-4 block">
+                  Select your Tone
                 </FormLabel>
                 
-                {/* Selected Tones */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {field.value.map((tone) => (
-                    <Badge
-                      key={tone}
-                      variant="secondary"
-                      className="bg-yellow-green text-black px-3 py-1 rounded-full flex items-center gap-2"
-                    >
-                      {tone}
-                      <X 
-                        className="w-3 h-3 cursor-pointer" 
-                        onClick={() => removeTone(tone)}
-                      />
-                    </Badge>
-                  ))}
-                </div>
-
-                {/* Available Tones */}
-                <FormControl>
-                  <div className="flex flex-wrap gap-2">
-                    {toneOptions.map((tone) => (
-                      <Button
+                {/* Selected Tones Display */}
+                {field.value.length > 0 && (
+                  <div className="flex flex-wrap gap-3 mb-6 p-4 bg-yellow-50 rounded-xl border-2 border-yellow-200">
+                    <span className="text-sm font-medium text-gray-700 mr-2">Selected:</span>
+                    {field.value.map((tone) => (
+                      <Badge
                         key={tone}
-                        type="button"
-                        variant="outline"
-                        onClick={() => addTone(tone)}
-                        disabled={field.value.includes(tone) || field.value.length >= 3}
-                        className={`px-4 py-2 rounded-full border transition-colors ${
-                          field.value.includes(tone)
-                            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                            : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                        }`}
+                        variant="secondary"
+                        className="bg-yellow-400 text-black px-4 py-2 rounded-full flex items-center gap-2 font-medium shadow-sm hover:bg-yellow-500 transition-colors"
                       >
                         {tone}
-                      </Button>
+                        <X 
+                          className="w-4 h-4 cursor-pointer hover:text-red-600" 
+                          onClick={() => removeTone(tone)}
+                        />
+                      </Badge>
                     ))}
+                  </div>
+                )}
+
+                {/* Available Tones Grid */}
+                <FormControl>
+                  <div className="grid grid-cols-4 gap-3">
+                    {toneOptions.map((tone) => {
+                      const isSelected = field.value.includes(tone);
+                      const isDisabled = field.value.length >= 3 && !isSelected;
+                      
+                      return (
+                        <Button
+                          key={tone}
+                          type="button"
+                          variant="outline"
+                          onClick={() => isSelected ? removeTone(tone) : addTone(tone)}
+                          disabled={isDisabled}
+                          className={`px-4 py-3 rounded-xl border-2 transition-all font-medium ${
+                            isSelected
+                              ? "bg-yellow-400 border-yellow-400 text-black shadow-md hover:bg-yellow-500"
+                              : isDisabled
+                              ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed"
+                              : "bg-white border-gray-200 text-gray-700 hover:border-yellow-300 hover:bg-yellow-50"
+                          }`}
+                        >
+                          {tone}
+                        </Button>
+                      );
+                    })}
                   </div>
                 </FormControl>
                 <FormMessage />
@@ -193,7 +203,7 @@ const ContentCreation = () => {
             name="variants"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-lg font-medium text-gray-900">
+                <FormLabel className="text-lg font-semibold text-gray-900 mb-4 block">
                   Number of variants
                 </FormLabel>
                 <FormControl>
@@ -204,10 +214,10 @@ const ContentCreation = () => {
                         type="button"
                         variant="outline"
                         onClick={() => field.onChange(option.value)}
-                        className={`px-6 py-3 rounded-full transition-colors ${
+                        className={`px-8 py-4 rounded-xl border-2 transition-all font-semibold text-base ${
                           field.value === option.value
-                            ? "bg-yellow-green text-black border-yellow-green"
-                            : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                            ? "bg-yellow-400 text-black border-yellow-400 shadow-md"
+                            : "bg-white border-gray-200 text-gray-700 hover:border-yellow-300 hover:bg-yellow-50"
                         }`}
                       >
                         {option.label}
@@ -221,12 +231,12 @@ const ContentCreation = () => {
           />
 
           {/* Step 4: Generate Button */}
-          <div className="pt-4">
+          <div className="pt-6">
             <Button
               type="submit"
-              className="px-12 bg-black hover:bg-gray-800 text-white font-medium py-3 rounded-full text-base"
+              className="px-16 bg-black hover:bg-gray-800 text-white font-semibold py-4 rounded-xl text-lg shadow-lg transition-all hover:shadow-xl"
             >
-              Generate
+              Generate Content
             </Button>
           </div>
         </form>

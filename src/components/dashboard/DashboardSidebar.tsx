@@ -50,20 +50,20 @@ interface DashboardSidebarProps {
 const DashboardSidebar = ({ activeItem, onItemSelect }: DashboardSidebarProps) => {
   return (
     <Sidebar className="w-20 bg-white border-r border-gray-100">
-      <SidebarContent className="flex flex-col items-center py-8 justify-between h-full">
-        <SidebarMenu className="space-y-8">
+      <SidebarContent className="flex flex-col items-center py-6 justify-between h-full">
+        <SidebarMenu className="space-y-6">
           {sidebarItems.map((item) => (
             <SidebarMenuItem key={item.id} className="flex flex-col items-center">
               <SidebarMenuButton
                 onClick={() => onItemSelect(item.id)}
-                className={`w-12 h-12 flex flex-col items-center justify-center rounded-2xl transition-all hover:bg-gray-50 ${
+                className={`w-14 h-14 flex flex-col items-center justify-center rounded-xl transition-all hover:bg-gray-50 border-2 ${
                   activeItem === item.id
-                    ? "bg-yellow-green shadow-sm"
-                    : "bg-transparent"
+                    ? "bg-yellow-400 border-yellow-400 shadow-md"
+                    : "bg-white border-gray-200 hover:border-gray-300"
                 }`}
                 tooltip={item.title}
               >
-                <img src={item?.icon} className="w-6 h-6" alt={item.title} />
+                <img src={item?.icon} className="w-7 h-7" alt={item.title} />
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
@@ -72,10 +72,10 @@ const DashboardSidebar = ({ activeItem, onItemSelect }: DashboardSidebarProps) =
         {/* Support at bottom */}
         <SidebarMenuItem className="flex flex-col items-center">
           <SidebarMenuButton
-            className="w-12 h-12 flex flex-col items-center justify-center rounded-2xl transition-all hover:bg-gray-50"
+            className="w-14 h-14 flex flex-col items-center justify-center rounded-xl transition-all hover:bg-gray-50 border-2 border-gray-200 hover:border-gray-300"
             tooltip="Support"
           >
-            <HelpCircle className="w-6 h-6 text-gray-600" />
+            <HelpCircle className="w-7 h-7 text-gray-600" />
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarContent>
