@@ -44,7 +44,7 @@ interface DashboardSidebarProps {
 const DashboardSidebar = ({ activeItem, onItemSelect }: DashboardSidebarProps) => {
   return (
     <Sidebar className="w-64 bg-white border-r border-gray-100">
-      <SidebarContent className="flex flex-col py-6 h-full">
+      <SidebarContent className="flex flex-col py-6 h-full bg-white">
         {/* Logo */}
         <div className="px-6 mb-8">
           <div className="flex items-center">
