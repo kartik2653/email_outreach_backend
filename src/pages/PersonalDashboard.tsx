@@ -1,11 +1,14 @@
+
 import { useState } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import ContentCreation from "@/components/dashboard/ContentCreation";
+import RightSidebar from "@/components/dashboard/RightSidebar";
 
 const PersonalDashboard = () => {
   const [activeSection, setActiveSection] = useState("create");
+  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
 
   const renderContent = () => {
     switch (activeSection) {
@@ -53,11 +56,21 @@ const PersonalDashboard = () => {
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="min-h-screen flex w-full bg-cloud">
+      <div className="min-h-screen flex w-full bg-white">
         <DashboardSidebar activeItem={activeSection} onItemSelect={setActiveSection} />
-        <div className="flex-1 flex flex-col px-48">
-          <DashboardHeader />
-          <div className="bg-white rounded-3xl">{renderContent()}</div>
+        <div className="flex-1 flex flex-col">
+          <DashboardHeader 
+            isRightSidebarOpen={isRightSidebarOpen}
+            onToggleRightSidebar={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
+          />
+          <div className="flex flex-1">
+            <div className="flex-1">
+              {renderContent()}
+            </div>
+            {isRightSidebarOpen && (
+              <RightSidebar onClose={() => setIsRightSidebarOpen(false)} />
+            )}
+          </div>
         </div>
       </div>
     </SidebarProvider>

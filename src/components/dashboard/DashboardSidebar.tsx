@@ -1,10 +1,11 @@
-import { Settings, User } from "lucide-react";
+
 import createLogo from "@/assests/svg/create.svg";
 import calendarLogo from "@/assests/svg/calendar.svg";
 import postPitLogo from "@/assests/svg/postpit.svg";
 import spotplanLogo from "@/assests/svg/spotplan.svg";
 import profileLogo from "@/assests/svg/profile.svg";
 import settingsLogo from "@/assests/svg/settings.svg";
+import { HelpCircle } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,14 +13,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { set } from "date-fns";
 
 const sidebarItems = [
-  {
-    title: "Profile View",
-    icon: profileLogo,
-    id: "profile",
-  },
   {
     title: "Create",
     icon: createLogo,
@@ -31,12 +26,12 @@ const sidebarItems = [
     id: "calendar",
   },
   {
-    title: "Spot Plan",
+    title: "Spotplan",
     icon: spotplanLogo,
     id: "spot-plan",
   },
   {
-    title: "Drafts",
+    title: "Postpit",
     icon: postPitLogo,
     id: "drafts",
   },
@@ -54,26 +49,35 @@ interface DashboardSidebarProps {
 
 const DashboardSidebar = ({ activeItem, onItemSelect }: DashboardSidebarProps) => {
   return (
-    <Sidebar className="w-20 bg-white border-r border-gray-200">
-      <SidebarContent className="flex flex-col items-center py-8">
-        <SidebarMenu className="space-y-6">
+    <Sidebar className="w-20 bg-white border-r border-gray-100">
+      <SidebarContent className="flex flex-col items-center py-8 justify-between h-full">
+        <SidebarMenu className="space-y-8">
           {sidebarItems.map((item) => (
             <SidebarMenuItem key={item.id} className="flex flex-col items-center">
               <SidebarMenuButton
                 onClick={() => onItemSelect(item.id)}
-                className={`w-16 h-16 flex flex-col items-center justify-center rounded-full transition-all ${
+                className={`w-12 h-12 flex flex-col items-center justify-center rounded-2xl transition-all hover:bg-gray-50 ${
                   activeItem === item.id
-                    ? "bg-yellow-green text-black shadow-lg"
-                    : "bg-black text-gray-600 hover:bg-gray-200"
+                    ? "bg-yellow-green shadow-sm"
+                    : "bg-transparent"
                 }`}
                 tooltip={item.title}
               >
-                <img src={item?.icon} />
+                <img src={item?.icon} className="w-6 h-6" alt={item.title} />
               </SidebarMenuButton>
-              <span className="text-xs font-medium">{item.title}</span>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
+
+        {/* Support at bottom */}
+        <SidebarMenuItem className="flex flex-col items-center">
+          <SidebarMenuButton
+            className="w-12 h-12 flex flex-col items-center justify-center rounded-2xl transition-all hover:bg-gray-50"
+            tooltip="Support"
+          >
+            <HelpCircle className="w-6 h-6 text-gray-600" />
+          </SidebarMenuButton>
+        </SidebarMenuItem>
       </SidebarContent>
     </Sidebar>
   );
