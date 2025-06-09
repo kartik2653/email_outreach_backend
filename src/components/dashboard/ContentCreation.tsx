@@ -16,6 +16,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { promptServices } from "@/services/api/prompt";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { postServices } from "@/services/api/post";
 
 const toneOptions = [
@@ -50,6 +51,7 @@ type ContentCreationFormData = z.infer<typeof contentCreationSchema>;
 
 const ContentCreation = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [isEnchanching, setIsEnchancing] = useState(false);
 
   const form = useForm<ContentCreationFormData>({
@@ -90,22 +92,11 @@ const ContentCreation = () => {
   };
 
   const onSubmit = async (data: ContentCreationFormData) => {
-    try {
-      const payload = {
-        promptText: data?.prompt,
-        variantsCount: Number(data?.variants || 1),
-        assetType: "image",
-      };
-
-      const resposne = await postServices.generatePost(payload);
-      debugger;
-    } catch (error) {
-    } finally {
-    }
     console.log("Generate clicked", data);
-    toast({
-      title: "Content Generation Started",
-      description: `Generating ${data.variants} variant(s) with ${data.selectedTones.join(", ")} tone(s)`,
+    
+    // Navigate to generated posts page with form data
+    navigate("/dashboard/generated-posts", {
+      state: { formData: data }
     });
   };
 
