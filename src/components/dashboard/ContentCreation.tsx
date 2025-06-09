@@ -93,10 +93,10 @@ const ContentCreation = () => {
 
   const onSubmit = async (data: ContentCreationFormData) => {
     console.log("Generate clicked", data);
-    
+
     // Navigate to generated posts page with form data
     navigate("/dashboard/generated-posts", {
-      state: { formData: data }
+      state: { formData: data },
     });
   };
 

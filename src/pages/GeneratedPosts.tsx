@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -45,16 +44,19 @@ const GeneratedPosts = () => {
         };
 
         const response = await postServices.generatePost(payload);
-        
+
         // Mock response structure - replace with actual API response structure
-        const mockPosts: GeneratedPost[] = Array.from({ length: Number(formData.variants) }, (_, index) => ({
-          id: `post-${index + 1}`,
-          image: "/lovable-uploads/d5081d4f-31ec-4f96-b0ff-f0572fa0526e.png", // Using the uploaded image as placeholder
-          description: formData.prompt,
-        }));
+        const mockPosts: GeneratedPost[] = Array.from(
+          { length: Number(formData.variants) },
+          (_, index) => ({
+            id: `post-${index + 1}`,
+            image: "/lovable-uploads/d5081d4f-31ec-4f96-b0ff-f0572fa0526e.png",
+            description: formData.prompt,
+          })
+        );
 
         setPosts(mockPosts);
-        
+
         toast({
           title: "Posts Generated Successfully",
           description: `Generated ${formData.variants} post variant(s)`,
@@ -96,18 +98,14 @@ const GeneratedPosts = () => {
                   Choose Post
                 </h1>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {isLoading ? (
-                  renderSkeletons()
-                ) : (
-                  posts.map((post) => (
-                    <PostCard key={post.id} post={post} />
-                  ))
-                )}
+                {isLoading
+                  ? renderSkeletons()
+                  : posts.map((post) => <PostCard key={post.id} post={post} />)}
               </div>
             </div>
-            
+
             {isRightSidebarOpen && <RightSidebar onClose={() => setIsRightSidebarOpen(false)} />}
             {!isRightSidebarOpen && (
               <div

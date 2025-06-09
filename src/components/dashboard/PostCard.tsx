@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Download, ThumbsUp, ThumbsDown, Pencil } from "lucide-react";
 
@@ -39,11 +38,7 @@ const PostCard = ({ post }: PostCardProps) => {
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       {/* Image Container */}
       <div className="relative aspect-video bg-gray-100 rounded-t-xl overflow-hidden">
-        <img
-          src={post.image}
-          alt="Generated post"
-          className="w-full h-full object-cover"
-        />
+        <img src={post.image} alt="Generated post" className="w-full h-full object-cover" />
         {/* Regenerate Icon */}
         <button
           onClick={handleRegenerate}
@@ -69,9 +64,7 @@ const PostCard = ({ post }: PostCardProps) => {
 
       {/* Content */}
       <div className="p-4">
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-          {post.description}
-        </p>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-3">{post.description}</p>
 
         {/* Regenerate Button */}
         <button
