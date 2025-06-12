@@ -29,10 +29,10 @@ const GeneratedPosts = () => {
   const formData = location.state?.formData;
 
   useEffect(() => {
-    if (!formData) {
-      navigate("/dashboard/create");
-      return;
-    }
+    // if (!formData) {
+    //   navigate("/dashboard/create");
+    //   return;
+    // }
 
     const generatePosts = async () => {
       try {
