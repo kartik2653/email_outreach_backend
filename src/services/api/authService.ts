@@ -1,4 +1,3 @@
-import axios from "axios";
 import { LoginFormData, SignupFormData } from "@/schemas/authSchemas";
 import apiClient from "./apiClient";
 

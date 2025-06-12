@@ -20,7 +20,7 @@ const PersonalDashboard = () => {
           />
           <div className="flex flex-1">
             <div className="flex-1">
-              <Outlet /> {/* Renders nested route components */}
+              <Outlet />
             </div>
             {isRightSidebarOpen && <RightSidebar onClose={() => setIsRightSidebarOpen(false)} />}
             {!isRightSidebarOpen && (

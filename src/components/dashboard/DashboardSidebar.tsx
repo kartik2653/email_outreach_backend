@@ -12,22 +12,22 @@ const sidebarItems = [
   {
     title: "Create",
     icon: createLogo,
-    path: "/dashboard/personal/create",
+    path: "/dashboard/create",
   },
   {
     title: "Calendar",
     icon: calendarLogo,
-    path: "/dashboard/personal/calendar",
+    path: "/dashboard/calendar",
   },
   {
     title: "Spotplan",
     icon: spotplanLogo,
-    path: "/dashboard/personal/spot-plan",
+    path: "/dashboard/spot-plan",
   },
   {
     title: "Postpit",
     icon: postPitLogo,
-    path: "/dashboard/personal/drafts",
+    path: "/dashboard/drafts",
   },
 ];
 
@@ -68,7 +68,7 @@ const DashboardSidebar = () => {
         <div className="px-4 space-y-2">
           <SidebarMenuItem className="list-none">
             <NavLink
-              to="/dashboard/personal/settings"
+              to="/dashboard/settings"
               end
               className={({ isActive }) =>
                 `w-full flex items-center gap-3 p-4 rounded-[16px] text-left transition-all ${

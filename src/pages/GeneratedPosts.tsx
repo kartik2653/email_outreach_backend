@@ -30,7 +30,7 @@ const GeneratedPosts = () => {
 
   useEffect(() => {
     if (!formData) {
-      navigate("/dashboard/personal");
+      navigate("/dashboard/create");
       return;
     }
 
@@ -43,7 +43,7 @@ const GeneratedPosts = () => {
           assetType: "image",
         };
 
-        const response = await postServices.generatePost(payload);
+        // const response = await postServices.generatePost(payload);
 
         // Mock response structure - replace with actual API response structure
         const mockPosts: GeneratedPost[] = Array.from(
@@ -83,42 +83,19 @@ const GeneratedPosts = () => {
   };
 
   return (
-    <SidebarProvider defaultOpen={true}>
-      <div className="min-h-screen flex flex-row w-full bg-white">
-        <DashboardSidebar activeItem={activeSection} onItemSelect={() => {}} />
-        <div className="flex-1 flex flex-col h-full">
-          <DashboardHeader
-            isRightSidebarOpen={isRightSidebarOpen}
-            onToggleRightSidebar={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
-          />
-          <div className="flex flex-1">
-            <div className="flex-1 p-8 px-16">
-              <div className="mb-8">
-                <h1 className="text-4xl font-bold text-gray-900 mb-2 font-bricolage-grotesque">
-                  Choose Post
-                </h1>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {isLoading
-                  ? renderSkeletons()
-                  : posts.map((post) => <PostCard key={post.id} post={post} />)}
-              </div>
-            </div>
-
-            {isRightSidebarOpen && <RightSidebar onClose={() => setIsRightSidebarOpen(false)} />}
-            {!isRightSidebarOpen && (
-              <div
-                onClick={() => setIsRightSidebarOpen(true)}
-                className="cursor-pointer w-[32px] h-[40px] bg-gray-100 flex justify-center items-center rounded-tl-md rounded-bl-md"
-              >
-                <img src={arrowLogo} alt="expand" className="rotate-180 w-[6px] h-[12px]" />
-              </div>
-            )}
-          </div>
-        </div>
+    <div className="flex-1 p-8 px-16">
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-gray-900 mb-2 font-bricolage-grotesque">
+          Choose Post
+        </h1>
       </div>
-    </SidebarProvider>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {isLoading
+          ? renderSkeletons()
+          : posts.map((post) => <PostCard key={post.id} post={post} />)}
+      </div>
+    </div>
   );
 };
 
