@@ -75,8 +75,8 @@ const ContentCreation = () => {
         return;
       }
       setIsEnchancing(true);
-      // const response: any = await promptServices.generateMagicPrompt({ promptText: currentPrompt });
-      // form.setValue("prompt", response?.data);
+      const response: any = await promptServices.generateMagicPrompt({ promptText: currentPrompt });
+      form.setValue("prompt", response);
       toast({
         title: "Magic Prompt",
         description: "Your prompt has been enhanced!",
@@ -95,7 +95,7 @@ const ContentCreation = () => {
     console.log("Generate clicked", data);
 
     // Navigate to generated posts page with form data
-    navigate("/dashboard/generated-posts", {
+    navigate("/dashboard/personal/generated-posts", {
       state: { formData: data },
     });
   };

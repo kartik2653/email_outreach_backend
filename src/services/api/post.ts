@@ -3,8 +3,17 @@ import apiClient from "./apiClient";
 export const postServices = {
   generatePost: async (body: any) => {
     try {
-      const resposne = await apiClient.post("/post/create-post", body);
-      return resposne;
+      const resposne: any = await apiClient.post("/post/create-post", body);
+      return resposne.data;
+    } catch (error) {
+      throw new Error(error?.message || "Failed to enchance prompt");
+    }
+  },
+  updatePost: async (data) => {
+    try {
+      const { postId, ...rest } = data;
+      const resposne: any = await apiClient.put(`/post/${postId}`, rest);
+      return resposne.data;
     } catch (error) {
       throw new Error(error?.message || "Failed to enchance prompt");
     }

@@ -2,55 +2,65 @@ import { Button } from "@/components/ui/button";
 import { Download, ThumbsUp, ThumbsDown, Pencil } from "lucide-react";
 import SocialMediaModal from "../SocialMediaModal";
 import { useState } from "react";
+import { Textarea } from "../ui/textarea";
 
 interface PostCardProps {
   post: {
-    id: string;
+    postIndex: number;
+    postId: string;
     image: string;
     description: string;
+    hashtags: string;
+  };
+  postsResponse: {
+    _id: string;
+    assetUrl: string[];
+    captions: string[];
+    hashtags: string[];
+    promptText: string;
+    variantsCount: number;
+    secureAssetUrl: string[];
+    assetType: string;
   };
 }
 
-const PostCard = ({ post }: PostCardProps) => {
+const PostCard = ({ postsResponse, post }: PostCardProps) => {
   const [openModal, setOpenModal] = useState(false);
+  const [caption, setCaption] = useState(`${post.description}\n\n${post.hashtags}`); // Combine description and hashtags with two newlines for gap
   const [defaultModalTabValue, setDefaultModalTabValue] = useState<"content" | "post" | "schedule">(
     "content"
   );
 
   const handleDownload = () => {
-    console.log("Download post:", post.id);
+    console.log("Download post:", post.postId);
   };
 
   const handleLike = () => {
-    console.log("Like post:", post.id);
+    console.log("Like post:", post.postId);
   };
 
   const handleDislike = () => {
-    console.log("Dislike post:", post.id);
+    console.log("Dislike post:", post.postId);
   };
 
   const handleEdit = () => {
     setDefaultModalTabValue("post");
     setOpenModal(true);
-    console.log("Edit post:", post.id);
   };
 
   const handlePost = () => {
     setDefaultModalTabValue("schedule");
     setOpenModal(true);
-    console.log("Post:", post.id);
   };
 
   const handleCaptionRegenerate = () => {
     setDefaultModalTabValue("content");
     setOpenModal(true);
-    console.log("Regenerate post:", post.id);
   };
 
   const handleImageRegenerate = () => {
     setDefaultModalTabValue("post");
     setOpenModal(true);
-    console.log("Regenerate post:", post.id);
   };
 
   return (
@@ -83,13 +93,17 @@ const PostCard = ({ post }: PostCardProps) => {
 
       {/* Content */}
       <div>
-        <div className="border rounded-lg border-gray-200 p-4 my-4">
-          <p className="text-gray-600 text-sm mb-4 line-clamp-3">{post.description}</p>
-
-          {/* Regenerate Button */}
+        <div className="space-y-4 relative my-3">
+          <Textarea
+            id="caption"
+            value={caption}
+            onChange={(e) => setCaption(e.target.value)}
+            className="min-h-32 resize-none border-gray-200 rounded-2xl text-gray-800"
+            placeholder="Write your caption here..."
+          />
           <button
             onClick={handleCaptionRegenerate}
-            className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto"
+            className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute bottom-3 right-3"
           >
             <svg
               width="16"
@@ -148,6 +162,8 @@ const PostCard = ({ post }: PostCardProps) => {
         </div>
       </div>
       <SocialMediaModal
+        postsResponse={postsResponse}
+        post={post}
         isOpen={openModal}
         setIsOpen={setOpenModal}
         defaultTabValue={defaultModalTabValue}

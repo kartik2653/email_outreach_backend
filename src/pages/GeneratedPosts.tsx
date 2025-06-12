@@ -1,27 +1,30 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import RightSidebar from "@/components/dashboard/RightSidebar";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import PostCard from "@/components/dashboard/PostCard";
 import PostCardSkeleton from "@/components/dashboard/PostCardSkeleton";
-import { postServices } from "@/services/api/post";
 import { useToast } from "@/hooks/use-toast";
-import arrowLogo from "@/assests/svg/arrow.svg";
+import LinkedInModal from "@/components/LinkedInModal";
+import { linkedInService } from "@/services/api/linkedinService";
+import { postServices } from "@/services/api/post";
 
 interface GeneratedPost {
-  id: string;
+  postIndex: number;
+  postId: string;
   image: string;
   description: string;
+  hashtags: string;
 }
 
 const GeneratedPosts = () => {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const code = searchParams.get("code");
   const navigate = useNavigate();
   const { toast } = useToast();
   const [activeSection] = useState("create");
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
+  const [openLinkedInModal, setOpenLinkedInModal] = useState(false);
+  const [generatedPostsResponse, setGeneratedPostsResponse] = useState(null);
   const [posts, setPosts] = useState<GeneratedPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -29,11 +32,17 @@ const GeneratedPosts = () => {
   const formData = location.state?.formData;
 
   useEffect(() => {
-    // if (!formData) {
-    //   navigate("/dashboard/create");
-    //   return;
-    // }
+    if (code) {
+      const response = linkedInService.linkedInVerifyCode({
+        code,
+        redirectUri: `${window.location.origin}/dashboard/personal/generated-posts`,
+      });
+      setOpenLinkedInModal(true);
+    }
+  }, [code, navigate]);
 
+  useEffect(() => {
+    if (code) return;
     const generatePosts = async () => {
       try {
         setIsLoading(true);
@@ -44,18 +53,40 @@ const GeneratedPosts = () => {
         };
 
         // const response = await postServices.generatePost(payload);
-
-        // Mock response structure - replace with actual API response structure
-        const mockPosts: GeneratedPost[] = Array.from(
-          { length: Number(formData.variants) },
+        const response = {
+          userId: "6847c409128407240203d327",
+          promptText: "fish in a bowl",
+          variantsCount: 1,
+          captions: ["Just keep swimming in this tiny blue world!"],
+          hashtags: ["#FishLife, #AquariumGoals, #UnderwaterVibes, #PetLove, #MarineMagic"],
+          assetUrl: [
+            "http://res.cloudinary.com/dhvsscmw8/image/upload/v1749727714/cezipzka6tqcshe390ys.png",
+          ],
+          secureAssetUrl: [
+            "https://res.cloudinary.com/dhvsscmw8/image/upload/v1749727714/cezipzka6tqcshe390ys.png",
+          ],
+          assetType: "image",
+          isPublished: false,
+          dateOfPublication: null,
+          assetIndexForPublication: 0,
+          _id: "684ab9e3cbb2725eb6d581b1",
+          createdAt: "2025-06-12T11:28:35.235Z",
+          updatedAt: "2025-06-12T11:28:35.235Z",
+          __v: 0,
+        };
+        setGeneratedPostsResponse(response);
+        const postsInfo: GeneratedPost[] = Array.from(
+          { length: response?.variantsCount },
           (_, index) => ({
-            id: `post-${index + 1}`,
-            image: "/lovable-uploads/d5081d4f-31ec-4f96-b0ff-f0572fa0526e.png",
-            description: formData.prompt,
+            postIndex: index,
+            postId: response?._id || "",
+            image: response?.assetUrl?.[index] || "",
+            description: response.captions[index],
+            hashtags: response.hashtags[index],
+            promptText: response.promptText,
           })
         );
-
-        setPosts(mockPosts);
+        setPosts(postsInfo);
 
         toast({
           title: "Posts Generated Successfully",
@@ -93,8 +124,11 @@ const GeneratedPosts = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading
           ? renderSkeletons()
-          : posts.map((post) => <PostCard key={post.id} post={post} />)}
+          : posts.map((post) => (
+              <PostCard postsResponse={generatedPostsResponse} key={post.postId} post={post} />
+            ))}
       </div>
+      <LinkedInModal code={code} isOpen={openLinkedInModal} setIsOpen={setOpenLinkedInModal} />
     </div>
   );
 };

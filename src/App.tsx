@@ -28,7 +28,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/onboarding-questions/:questionId" element={<OnboardingQuestion />} />
-          <Route path="/dashboard" element={<PersonalDashboard />}>
+          <Route path="/dashboard/personal" element={<PersonalDashboard />}>
             <Route index element={<ContentCreation />} /> {/* Default route */}
             <Route path="create" element={<ContentCreation />} />
             <Route path="generated-posts" element={<GeneratedPosts />} />
@@ -77,8 +77,7 @@ const App = () => (
               }
             />
           </Route>
-          <Route path="/dashboard/professional" element={<ProfessionalDashboard />} />
-          <Route path="/dashboard/agency" element={<AgencyDashboard />} />
+          <Route path="/dashboard/personal/agency" element={<AgencyDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

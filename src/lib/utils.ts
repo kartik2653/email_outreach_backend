@@ -4,3 +4,24 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export const formatToUTC = (
+  date: Date | undefined,
+  time: { hour: number; minute: number; period: string }
+) => {
+  if (!date) return undefined;
+
+  // Create a copy of the selected date
+  const utcDate = new Date(date);
+
+  // Convert hour to 24-hour format based on period (AM/PM)
+  let hours = time.hour;
+  if (time.period === "PM" && hours !== 12) hours += 12;
+  if (time.period === "AM" && hours === 12) hours = 0;
+
+  // Set hours and minutes
+  utcDate.setHours(hours, time.minute, 0, 0);
+
+  // Convert to UTC ISO string with milliseconds and +00:00 offset
+  return utcDate.toISOString();
+};

@@ -12,7 +12,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   PenTool,
   CheckCircle,
-  Globe,
   Zap,
   MessageSquare,
   RefreshCw,
@@ -23,25 +22,54 @@ import {
   ChevronRight,
 } from "lucide-react";
 import LinkedInModal from "./LinkedInModal";
+import { promptServices } from "@/services/api/prompt";
+import { postServices } from "@/services/api/post";
+import { useToast } from "@/hooks/use-toast";
+import { useAuthStore } from "@/store";
+import { formatToUTC } from "@/lib/utils";
 
 export default function SocialMediaModal({
   isOpen,
   setIsOpen,
   defaultTabValue = "content",
+  post,
+  postsResponse,
 }: {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   defaultTabValue?: "content" | "post" | "schedule";
+  post: {
+    postIndex: number;
+    postId: string;
+    image: string;
+    description: string;
+    hashtags: string;
+    promptText?: string;
+  };
+  postsResponse?: {
+    _id: string;
+    assetUrl: string[];
+    captions: string[];
+    hashtags: string[];
+    promptText: string;
+    variantsCount: number;
+    secureAssetUrl: string[];
+    assetType: string;
+  };
 }) {
+  const { toast } = useToast();
+  const [code, setCode] = useState(null);
+  const { description, postId, hashtags: postHashtags, image, postIndex } = post;
   const [openLinkedInModal, setOpenLinkedInModal] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
-  const [selectedTime, setSelectedTime] = useState({ hour: "11", minute: "00", period: "AM" });
-  const [caption, setCaption] = useState(
-    "Augmented Reality is taking over design, and if you're not on top of it, you're already behind. And that's why we've broken down the latest trends, challenges, and real-world examples in one infographic—so you can stay ahead, inspired, and ready to design for the future."
-  );
-  const [hashtags, setHashtags] = useState(
-    "hashtag#AugmentedReality hashtag#ARDesign hashtag#DesignTrends hashtag#FutureOfDesign hashtag#UXDesign hashtag#ARExperience"
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const { linkedInCredentials }: any = useAuthStore();
+  const [selectedTime, setSelectedTime] = useState({
+    hour: new Date().getHours() % 12 || 12,
+    minute: new Date().getMinutes(),
+    period: new Date().getHours() >= 12 ? "PM" : "AM",
+  });
+  const [caption, setCaption] = useState(description);
+  const [hashtags, setHashtags] = useState(postHashtags);
 
   const writingTools = [
     {
@@ -54,7 +82,6 @@ export default function SocialMediaModal({
       label: "Fix spelling & grammar",
       color: "bg-orange-100 text-orange-700 border-orange-200",
     },
-    { icon: Globe, label: "Translate to", color: "bg-blue-100 text-blue-700 border-blue-200" },
     { icon: Zap, label: "Make longer", color: "bg-yellow-100 text-yellow-700 border-yellow-200" },
     {
       icon: MessageSquare,
@@ -76,6 +103,73 @@ export default function SocialMediaModal({
       day: "numeric",
       month: "long",
     });
+  };
+
+  const handleMagicPrompt = async (data: { type: string }) => {
+    const { type } = data;
+    if (type === "caption") {
+      const response: any = await promptServices.generateMagicPrompt({
+        promptText: post?.promptText,
+      });
+      setCaption(response);
+    } else if (data.type === "hashtags") {
+      const response: any = await promptServices.generateHashtags({ promptText: post?.promptText });
+      setHashtags(response);
+    } else if (data.type === "image") {
+      const response: any = await promptServices.regeneratePostVariant({
+        postId,
+        variationIndex: postIndex,
+      });
+      setCaption(response?.captions?.[postIndex] || "");
+      setHashtags(response?.hashtags?.[postIndex] || "");
+    }
+  };
+
+  const handleCaptionEnhance = async (data: { action: string }) => {
+    const { action } = data;
+    const response: any = await promptServices.enhanceCaption({
+      promptText: post?.promptText,
+      actions: [action],
+    });
+    setCaption(response);
+  };
+
+  const handleOnSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Create updated captions array
+    const updatedCaptions = [...(postsResponse?.captions || [])];
+    updatedCaptions[postIndex] = caption;
+
+    // Create updated hashtags array
+    const updatedHashtags = [...(postsResponse?.hashtags || [])];
+    updatedHashtags[postIndex] = hashtags;
+
+    // Create updated image array
+    const updatedImages = [...(postsResponse?.assetUrl || [])];
+    updatedImages[postIndex] = image;
+    const updatedSecureImages = [...(postsResponse?.secureAssetUrl || [])];
+    updatedSecureImages[postIndex] = image;
+
+    const dateOfPublication = formatToUTC(selectedDate, selectedTime);
+
+    const formData = {
+      postId: postId,
+      captions: updatedCaptions,
+      hashtags: updatedHashtags,
+      assetUrl: updatedImages,
+      secureAssetUrl: updatedSecureImages,
+      dateOfPublication,
+    };
+
+    try {
+      const response = await postServices.updatePost(formData);
+      toast({
+        title: "Post Updated Successfully",
+      });
+    } catch (error) {
+      console.error("Error updating post:", error);
+    }
   };
 
   return (
@@ -104,11 +198,11 @@ export default function SocialMediaModal({
               </TabsTrigger>
             </TabsList>
 
-            <div className="p-6">
+            <form onSubmit={handleOnSubmit} className="p-6">
               <TabsContent value="content" className="space-y-6 mt-0">
                 <div>
                   <Label htmlFor="caption" className="text-base font-medium mb-3 block">
-                    caption
+                    Caption
                   </Label>
                   <div className="space-y-4 relative">
                     <Textarea
@@ -118,7 +212,11 @@ export default function SocialMediaModal({
                       className="min-h-32 resize-none border-gray-200 rounded-2xl text-gray-400"
                       placeholder="Write your caption here..."
                     />
-                    <Button className="bg-lime-400 hover:bg-lime-500 text-black font-medium absolute bottom-4 right-4">
+                    <Button
+                      type="button"
+                      onClick={() => handleMagicPrompt({ type: "caption" })}
+                      className="bg-lime-400 hover:bg-lime-500 text-black font-medium absolute bottom-4 right-4"
+                    >
                       Magic Prompt
                     </Button>
                   </div>
@@ -127,6 +225,7 @@ export default function SocialMediaModal({
                 <div className="flex flex-wrap gap-2">
                   {writingTools.map((tool, index) => (
                     <Badge
+                      onClick={() => handleCaptionEnhance({ action: tool.label.toLowerCase() })}
                       key={index}
                       variant="outline"
                       className={`${tool.color} cursor-pointer hover:opacity-80 px-3 py-1`}
@@ -142,7 +241,10 @@ export default function SocialMediaModal({
                     <Label htmlFor="hashtags" className="text-base font-medium">
                       Hashtag
                     </Label>
-                    <RefreshCw className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" />
+                    <RefreshCw
+                      onClick={() => handleMagicPrompt({ type: "hashtags" })}
+                      className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600"
+                    />
                   </div>
                   <Textarea
                     id="hashtags"
@@ -153,52 +255,42 @@ export default function SocialMediaModal({
                   />
                 </div>
 
-                <Button className="bg-black text-white hover:bg-gray-800 font-medium rounded-full">
+                <Button
+                  type="submit"
+                  className="bg-black text-white hover:bg-gray-800 font-medium rounded-full"
+                >
                   Save changes
                 </Button>
               </TabsContent>
 
               <TabsContent value="post" className="space-y-6 mt-0">
                 <div className="flex gap-4">
-                  <div className="flex-1">
+                  <div className="flex-1 relative">
                     <div className="bg-black rounded-lg overflow-hidden aspect-square relative">
-                      <img
-                        src="/placeholder.svg?height=400&width=400"
-                        alt="AR Trends Preview"
-                        className="w-full h-full object-cover"
+                      <img src={image} alt="Post Preview" className="w-full h-full object-cover" />
+                      <RefreshCw
+                        onClick={() => handleMagicPrompt({ type: "image" })}
+                        className="w-6 h-6 text-gray-400 cursor-pointer hover:text-gray-600 absolute top-3 right-3 bg-white rounded-full p-1"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                      <div className="absolute bottom-4 left-4 text-white">
-                        <div className="text-sm font-medium mb-1">Top AR Trends & Challenges</div>
-                        <div className="text-xs opacity-80">Every Designer Should Know</div>
-                      </div>
                     </div>
                   </div>
-                  <div className="w-32 space-y-2">
-                    {[1, 2, 3].map((i) => (
-                      <div
-                        key={i}
-                        className="bg-black rounded aspect-square relative overflow-hidden"
-                      >
-                        <img
-                          src="/placeholder.svg?height=100&width=100"
-                          alt={`Preview ${i}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    ))}
-                    <Button variant="outline" size="icon" className="w-full aspect-square">
-                      <RefreshCw className="w-4 h-4" />
-                    </Button>
+                  <div className="flex-1 relative">
+                    <textarea
+                      className="w-full h-full p-4 border border-gray-200 text-sm rounded-2xl text-gray-400"
+                      placeholder="Enter your caption..."
+                      value={caption}
+                      onChange={(e) => setCaption(e.target.value)}
+                    />
+                    {/* <RefreshCw
+                      onClick={() => handleMagicPrompt({ type: "caption" })}
+                      className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600 absolute top-3 right-6"
+                    /> */}
                   </div>
                 </div>
-
-                <div className="flex items-start gap-3">
-                  <RefreshCw className="w-4 h-4 text-gray-400 mt-1 cursor-pointer hover:text-gray-600" />
-                  <p className="text-sm text-gray-600 leading-relaxed">{caption}</p>
-                </div>
-
-                <Button className="bg-black text-white hover:bg-gray-800 font-medium rounded-full">
+                <Button
+                  type="submit"
+                  className="bg-black text-white hover:bg-gray-800 font-medium rounded-full"
+                >
                   Save changes
                 </Button>
               </TabsContent>
@@ -220,11 +312,11 @@ export default function SocialMediaModal({
                 <div className="flex gap-6">
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-4">
-                      <Button variant="ghost" size="icon">
+                      <Button variant="default" size="sm">
                         <ChevronLeft className="w-4 h-4" />
                       </Button>
-                      <h3 className="font-medium">May, 2025</h3>
-                      <Button variant="ghost" size="icon">
+                      <h3 className="font-medium">June, 2025</h3>
+                      <Button variant="default" size="sm">
                         <ChevronRight className="w-4 h-4" />
                       </Button>
                     </div>
@@ -245,7 +337,7 @@ export default function SocialMediaModal({
                           <Input
                             value={selectedTime.hour}
                             onChange={(e) =>
-                              setSelectedTime((prev) => ({ ...prev, hour: e.target.value }))
+                              setSelectedTime((prev) => ({ ...prev, hour: Number(e.target.value) }))
                             }
                             className="text-center"
                           />
@@ -255,7 +347,10 @@ export default function SocialMediaModal({
                           <Input
                             value={selectedTime.minute}
                             onChange={(e) =>
-                              setSelectedTime((prev) => ({ ...prev, minute: e.target.value }))
+                              setSelectedTime((prev) => ({
+                                ...prev,
+                                minute: Number(e.target.value),
+                              }))
                             }
                             className="text-center"
                           />
@@ -282,17 +377,23 @@ export default function SocialMediaModal({
                 </div>
 
                 <Button
-                  onClick={() => setOpenLinkedInModal(true)}
+                  type={linkedInCredentials?.isAccessProvided ? "submit" : "button"}
+                  onClick={() => {
+                    if (linkedInCredentials?.isAccessProvided) {
+                      setCode("true");
+                    }
+                    setOpenLinkedInModal(true);
+                  }}
                   className="bg-black text-white hover:bg-gray-800 font-medium rounded-full"
                 >
                   Save & schedule
                 </Button>
               </TabsContent>
-            </div>
+            </form>
           </Tabs>
         </div>
       </DialogContent>
-      <LinkedInModal isOpen={openLinkedInModal} setIsOpen={setOpenLinkedInModal} />
+      <LinkedInModal code={code} isOpen={openLinkedInModal} setIsOpen={setOpenLinkedInModal} />
     </Dialog>
   );
 }

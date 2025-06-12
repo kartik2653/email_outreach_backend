@@ -12,22 +12,22 @@ const sidebarItems = [
   {
     title: "Create",
     icon: createLogo,
-    path: "/dashboard/create",
+    path: "/dashboard/personal/create",
   },
   {
     title: "Calendar",
     icon: calendarLogo,
-    path: "/dashboard/calendar",
+    path: "/dashboard/personal/calendar",
   },
   {
     title: "Spotplan",
     icon: spotplanLogo,
-    path: "/dashboard/spot-plan",
+    path: "/dashboard/personal/spot-plan",
   },
   {
     title: "Postpit",
     icon: postPitLogo,
-    path: "/dashboard/drafts",
+    path: "/dashboard/personal/drafts",
   },
 ];
 
