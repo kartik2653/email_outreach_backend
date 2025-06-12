@@ -73,21 +73,7 @@ const PostCard = ({ postsResponse, post }: PostCardProps) => {
           onClick={handleImageRegenerate}
           className="absolute bottom-3 right-3 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center hover:bg-white transition-colors"
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-            <path d="M21 3v5h-5" />
-            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-            <path d="M3 21v-5h5" />
-          </svg>
+          <img src="/src/assests/svg/anticlockwiseArrow.svg" alt="" />
         </button>
       </div>
 
@@ -105,21 +91,7 @@ const PostCard = ({ postsResponse, post }: PostCardProps) => {
             onClick={handleCaptionRegenerate}
             className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute bottom-3 right-3"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-              <path d="M21 3v5h-5" />
-              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-              <path d="M3 21v-5h5" />
-            </svg>
+            <img src="/src/assests/svg/anticlockwiseArrow.svg" alt="" />
           </button>
         </div>
         {/* Action Buttons */}
@@ -127,7 +99,7 @@ const PostCard = ({ postsResponse, post }: PostCardProps) => {
           {/* Primary Post Button */}
           <Button
             onClick={handlePost}
-            className="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-full font-medium"
+            className="bg-black hover:bg-gray-800 text-white w-[76px] h-[35px] text-[18px] px-6 py-2 rounded-full font-medium"
           >
             Post
           </Button>

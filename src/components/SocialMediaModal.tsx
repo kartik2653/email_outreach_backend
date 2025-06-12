@@ -73,26 +73,26 @@ export default function SocialMediaModal({
 
   const writingTools = [
     {
-      icon: PenTool,
-      label: "Improve Writing",
-      color: "bg-yellow-100 text-yellow-700 border-yellow-200",
+      label: "✍️ Improve Writing",
+      color: "bg-light-green text-dark-charcoal",
+      font: "Manrope",
     },
     {
-      icon: CheckCircle,
-      label: "Fix spelling & grammar",
-      color: "bg-orange-100 text-orange-700 border-orange-200",
+      label: "🫰 Fix spelling & grammar",
+      color: "bbg-light-green text-dark-charcoal",
+      font: "Manrope",
     },
-    { icon: Zap, label: "Make longer", color: "bg-yellow-100 text-yellow-700 border-yellow-200" },
+    { label: "✍️ Make longer", color: "bg-light-green text-dark-charcoal", font: "Manrope" },
     {
-      icon: MessageSquare,
-      label: "Make Shorter",
-      color: "bg-yellow-100 text-yellow-700 border-yellow-200",
+      label: "✍️ Make Shorter",
+      color: "bg-light-green text-dark-charcoal",
+      font: "Manrope",
     },
-    { icon: RefreshCw, label: "Change tone", color: "bg-blue-100 text-blue-700 border-blue-200" },
+    { label: "🗣️ Change tone", color: "bg-light-green text-dark-charcoal", font: "Manrope" },
     {
-      icon: Target,
-      label: "Simplify Language",
-      color: "bg-blue-100 text-blue-700 border-blue-200",
+      label: "🔤 Simplify Language ",
+      color: "bbg-light-green text-dark-charcoalh",
+      font: "Manrope",
     },
   ];
 
@@ -180,19 +180,23 @@ export default function SocialMediaModal({
             <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-transparent h-auto p-0">
               <TabsTrigger
                 value="content"
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent text-[20px] font-bricolage-grotesque text-dark-charcoal"
               >
                 Content
               </TabsTrigger>
               <TabsTrigger
                 value="post"
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent text-[20px]"
+                font-bricolage-grotesque
+                text-dark-charcoal
               >
                 Post
               </TabsTrigger>
               <TabsTrigger
                 value="schedule"
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent text-[20px]"
+                font-bricolage-grotesque
+                text-dark-charcoal
               >
                 Schedule
               </TabsTrigger>
@@ -201,7 +205,10 @@ export default function SocialMediaModal({
             <form onSubmit={handleOnSubmit} className="p-6">
               <TabsContent value="content" className="space-y-6 mt-0">
                 <div>
-                  <Label htmlFor="caption" className="text-base font-medium mb-3 block">
+                  <Label
+                    htmlFor="caption"
+                    className="text-base font-medium mb-3 block text-dark-charcoal font-manrope text-standard"
+                  >
                     Caption
                   </Label>
                   <div className="space-y-4 relative">
@@ -209,13 +216,13 @@ export default function SocialMediaModal({
                       id="caption"
                       value={caption}
                       onChange={(e) => setCaption(e.target.value)}
-                      className="min-h-32 resize-none border-gray-200 rounded-2xl text-gray-400"
+                      className="min-h-32 resize-none border-base-grey-300 rounded-2xl text-base-grey-600 font-manrope text-standard"
                       placeholder="Write your caption here..."
                     />
                     <Button
                       type="button"
                       onClick={() => handleMagicPrompt({ type: "caption" })}
-                      className="bg-lime-400 hover:bg-lime-500 text-black font-medium absolute bottom-4 right-4"
+                      className="bg-yellow-green hover:bg-light-yellow-green text-[14px] font-manrope text-black font-medium absolute bottom-4 right-4"
                     >
                       Magic Prompt
                     </Button>
@@ -230,7 +237,6 @@ export default function SocialMediaModal({
                       variant="outline"
                       className={`${tool.color} cursor-pointer hover:opacity-80 px-3 py-1`}
                     >
-                      <tool.icon className="w-3 h-3 mr-1" />
                       {tool.label}
                     </Badge>
                   ))}
@@ -238,7 +244,10 @@ export default function SocialMediaModal({
 
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <Label htmlFor="hashtags" className="text-base font-medium">
+                    <Label
+                      htmlFor="hashtags"
+                      className="text-base font-medium font-manrope text-standard text-dark-charcoal-500"
+                    >
                       Hashtag
                     </Label>
                     <RefreshCw
@@ -250,14 +259,14 @@ export default function SocialMediaModal({
                     id="hashtags"
                     value={hashtags}
                     onChange={(e) => setHashtags(e.target.value)}
-                    className="min-h-20 resize-none border-gray-200 text-sm rounded-2xl text-gray-400"
+                    className="min-h-20 resize-none border-base-grey-300 text-sm rounded-2xl font-manrope text-base-grey-600 text-standard "
                     placeholder="Add your hashtags..."
                   />
                 </div>
 
                 <Button
                   type="submit"
-                  className="bg-black text-white hover:bg-gray-800 font-medium rounded-full"
+                  className="bg-black text-white font-manrope text-standard w-standard h-standard hover:bg-gray-800 font-medium rounded-full"
                 >
                   Save changes
                 </Button>
@@ -276,7 +285,7 @@ export default function SocialMediaModal({
                   </div>
                   <div className="flex-1 relative">
                     <textarea
-                      className="w-full h-full p-4 border border-gray-200 text-sm rounded-2xl text-gray-400"
+                      className="w-[334px] h-[244px] p-4 border border-bae-gray-300 text-sm rounded-2xl text-base-grey-600"
                       placeholder="Enter your caption..."
                       value={caption}
                       onChange={(e) => setCaption(e.target.value)}
@@ -289,7 +298,7 @@ export default function SocialMediaModal({
                 </div>
                 <Button
                   type="submit"
-                  className="bg-black text-white hover:bg-gray-800 font-medium rounded-full"
+                  className="bg-black text-white font-manrope text-standard w-standard h-standard hover:bg-gray-800 font-medium rounded-full"
                 >
                   Save changes
                 </Button>
@@ -312,11 +321,11 @@ export default function SocialMediaModal({
                 <div className="flex gap-6">
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-4">
-                      <Button variant="default" size="sm">
+                      <Button variant="default" size="sm" className="bg-yellow-green rounded-xl">
                         <ChevronLeft className="w-4 h-4" />
                       </Button>
-                      <h3 className="font-medium">June, 2025</h3>
-                      <Button variant="default" size="sm">
+                      <h3 className="font-standard font">June, 2025</h3>
+                      <Button variant="default" size="sm" className="bg-yellow-green rounded-xl">
                         <ChevronRight className="w-4 h-4" />
                       </Button>
                     </div>
@@ -329,7 +338,7 @@ export default function SocialMediaModal({
                   </div>
 
                   <div className="w-48">
-                    <h4 className="font-medium mb-4">Enter Time</h4>
+                    <h4 className="font-medium mb-4 text-standard font-manrope">Enter Time</h4>
                     <div className="space-y-4">
                       <div className="flex gap-2">
                         <div className="flex-1">
@@ -343,7 +352,7 @@ export default function SocialMediaModal({
                           />
                         </div>
                         <div className="flex-1">
-                          <Label className="text-xs text-gray-500">Minute</Label>
+                          <Label className="text-xs text-dark-charcoal">Minute</Label>
                           <Input
                             value={selectedTime.minute}
                             onChange={(e) =>
@@ -360,7 +369,7 @@ export default function SocialMediaModal({
                           <Button
                             variant="outline"
                             size="sm"
-                            className="w-full bg-lime-400 text-black hover:bg-lime-500"
+                            className="w-full bg-yellow-green text-dark-charcoal text-[10px] font-bricolage-grotesque hover:bg-lime-500"
                             onClick={() =>
                               setSelectedTime((prev) => ({
                                 ...prev,
@@ -384,7 +393,7 @@ export default function SocialMediaModal({
                     }
                     setOpenLinkedInModal(true);
                   }}
-                  className="bg-black text-white hover:bg-gray-800 font-medium rounded-full"
+                  className="bg-black text-white hover:bg-gray-800 font-medium rounded-full w-standard h-standard font-manrope text-standard"
                 >
                   Save & schedule
                 </Button>

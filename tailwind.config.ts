@@ -23,10 +23,24 @@ export default {
         manrope: ["Manrope", "sans-serif"],
         sans: ["Manrope", "sans-serif"],
       },
+      width:{
+        "standard": "160px",
+      },
+      height:{
+        "standard": "54px",
+      },
+      fontSize:{
+        "standard": "16px"
+      },
       colors: {
         "light-gray":"#FAFAFA",
         "yellow-green":'#D3F26B',
         "light-yellow-green": '#EDFAC4',
+        "light-green": '#F6FCE1',
+        "dark-charcoal": '#858585',
+        "dark-charcoal-500": '#333333',
+        "base-grey-600": '#B7B7B7',
+        "base-grey-300": '#EFEFEF',
         "primary-white":"#ffffff",
         cloud: '#F2F4F8',
         border: "hsl(var(--border))",

@@ -67,7 +67,8 @@ const OnboardingQuestion = () => {
 
         // Use first 3 response IDs for dashboard routing, fallback to personal
         const dashboardRoute =
-          dashboardRoutes[selectedResponseId as keyof typeof dashboardRoutes] || "/dashboard/personal";
+          dashboardRoutes[selectedResponseId as keyof typeof dashboardRoutes] ||
+          "/dashboard/personal";
         navigate(dashboardRoute);
       }
     } catch (error: any) {

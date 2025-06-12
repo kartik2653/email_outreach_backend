@@ -115,12 +115,6 @@ const GeneratedPosts = () => {
 
   return (
     <div className="flex-1 p-8 px-16">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2 font-bricolage-grotesque">
-          Choose Post
-        </h1>
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading
           ? renderSkeletons()
