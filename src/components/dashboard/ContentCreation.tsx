@@ -75,8 +75,8 @@ const ContentCreation = () => {
         return;
       }
       setIsEnchancing(true);
-      const response: any = await promptServices.generateMagicPrompt({ promptText: currentPrompt });
-      form.setValue("prompt", response?.data);
+      // const response: any = await promptServices.generateMagicPrompt({ promptText: currentPrompt });
+      // form.setValue("prompt", response?.data);
       toast({
         title: "Magic Prompt",
         description: "Your prompt has been enhanced!",

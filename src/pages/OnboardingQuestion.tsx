@@ -60,15 +60,14 @@ const OnboardingQuestion = () => {
       } else {
         // For the 4th question, redirect to appropriate dashboard based on selection
         const dashboardRoutes = {
-          1: "/dashboard/personal",
+          1: "/dashboard/create",
           2: "/dashboard/professional",
           3: "/dashboard/agency",
         };
 
         // Use first 3 response IDs for dashboard routing, fallback to personal
         const dashboardRoute =
-          dashboardRoutes[selectedResponseId as keyof typeof dashboardRoutes] ||
-          "/dashboard/personal";
+          dashboardRoutes[selectedResponseId as keyof typeof dashboardRoutes] || "/dashboard";
         navigate(dashboardRoute);
       }
     } catch (error: any) {

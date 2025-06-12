@@ -15,9 +15,11 @@ import AuthLayout from "@/components/auth/AuthLayout";
 import PasswordInput from "@/components/auth/PasswordInput";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 import AuthLink from "@/components/auth/AuthLink";
+import { useAuthStore } from "@/store";
 
 const Login = () => {
   const { toast } = useToast();
+  const { setAuthData } = useAuthStore();
   const navigate = useNavigate();
 
   const {
@@ -55,13 +57,14 @@ const Login = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await authService.loginUser(data);
+      setAuthData(response);
       toast({
         title: "Login successful!",
         description: response.message || "Welcome back to SpotBoi",
       });
       // Redirect to onboarding flow instead of home
       navigate("/onboarding-questions/1");
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: "Login failed",
         description: error.message || "Please check your credentials and try again",
@@ -89,7 +92,7 @@ const Login = () => {
         });
         navigate("/");
       }
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: `${provider} login failed`,
         description: error.message || `${provider} authentication failed`,
