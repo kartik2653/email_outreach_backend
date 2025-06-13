@@ -7,6 +7,7 @@ import { useAuthStore } from "@/store";
 import { linkedInService } from "@/services/api/linkedinService";
 import { useEffect } from "react";
 import { Check } from "lucide-react";
+import modalBgIcon from "@/assests/svg/modalbg.svg";
 
 export default function LinkedInModal({
   isOpen,
@@ -37,18 +38,24 @@ export default function LinkedInModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="max-w-md p-0 bg-yellow-green border-none">
-        <div className="relative p-8">
+      <DialogContent
+        style={{
+          backgroundImage: `url("${modalBgIcon}")`,
+          backgroundPosition: "center",
+        }}
+        className="p-0 border-none w-[696px] h-[476px] rounded-standard bg-yellow-green"
+      >
+        <div className="relative flex flex-col items-center justify-center">
           <div className={`text-center ${code ? "" : "mb-8"}`}>
             {code && (
               <div className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-4">
                 <Check />
               </div>
             )}
-            <h2 className="text-2xl font-bold text-black mb-2">
+            <h2 className="text-3xl font-bold text-black mb-2 font-bricolage-grotesque">
               {code ? "Scheduled!" : "Link your LinkedIn now !"}
             </h2>
-            <p className="text-black/80 text-sm leading-relaxed">
+            <p className="text-black/80 text-sm leading-relaxed font-manrope">
               {code ? (
                 "Set it and forget it. I’ll take it from here."
               ) : (
@@ -66,7 +73,7 @@ export default function LinkedInModal({
             <>
               <Button
                 onClick={handleLinkAccount}
-                className="w-full h-12 bg-black text-white hover:bg-gray-800 rounded-full font-medium mb-4"
+                className="px-[150px] h-12 bg-black text-white hover:bg-gray-800 rounded-full font-medium mb-4"
               >
                 Link Account
               </Button>
