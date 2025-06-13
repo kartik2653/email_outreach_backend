@@ -25,13 +25,30 @@ export default {
       },
       width:{
         "standard": "160px",
+        "334": "334px",
+        "348": "348px",
+        "76": "76px",
+        "35": "35px",
+        "28": "28px",
+        "339": "339px",
+        "223": "223px",
+        "696": "696px",
       },
       height:{
+        "28": "28px",
+        "38": "38px",
         "standard": "54px",
+        "334": "334px",
+        "314": "314px",
+        "348": "348px",
+        "76": "76px",
+        "35": "35px",
+        "172": "172px",
       },
       fontSize:{
         "standard": "16px"
       },
+      
       colors: {
         "light-gray":"#FAFAFA",
         "yellow-green":'#D3F26B',
@@ -40,8 +57,11 @@ export default {
         "dark-charcoal": '#858585',
         "dark-charcoal-500": '#333333',
         "base-grey-600": '#B7B7B7',
+        "base-grey-200": '#F5F5F5',
         "base-grey-300": '#EFEFEF',
         "primary-white":"#ffffff",
+        "green-400":"#DCF589",
+        "little-black": "#21272A",
         cloud: '#F2F4F8',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
