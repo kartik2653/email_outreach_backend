@@ -18,6 +18,7 @@ import { promptServices } from "@/services/api/prompt";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { postServices } from "@/services/api/post";
+import { ThemeLoader } from "../ui/loader";
 
 const toneOptions = [
   "Inspirational",
@@ -138,7 +139,14 @@ const ContentCreation = () => {
                       onClick={isEnchanching ? () => {} : handleMagicPrompt}
                       className="absolute bottom-4 right-4 bg-yellow-green hover:bg-yellow-green text-black font-semibold px-6 py-2 rounded-full text-sm shadow-sm"
                     >
-                      {isEnchanching ? "Enchancing..." : "Magic Prompt"}
+                      {isEnchanching ? (
+                        <div className="flex items-center space-x-2">
+                          <ThemeLoader size={16} />
+                          <span>Enhancing...</span>
+                        </div>
+                      ) : (
+                        "Magic Prompt"
+                      )}
                     </Button>
                   </div>
                 </FormControl>
