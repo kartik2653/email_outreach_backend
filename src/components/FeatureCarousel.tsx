@@ -36,7 +36,12 @@ const FeatureCarousel = () => {
           }`}
         >
           <div className="h-full flex flex-col justify-center items-center text-center space-y-8 ">
-            <img src={slide} alt={`Slide ${index + 1}`} className="w-auto h-full rounded-lg" />
+            <img
+              src={slide}
+              alt={`Slide ${index + 1}`}
+              className="w-auto h-full rounded-lg"
+              loading="lazy"
+            />
           </div>
         </div>
       ))}
