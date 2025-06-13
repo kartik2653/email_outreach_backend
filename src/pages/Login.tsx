@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,11 +16,13 @@ import PasswordInput from "@/components/auth/PasswordInput";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 import AuthLink from "@/components/auth/AuthLink";
 import { useAuthStore } from "@/store";
+import { ThemeLoader } from "@/components/ui/loader";
 
 const Login = () => {
   const { toast } = useToast();
-  const { setAuthData } = useAuthStore();
+  const { setAuthData, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   const {
     register,
@@ -29,6 +31,32 @@ const Login = () => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
+
+  // Check for existing authentication on component mount
+  useEffect(() => {
+    const checkExistingAuth = () => {
+      const accessToken = localStorage.getItem("accessToken");
+      
+      if (accessToken && isAuthenticated()) {
+        // User is already logged in, redirect to dashboard
+        navigate("/dashboard/personal", { replace: true });
+      } else {
+        // No valid auth, show login form
+        setIsCheckingAuth(false);
+      }
+    };
+
+    checkExistingAuth();
+  }, [navigate, isAuthenticated]);
+
+  // Show loader while checking authentication
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <ThemeLoader size={32} text="Checking authentication..." />
+      </div>
+    );
+  }
 
   const carouselSlides = [
     {
@@ -142,7 +170,14 @@ const Login = () => {
           className="w-full bg-black hover:bg-gray-800 text-white py-3 rounded-standard h-12"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Logging in..." : "Login"}
+          {isSubmitting ? (
+            <div className="flex items-center space-x-2">
+              <ThemeLoader size={16} />
+              <span>Logging in...</span>
+            </div>
+          ) : (
+            "Login"
+          )}
         </Button>
       </form>
 
