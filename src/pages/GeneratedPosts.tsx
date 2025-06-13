@@ -52,28 +52,28 @@ const GeneratedPosts = () => {
           assetType: "image",
         };
 
-        // const response = await postServices.generatePost(payload);
-        const response = {
-          userId: "6847c409128407240203d327",
-          promptText: "fish in a bowl",
-          variantsCount: 1,
-          captions: ["Just keep swimming in this tiny blue world!"],
-          hashtags: ["#FishLife, #AquariumGoals, #UnderwaterVibes, #PetLove, #MarineMagic"],
-          assetUrl: [
-            "http://res.cloudinary.com/dhvsscmw8/image/upload/v1749727714/cezipzka6tqcshe390ys.png",
-          ],
-          secureAssetUrl: [
-            "https://res.cloudinary.com/dhvsscmw8/image/upload/v1749727714/cezipzka6tqcshe390ys.png",
-          ],
-          assetType: "image",
-          isPublished: false,
-          dateOfPublication: null,
-          assetIndexForPublication: 0,
-          _id: "684ab9e3cbb2725eb6d581b1",
-          createdAt: "2025-06-12T11:28:35.235Z",
-          updatedAt: "2025-06-12T11:28:35.235Z",
-          __v: 0,
-        };
+        const response = await postServices.generatePost(payload);
+        // const response = {
+        //   userId: "6847c409128407240203d327",
+        //   promptText: "fish in a bowl",
+        //   variantsCount: 1,
+        //   captions: ["Just keep swimming in this tiny blue world!"],
+        //   hashtags: ["#FishLife, #AquariumGoals, #UnderwaterVibes, #PetLove, #MarineMagic"],
+        //   assetUrl: [
+        //     "http://res.cloudinary.com/dhvsscmw8/image/upload/v1749727714/cezipzka6tqcshe390ys.png",
+        //   ],
+        //   secureAssetUrl: [
+        //     "https://res.cloudinary.com/dhvsscmw8/image/upload/v1749727714/cezipzka6tqcshe390ys.png",
+        //   ],
+        //   assetType: "image",
+        //   isPublished: false,
+        //   dateOfPublication: null,
+        //   assetIndexForPublication: 0,
+        //   _id: "684ab9e3cbb2725eb6d581b1",
+        //   createdAt: "2025-06-12T11:28:35.235Z",
+        //   updatedAt: "2025-06-12T11:28:35.235Z",
+        //   __v: 0,
+        // };
         setGeneratedPostsResponse(response);
         const postsInfo: GeneratedPost[] = Array.from(
           { length: response?.variantsCount },
