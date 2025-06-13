@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { onboardingService, type OnboardingResponse } from "@/services/api/onboardingService";
 import logo from "@/assests/svg/appLogo.svg";
 import { Check } from "lucide-react";
+import { ThemeLoader } from "@/components/ui/loader";
 
 const OnboardingQuestion = () => {
   const { questionId } = useParams<{ questionId: string }>();
@@ -84,16 +86,19 @@ const OnboardingQuestion = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <ThemeLoader size={32} text="Loading question..." />
       </div>
     );
   }
 
   if (!questionData) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">Question not found</div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Question not found</h2>
+          <p className="text-gray-600">The requested question could not be loaded.</p>
+        </div>
       </div>
     );
   }
@@ -177,7 +182,14 @@ const OnboardingQuestion = () => {
               disabled={!selectedResponseId || isSubmitting}
               className="bg-black text-white py-3 px-10 rounded-3xl h-12 font-semibold"
             >
-              {"Next"}
+              {isSubmitting ? (
+                <div className="flex items-center space-x-2">
+                  <ThemeLoader size={16} />
+                  <span>Submitting...</span>
+                </div>
+              ) : (
+                "Next"
+              )}
             </Button>
           </div>
         </div>
