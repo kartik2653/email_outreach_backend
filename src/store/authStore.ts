@@ -25,6 +25,7 @@ export const useAuthStore = create<AuthStore>()(
         // Clear localStorage tokens when clearing auth data
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+        localStorage.removeItem("loginData"); // Clear zustand persisted store
         set(initialState);
       },
       isAuthenticated: () => !!get().accessToken,
