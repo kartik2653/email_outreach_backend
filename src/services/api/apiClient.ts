@@ -1,4 +1,3 @@
-
 /**
  * API Client for handling HTTP requests using axios
  */
@@ -15,7 +14,7 @@ const handleUnauthorized = () => {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
   localStorage.removeItem("loginData"); // Clear zustand persisted store
-  
+
   // Redirect to login page
   window.location.href = "/login";
 };

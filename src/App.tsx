@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -29,31 +28,54 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route 
-            path="/onboarding-questions/:questionId" 
+          <Route
+            path="/onboarding-questions/:questionId"
             element={
               <ProtectedRoute>
                 <OnboardingQuestion />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/dashboard/personal" 
+          <Route
+            path="/dashboard/personal"
             element={
               <ProtectedRoute>
                 <PersonalDashboard />
               </ProtectedRoute>
             }
           >
-            <Route index element={<ContentCreation />} />
-            <Route path="create" element={<ContentCreation />} />
-            <Route path="generated-posts" element={<GeneratedPosts />} />
+            <Route
+              index
+              element={
+                <ProtectedRoute>
+                  <ContentCreation />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="create"
+              element={
+                <ProtectedRoute>
+                  <ContentCreation />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="generated-posts"
+              element={
+                <ProtectedRoute>
+                  <GeneratedPosts />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="calendar"
               element={
-                <div className="flex-1 pr-6">
-                  <CalendarView />
-                </div>
+                <ProtectedRoute>
+                  <div className="flex-1 pr-6">
+                    <CalendarView />
+                  </div>
+                </ProtectedRoute>
               }
             />
             <Route
@@ -93,13 +115,13 @@ const App = () => (
               }
             />
           </Route>
-          <Route 
-            path="/dashboard/personal/agency" 
+          <Route
+            path="/dashboard/personal/agency"
             element={
               <ProtectedRoute>
                 <AgencyDashboard />
               </ProtectedRoute>
-            } 
+            }
           />
           <Route path="*" element={<NotFound />} />
         </Routes>

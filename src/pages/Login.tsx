@@ -36,7 +36,7 @@ const Login = () => {
   useEffect(() => {
     const checkExistingAuth = () => {
       const accessToken = localStorage.getItem("accessToken");
-      
+
       if (accessToken && isAuthenticated()) {
         // User is already logged in, redirect to dashboard
         navigate("/dashboard/personal", { replace: true });
