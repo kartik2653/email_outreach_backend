@@ -39,7 +39,7 @@ const Login = () => {
 
       if (accessToken && isAuthenticated()) {
         // User is already logged in, redirect to dashboard
-        navigate("/dashboard/personal", { replace: true });
+        navigate("/dashboard/personal/create", { replace: true });
       } else {
         // No valid auth, show login form
         setIsCheckingAuth(false);
