@@ -1,3 +1,4 @@
+
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -21,7 +22,12 @@ export const useAuthStore = create<AuthStore>()(
             ...data,
           };
         }),
-      clearAuthData: () => set(initialState),
+      clearAuthData: () => {
+        // Clear localStorage tokens when clearing auth data
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        set(initialState);
+      },
       isAuthenticated: () => !!get().accessToken,
     }),
     {

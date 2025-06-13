@@ -1,3 +1,4 @@
+
 /**
  * API Client for handling HTTP requests using axios
  */
@@ -7,6 +8,17 @@ interface RequestOptions {
   headers?: Record<string, string>;
   params?: Record<string, string>;
 }
+
+// Function to clear auth data and redirect to login
+const handleUnauthorized = () => {
+  // Clear localStorage tokens
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("loginData"); // Clear zustand persisted store
+  
+  // Redirect to login page
+  window.location.href = "/login";
+};
 
 class ApiClient {
   private axiosInstance: AxiosInstance;
@@ -34,8 +46,7 @@ class ApiClient {
     } catch (error) {
       console.error(`Error fetching from ${endpoint}:`, error);
       if (error?.status === 401) {
-        localStorage.clear();
-        window.location.href = "/login";
+        handleUnauthorized();
       }
 
       throw error;
@@ -55,8 +66,7 @@ class ApiClient {
     } catch (error) {
       console.error(`Error posting to ${endpoint}:`, error);
       if (error?.status === 401) {
-        localStorage.clear();
-        window.location.href = "/login";
+        handleUnauthorized();
       }
 
       throw error;
@@ -76,8 +86,7 @@ class ApiClient {
     } catch (error) {
       console.error(`Error posting to ${endpoint}:`, error);
       if (error?.status === 401) {
-        localStorage.clear();
-        window.location.href = "/login";
+        handleUnauthorized();
       }
 
       throw error;
@@ -97,8 +106,7 @@ class ApiClient {
     } catch (error) {
       console.error(`Error posting to ${endpoint}:`, error);
       if (error?.status === 401) {
-        localStorage.clear();
-        window.location.href = "/login";
+        handleUnauthorized();
       }
 
       throw error;
