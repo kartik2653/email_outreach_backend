@@ -184,10 +184,13 @@ const OnboardingQuestion = () => {
       </div>
 
       {/* Right Side - Static Image */}
-      <div className="flex-[0.7] bg-gray-600 rounded-xl flex items-center justify-center">
-        <div className="text-white text-center">
-          <div className="w-full h-full bg-gray-600 rounded-xl"></div>
-        </div>
+      <div className="flex-1 hidden lg:flex items-center justify-center">
+        <img
+          src={questionData?.imageUrl}
+          alt="Question Illustration"
+          className="w-auto h-auto rounded-lg"
+          loading="lazy"
+        />
       </div>
     </div>
   );

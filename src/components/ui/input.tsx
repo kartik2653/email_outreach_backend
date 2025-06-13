@@ -12,6 +12,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
            border-[2px]
            border-gray-300
            focus:border-yellow-green
+           focus:bg-white
            hover:border-[3px]
            hover:border-yellow-green
            hover:bg-light-yellow-green

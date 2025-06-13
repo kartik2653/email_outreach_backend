@@ -51,8 +51,8 @@ const AuthLayout = ({
       </div>
 
       {/* Right Side - Feature Carousel */}
-      <div className="flex-[0.7] bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 rounded-[1rem]">
-        <FeatureCarousel slides={carouselSlides} />
+      <div className="flex-[0.7]">
+        <FeatureCarousel />
       </div>
     </div>
   );

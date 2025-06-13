@@ -18,6 +18,7 @@ export interface OnboardingResponse {
       questionId: number;
       responseId: number;
     };
+    imageUrl?: string;
   };
   success: boolean;
   message: string;

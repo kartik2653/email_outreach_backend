@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { LogIn } from "lucide-react";
+import googleIcon from "@/assests/svg/googleIcon.svg";
+import linkedinIcon from "@/assests/svg/linkedinIcon.svg";
 
 interface SocialAuthButtonsProps {
   onGoogleAuth: () => void;
@@ -14,12 +16,13 @@ const SocialAuthButtons = ({ onGoogleAuth, onLinkedInAuth, mode }: SocialAuthBut
     <div className="space-y-4">
       <div className="text-center text-gray-500">Or {actionText} with</div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-8">
         <Button
           variant="outline"
           onClick={onGoogleAuth}
-          className="flex items-center justify-center space-x-2 rounded-standard"
+          className="flex items-center justify-center space-x-2 rounded-standard "
         >
+          <img src={googleIcon} alt="Google Icon" />
           <span>Google</span>
         </Button>
 
@@ -28,7 +31,7 @@ const SocialAuthButtons = ({ onGoogleAuth, onLinkedInAuth, mode }: SocialAuthBut
           onClick={onLinkedInAuth}
           className="flex items-center justify-center space-x-2 rounded-standard"
         >
-          <LogIn className="w-4 h-4" />
+          <img src={linkedinIcon} alt="LinkedIn Icon" />
           <span>LinkedIn</span>
         </Button>
       </div>
