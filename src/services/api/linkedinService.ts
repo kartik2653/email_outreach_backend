@@ -18,4 +18,12 @@ export const linkedInService = {
       throw new Error(error.response?.data?.message || "Failed to authenticate with LinkedIn");
     }
   },
+  publishPostToLinkedIn: async (data: { postId: string; assetIndexOfPublication: number }) => {
+    try {
+      const response: any = await apiClient.post("/thirdparty/linkedin/publish", data);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || "Failed to publish post to LinkedIn");
+    }
+  },
 };

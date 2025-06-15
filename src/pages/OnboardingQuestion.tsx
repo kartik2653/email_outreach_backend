@@ -150,13 +150,13 @@ const OnboardingQuestion = () => {
                   className={`w-full 
                     ${
                       selectedResponseId === option.responseId
-                        ? "border-[3px] border-yellow-green bg-gray-50"
+                        ? "border-[1px] border-yellow-green bg-gray-50"
                         : "border-gray-200"
                     }
                     p-4 
                     text-left 
                     rounded-[60px] 
-                    border-2 
+                    border-[1px]
                     transition-colors
                     hover:border-yellow-green
                     hover:bg-light-yellow-green`}

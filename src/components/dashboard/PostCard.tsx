@@ -67,7 +67,7 @@ const PostCard = ({ postsResponse, post }: PostCardProps) => {
     <div className="bg-white p-4 rounded-xl border border-base-grey-300 overflow-hidden shadow-sm hover:shadow-md transition-shadow w-[334px]">
       {/* Image Container */}
       <div className="relative aspect-video bg-gray-100 rounded-xl overflow-hidden">
-        <img src={post.image} alt="Generated post" className="w-full h-full object-cover" />
+        <img src={post.image} alt="Generated post" className="w-full h-full object-contain" />
         {/* Regenerate Icon */}
         <button
           onClick={handleImageRegenerate}

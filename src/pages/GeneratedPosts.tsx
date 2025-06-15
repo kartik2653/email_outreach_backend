@@ -60,10 +60,10 @@ const GeneratedPosts = () => {
         //   captions: ["Just keep swimming in this tiny blue world!"],
         //   hashtags: ["#FishLife, #AquariumGoals, #UnderwaterVibes, #PetLove, #MarineMagic"],
         //   assetUrl: [
-        //     "http://res.cloudinary.com/dhvsscmw8/image/upload/v1749727714/cezipzka6tqcshe390ys.png",
+        //     "https://imgs.search.brave.com/MpuL6g7R5h-NrHfPeQY07cJIOCTlmy_fdCYV2OGISII/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNDcy/MDQyNTY3L3Bob3Rv/L2xvcmVhbC1leGNl/bGxlbmNlLWNyZW1l/LWhhaXJjb2xvci5q/cGc_cz02MTJ4NjEy/Jnc9MCZrPTIwJmM9/RjRPdGNEMEo2WjhG/c2E1TUN6a3dnRmNh/ajdvVFBZUXpVeVZo/VXdjbFNjbz0",
         //   ],
         //   secureAssetUrl: [
-        //     "https://res.cloudinary.com/dhvsscmw8/image/upload/v1749727714/cezipzka6tqcshe390ys.png",
+        //     "https://imgs.search.brave.com/MpuL6g7R5h-NrHfPeQY07cJIOCTlmy_fdCYV2OGISII/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNDcy/MDQyNTY3L3Bob3Rv/L2xvcmVhbC1leGNl/bGxlbmNlLWNyZW1l/LWhhaXJjb2xvci5q/cGc_cz02MTJ4NjEy/Jnc9MCZrPTIwJmM9/RjRPdGNEMEo2WjhG/c2E1TUN6a3dnRmNh/ajdvVFBZUXpVeVZo/VXdjbFNjbz0",
         //   ],
         //   assetType: "image",
         //   isPublished: false,

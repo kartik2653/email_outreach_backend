@@ -27,6 +27,7 @@ import { postServices } from "@/services/api/post";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/store";
 import { formatToUTC } from "@/lib/utils";
+import { linkedInService } from "@/services/api/linkedinService";
 
 export default function SocialMediaModal({
   isOpen,
@@ -68,6 +69,7 @@ export default function SocialMediaModal({
   const [hour, setHour] = useState<number>(currentHour % 12 || 12);
   const [minute, setMinute] = useState<number>(currentDate.getMinutes());
   const [ampm, setAmpm] = useState<"AM" | "PM">(currentHour >= 12 ? "PM" : "AM");
+  const [activeTab, setActiveTab] = useState<"content" | "post" | "schedule">("content");
 
   const [caption, setCaption] = useState(description);
   const [hashtags, setHashtags] = useState(postHashtags);
@@ -122,12 +124,6 @@ export default function SocialMediaModal({
     });
   };
 
-  const formatTimeForDisplay = (h: number, m: number, ap: "AM" | "PM") => {
-    const formattedHour = h.toString().padStart(2, "0");
-    const formattedMinute = m.toString().padStart(2, "0");
-    return `${formattedHour}:${formattedMinute} ${ap}`;
-  };
-
   const handleMagicPrompt = async (data: { type: string }) => {
     const { type } = data;
     if (type === "caption") {
@@ -155,6 +151,26 @@ export default function SocialMediaModal({
       actions: [action],
     });
     setCaption(response);
+  };
+
+  const handlePublishNow = async () => {
+    try {
+      const response = await linkedInService?.publishPostToLinkedIn({
+        postId: postId,
+        assetIndexOfPublication: postIndex,
+      });
+      toast({
+        title: "Post Published Successfully",
+        description: "Your post has been published on LinkedIn.",
+      });
+    } catch (error) {
+      console.error("Error publishing post:", error);
+      toast({
+        title: "Error",
+        description: "Failed to publish post. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleOnSubmit = async (e: React.FormEvent) => {
@@ -186,7 +202,8 @@ export default function SocialMediaModal({
       hashtags: updatedHashtags,
       assetUrl: updatedImages,
       secureAssetUrl: updatedSecureImages,
-      dateOfPublication,
+      dateOfPublication: activeTab === "schedule" ? dateOfPublication : null,
+      assetIndexForPublication: postIndex,
     };
 
     try {
@@ -203,7 +220,13 @@ export default function SocialMediaModal({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden p-0 bg-opacity-0">
         <div className="relative">
-          <Tabs defaultValue={defaultTabValue} className="w-full p-4">
+          <Tabs
+            defaultValue={defaultTabValue}
+            className="w-full p-4"
+            onValueChange={(value) => {
+              setActiveTab(value as "content" | "post" | "schedule");
+            }}
+          >
             <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-transparent h-auto p-0">
               <TabsTrigger
                 value="content"
@@ -300,8 +323,12 @@ export default function SocialMediaModal({
               <TabsContent value="post" className="space-y-6 mt-0">
                 <div className="flex gap-4">
                   <div className="flex-1 relative">
-                    <div className="bg-black rounded-lg overflow-hidden aspect-square relative">
-                      <img src={image} alt="Post Preview" className="w-full h-full object-cover" />
+                    <div className="bg-gray-100 rounded-lg overflow-hidden aspect-square relative">
+                      <img
+                        src={image}
+                        alt="Post Preview"
+                        className="w-full h-full object-contain"
+                      />
                       <button
                         onClick={() => handleMagicPrompt({ type: "image" })}
                         className="w-28 h-28 rounded-md bg-white border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-2 right-3"
@@ -417,18 +444,33 @@ export default function SocialMediaModal({
                     </div>
                   </div>
                 </div>
-                <Button
-                  type={linkedInCredentials?.isAccessProvided ? "submit" : "button"}
-                  onClick={() => {
-                    if (linkedInCredentials?.isAccessProvided) {
-                      setCode("true");
-                    }
-                    setOpenLinkedInModal(true);
-                  }}
-                  className="bg-black text-white w-standard h-standard font-16 font-manrope hover:bg-gray-800  rounded-full"
-                >
-                  Save & schedule
-                </Button>
+                <div className="flex justify-between mt-6">
+                  <Button
+                    type={linkedInCredentials?.isAccessProvided ? "submit" : "button"}
+                    onClick={() => {
+                      if (linkedInCredentials?.isAccessProvided) {
+                        setCode("true");
+                      }
+                      setOpenLinkedInModal(true);
+                    }}
+                    className="bg-black text-white w-standard h-standard font-16 font-manrope hover:bg-gray-800  rounded-full"
+                  >
+                    Save & schedule
+                  </Button>
+                  <Button
+                    type={"button"}
+                    onClick={() => {
+                      if (linkedInCredentials?.isAccessProvided) {
+                        setCode("true");
+                        handlePublishNow();
+                      }
+                      setOpenLinkedInModal(true);
+                    }}
+                    className="bg-black text-white w-standard h-standard font-16 font-manrope hover:bg-gray-800  rounded-full"
+                  >
+                    Publish Now
+                  </Button>
+                </div>
               </TabsContent>
             </form>
           </Tabs>
