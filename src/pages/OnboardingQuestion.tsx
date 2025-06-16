@@ -4,14 +4,15 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { onboardingService, type OnboardingResponse } from "@/services/api/onboardingService";
 import logo from "@/assests/svg/appLogo.svg";
-import { Check } from "lucide-react";
+import { Check, Code } from "lucide-react";
 import { ThemeLoader } from "@/components/ui/loader";
+import ModalSkeleton from "@/components/ModalSkeleton";
 
 const OnboardingQuestion = () => {
   const { questionId } = useParams<{ questionId: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [questionData, setQuestionData] = useState<OnboardingResponse["data"] | null>(null);
   const [selectedResponseId, setSelectedResponseId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,9 +29,7 @@ const OnboardingQuestion = () => {
         setQuestionData(response.data);
 
         // Set previously selected answer if exists
-        if (response.data.response) {
-          setSelectedResponseId(response.data.response.responseId);
-        }
+        setSelectedResponseId(response?.data?.response?.responseId ?? null);
       } catch (error: any) {
         toast({
           title: "Error",
@@ -66,11 +65,13 @@ const OnboardingQuestion = () => {
           3: "/dashboard/personal/agency",
         };
 
-        // Use first 3 response IDs for dashboard routing, fallback to personal
         const dashboardRoute =
           dashboardRoutes[selectedResponseId as keyof typeof dashboardRoutes] ||
           "/dashboard/personal";
-        navigate(dashboardRoute);
+        setShowWelcomeModal(true);
+        setTimeout(() => {
+          navigate(dashboardRoute);
+        }, 1000);
       }
     } catch (error: any) {
       toast({
@@ -203,6 +204,13 @@ const OnboardingQuestion = () => {
           loading="lazy"
         />
       </div>
+      {true && (
+        <ModalSkeleton
+          isOpen={showWelcomeModal}
+          setIsOpen={setShowWelcomeModal}
+          activeModal="welcome"
+        />
+      )}
     </div>
   );
 };
