@@ -18,4 +18,16 @@ export const postServices = {
       throw new Error(error?.message || "Failed to enchance prompt");
     }
   },
+  updatePostVariant: async (data) => {
+    try {
+      const { postId, variationIndex, ...rest } = data;
+      const response: any = await apiClient.put(
+        `/post/${postId}/update-variant/${variationIndex}`,
+        rest
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error(error?.message || "Failed to update post variant");
+    }
+  },
 };

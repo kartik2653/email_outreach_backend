@@ -3,6 +3,7 @@ import SocialMediaModal from "../SocialMediaModal";
 import { useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { postServices } from "@/services/api/post";
 
 interface PostCardProps {
   post: {
@@ -36,8 +37,14 @@ const PostCard = ({ postsResponse, post }: PostCardProps) => {
     window.open(post?.image, "_blank");
   };
 
-  const handleLike = () => {
-    console.log("Like post:", post.postId);
+  const handleLike = async () => {
+    const payload = {
+      postId: post.postId,
+      variationIndex: post.postIndex,
+      isLiked: 1,
+      isDisliked: 0,
+    };
+    await postServices?.updatePostVariant(payload);
     toast({
       title: "Post liked!",
       description: `You liked the post variant ${post.postIndex + 1}`,
@@ -45,8 +52,14 @@ const PostCard = ({ postsResponse, post }: PostCardProps) => {
     });
   };
 
-  const handleDislike = () => {
-    console.log("Dislike post:", post.postId);
+  const handleDislike = async () => {
+    const payload = {
+      postId: post.postId,
+      variationIndex: post.postIndex,
+      isLiked: 0,
+      isDisliked: 1,
+    };
+    await postServices?.updatePostVariant(payload);
     toast({
       title: "Post disliked!",
       description: `You disliked the post variant ${post.postIndex + 1}`,
