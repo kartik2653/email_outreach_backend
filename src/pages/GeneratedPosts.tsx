@@ -54,24 +54,45 @@ const GeneratedPosts = () => {
 
         const response = await postServices.generatePost(payload);
         // const response = {
-        //   userId: "6847c409128407240203d327",
-        //   promptText: "fish in a bowl",
-        //   variantsCount: 1,
-        //   captions: ["Just keep swimming in this tiny blue world!"],
-        //   hashtags: ["#FishLife, #AquariumGoals, #UnderwaterVibes, #PetLove, #MarineMagic"],
-        //   assetUrl: [
-        //     "https://imgs.search.brave.com/MpuL6g7R5h-NrHfPeQY07cJIOCTlmy_fdCYV2OGISII/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNDcy/MDQyNTY3L3Bob3Rv/L2xvcmVhbC1leGNl/bGxlbmNlLWNyZW1l/LWhhaXJjb2xvci5q/cGc_cz02MTJ4NjEy/Jnc9MCZrPTIwJmM9/RjRPdGNEMEo2WjhG/c2E1TUN6a3dnRmNh/ajdvVFBZUXpVeVZo/VXdjbFNjbz0",
-        //   ],
-        //   secureAssetUrl: [
-        //     "https://imgs.search.brave.com/MpuL6g7R5h-NrHfPeQY07cJIOCTlmy_fdCYV2OGISII/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNDcy/MDQyNTY3L3Bob3Rv/L2xvcmVhbC1leGNl/bGxlbmNlLWNyZW1l/LWhhaXJjb2xvci5q/cGc_cz02MTJ4NjEy/Jnc9MCZrPTIwJmM9/RjRPdGNEMEo2WjhG/c2E1TUN6a3dnRmNh/ajdvVFBZUXpVeVZo/VXdjbFNjbz0",
+        //   userId: "6836a1bc78c5834c58fac072",
+        //   promptText: "Fish in a bowl",
+        //   variantsCount: 2,
+        //   tone: ["infomative"],
+        //   assetsData: [
+        //     {
+        //       assetUrl:
+        //         "http://res.cloudinary.com/dhvsscmw8/image/upload/v1750055251/ogxx67nbgg3gvqzmpfm0.png",
+        //       secureAssetUrl:
+        //         "https://res.cloudinary.com/dhvsscmw8/image/upload/v1750055251/ogxx67nbgg3gvqzmpfm0.png",
+        //       assetType: "image",
+        //       caption:
+        //         "Did you know? A fishbowl requires regular cleaning to keep your aquatic friend healthy and happy.",
+        //       hashtags: "#FishCare, #AquariumTips, #PetFish, #HealthyFish, #FishBowlFacts",
+        //       isLiked: false,
+        //       isDisliked: false,
+        //       _id: "684fb9559c79079b8faaaa37",
+        //     },
+        //     {
+        //       assetUrl:
+        //         "http://res.cloudinary.com/dhvsscmw8/image/upload/v1750055251/uqthjyc28zevokt3jcht.png",
+        //       secureAssetUrl:
+        //         "https://res.cloudinary.com/dhvsscmw8/image/upload/v1750055251/uqthjyc28zevokt3jcht.png",
+        //       assetType: "image",
+        //       caption:
+        //         "Keeping fish in a bowl? Ensure proper oxygen levels and avoid overcrowding for a balanced ecosystem.",
+        //       hashtags: "#FishTankCare, #AquariumLife, #PetCareTips, #FishBowl, #CleanWater",
+        //       isLiked: false,
+        //       isDisliked: false,
+        //       _id: "684fb9559c79079b8faaaa38",
+        //     },
         //   ],
         //   assetType: "image",
         //   isPublished: false,
         //   dateOfPublication: null,
         //   assetIndexForPublication: 0,
-        //   _id: "684ab9e3cbb2725eb6d581b1",
-        //   createdAt: "2025-06-12T11:28:35.235Z",
-        //   updatedAt: "2025-06-12T11:28:35.235Z",
+        //   _id: "684fb9559c79079b8faaaa36",
+        //   createdAt: "2025-06-16T06:27:33.711Z",
+        //   updatedAt: "2025-06-16T06:27:33.711Z",
         //   __v: 0,
         // };
         setGeneratedPostsResponse(response);
@@ -80,9 +101,9 @@ const GeneratedPosts = () => {
           (_, index) => ({
             postIndex: index,
             postId: response?._id || "",
-            image: response?.assetUrl?.[index] || "",
-            description: response.captions[index],
-            hashtags: response.hashtags[index],
+            image: response?.assetsData?.[index]?.assetUrl || "",
+            description: response?.assetsData?.[index]?.caption || "",
+            hashtags: response?.assetsData?.[index]?.hashtags || "",
             promptText: response.promptText,
           })
         );

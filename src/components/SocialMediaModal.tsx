@@ -26,7 +26,7 @@ import { promptServices } from "@/services/api/prompt";
 import { postServices } from "@/services/api/post";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/store";
-import { formatToUTC } from "@/lib/utils";
+import { formatToUTC, refactorFormData } from "@/lib/utils";
 import { linkedInService } from "@/services/api/linkedinService";
 
 export default function SocialMediaModal({
@@ -73,6 +73,7 @@ export default function SocialMediaModal({
 
   const [caption, setCaption] = useState(description);
   const [hashtags, setHashtags] = useState(postHashtags);
+  const [imageUrl, setImageUrl] = useState(image);
 
   const writingTools = [
     {
@@ -139,8 +140,9 @@ export default function SocialMediaModal({
         postId,
         variationIndex: postIndex,
       });
-      setCaption(response?.captions?.[postIndex] || "");
-      setHashtags(response?.hashtags?.[postIndex] || "");
+      setCaption(response?.assetsData?.[postIndex]?.caption || "");
+      setHashtags(response?.assetsData?.[postIndex]?.hashtags || "");
+      setImageUrl(response?.assetsData?.[postIndex]?.assetUrl || "");
     }
   };
 
@@ -198,16 +200,18 @@ export default function SocialMediaModal({
 
     const formData = {
       postId: postId,
-      captions: updatedCaptions,
-      hashtags: updatedHashtags,
-      assetUrl: updatedImages,
-      secureAssetUrl: updatedSecureImages,
+      captions: caption,
+      hashtags: hashtags,
+      assetUrl: imageUrl,
+      secureAssetUrl: imageUrl,
       dateOfPublication: activeTab === "schedule" ? dateOfPublication : null,
       assetIndexForPublication: postIndex,
     };
 
+    const refactoredData = refactorFormData({ formData, postsResponse, postIndex });
+
     try {
-      const response = await postServices.updatePost(formData);
+      const response = await postServices.updatePost(refactoredData);
       toast({
         title: "Post Updated Successfully",
       });
@@ -267,7 +271,10 @@ export default function SocialMediaModal({
                     />
                     <Button
                       type="button"
-                      onClick={() => handleMagicPrompt({ type: "caption" })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleMagicPrompt({ type: "caption" });
+                      }}
                       className="bg-yellow-green hover:bg-light-yellow-green font-14 w-125 h-35 rounded-full font-manrope text-black font-medium absolute bottom-4 right-4"
                     >
                       Magic Prompt
@@ -278,7 +285,10 @@ export default function SocialMediaModal({
                 <div className="flex flex-wrap gap-2">
                   {writingTools.map((tool, index) => (
                     <Badge
-                      onClick={() => handleCaptionEnhance({ action: tool.label.toLowerCase() })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCaptionEnhance({ action: tool.label.toLowerCase() });
+                      }}
                       key={index}
                       variant="outline"
                       className={`${tool.color} cursor-pointer hover:opacity-80 px-3 py-1`}
@@ -297,7 +307,10 @@ export default function SocialMediaModal({
                       Hashtag
                     </Label>
                     <button
-                      onClick={() => handleMagicPrompt({ type: "hashtags" })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleMagicPrompt({ type: "hashtags" });
+                      }}
                       className="w-28 h-28 rounded-md border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-16 right-4"
                     >
                       <img src="/src/assests/svg/anticlockwiseArrow-black.svg" alt="" />
@@ -325,12 +338,16 @@ export default function SocialMediaModal({
                   <div className="flex-1 relative">
                     <div className="bg-gray-100 rounded-lg overflow-hidden aspect-square relative">
                       <img
-                        src={image}
+                        src={imageUrl}
                         alt="Post Preview"
                         className="w-full h-full object-contain"
                       />
                       <button
-                        onClick={() => handleMagicPrompt({ type: "image" })}
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleMagicPrompt({ type: "image" });
+                        }}
                         className="w-28 h-28 rounded-md bg-white border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-2 right-3"
                       >
                         <img src="/src/assests/svg/anticlockwiseArrow-black.svg" alt="" />
@@ -345,7 +362,10 @@ export default function SocialMediaModal({
                       onChange={(e) => setCaption(e.target.value)}
                     />
                     <button
-                      onClick={() => handleMagicPrompt({ type: "image" })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleMagicPrompt({ type: "image" });
+                      }}
                       className="w-28 h-28 rounded-md bg-white border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-2 right-3"
                     >
                       <img src="/src/assests/svg/anticlockwiseArrow-black.svg" alt="" />
@@ -416,7 +436,10 @@ export default function SocialMediaModal({
                       <div className="w-[27px] h-[38px] mt-1 mx-2 rounded-sm border border-grey-400 p-0">
                         <div
                           typeof="button"
-                          onClick={() => setAmpm("AM")}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setAmpm("AM");
+                          }}
                           className={`rounded-t-sm w-[27px] h-[19px] font-[Bricolage Grotesque] font-bold text-[#858585] text-[11px] ps-1 ${
                             ampm === "AM" ? "bg-[#D3F26B]" : "hover:bg-[#D3F26B]"
                           }`}
@@ -425,7 +448,10 @@ export default function SocialMediaModal({
                         </div>
                         <div
                           typeof="button"
-                          onClick={() => setAmpm("PM")}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setAmpm("PM");
+                          }}
                           className={`rounded-b-sm w-[27px] h-[19px] font-[Bricolage Grotesque] font-bold text-[#858585] text-[11px] ps-1 ${
                             ampm === "PM" ? "bg-[#D3F26B]" : "hover:bg-[#D3F26B]"
                           }`}

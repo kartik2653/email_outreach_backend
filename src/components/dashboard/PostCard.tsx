@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Download, ThumbsUp, ThumbsDown, Pencil } from "lucide-react";
 import SocialMediaModal from "../SocialMediaModal";
 import { useState } from "react";
 import { Textarea } from "../ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 
 interface PostCardProps {
   post: {
@@ -30,17 +30,28 @@ const PostCard = ({ postsResponse, post }: PostCardProps) => {
   const [defaultModalTabValue, setDefaultModalTabValue] = useState<"content" | "post" | "schedule">(
     "content"
   );
-
+  const { toast } = useToast();
   const handleDownload = () => {
     console.log("Download post:", post.postId);
+    window.open(post?.image, "_blank");
   };
 
   const handleLike = () => {
     console.log("Like post:", post.postId);
+    toast({
+      title: "Post liked!",
+      description: `You liked the post variant ${post.postIndex + 1}`,
+      variant: "default",
+    });
   };
 
   const handleDislike = () => {
     console.log("Dislike post:", post.postId);
+    toast({
+      title: "Post disliked!",
+      description: `You disliked the post variant ${post.postIndex + 1}`,
+      variant: "default",
+    });
   };
 
   const handleEdit = () => {

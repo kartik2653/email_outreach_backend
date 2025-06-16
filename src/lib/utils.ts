@@ -25,3 +25,27 @@ export const formatToUTC = (
   // Convert to UTC ISO string with milliseconds and +00:00 offset
   return utcDate.toISOString();
 };
+
+export const refactorFormData = ({ formData, postsResponse, postIndex }) => {
+  const {
+    postId,
+    captions,
+    hashtags,
+    assetUrl,
+    secureAssetUrl,
+    assetType,
+    dateOfPublication,
+    assetIndexForPublication,
+  } = formData;
+  const refactoredData = { ...postsResponse, postId, dateOfPublication, assetIndexForPublication };
+  refactoredData.assetsData[postIndex] = {
+    caption: captions || "",
+    hashtags: hashtags || "",
+    assetType: assetType || "image",
+    isLiked: false,
+    isDisliked: false,
+    assetUrl: assetUrl || "",
+    secureAssetUrl: secureAssetUrl || "",
+  };
+  return refactoredData;
+};
