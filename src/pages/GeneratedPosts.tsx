@@ -50,6 +50,7 @@ const GeneratedPosts = () => {
           promptText: formData.prompt,
           variantsCount: Number(formData.variants || 1),
           assetType: "image",
+          tone: formData?.selectedTones || [],
         };
 
         const response = await postServices.generatePost(payload);
