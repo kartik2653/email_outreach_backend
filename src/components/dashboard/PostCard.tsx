@@ -30,8 +30,10 @@ interface PostCardProps {
 const PostCard = ({ postsResponse, post }: PostCardProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [caption, setCaption] = useState(`${post.description}\n\n${post.hashtags}`); // Combine description and hashtags with two newlines for gap
-  const [defaultModalTabValue, setDefaultModalTabValue] = useState<"content" | "post" | "schedule" | "modal">("content");
- const [active, activeModal] = useState<"welcome" | "linkedIn">(null);
+  const [defaultModalTabValue, setDefaultModalTabValue] = useState<
+    "content" | "post" | "schedule" | "modal"
+  >("content");
+  const [active, activeModal] = useState<"welcome" | "linkedIn">(null);
   const { toast } = useToast();
   const handleDownload = () => {
     console.log("Download post:", post.postId);
@@ -89,7 +91,7 @@ const PostCard = ({ postsResponse, post }: PostCardProps) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl border border-2 border-base-grey-300 overflow-hidden  hover:shadow-md transition-shadow w-[120%]">
+    <div className="bg-white max-w-[30%] p-4 rounded-xl border border-2 border-base-grey-300 overflow-hidden  hover:shadow-md transition-shadow w-[120%]">
       {/* Image Container */}
       <div className="relative aspect-video bg-gray-100 rounded-xl overflow-hidden">
         <img src={post.image} alt="Generated post" className="w-full h-full object-contain" />
@@ -165,11 +167,7 @@ const PostCard = ({ postsResponse, post }: PostCardProps) => {
         setIsOpen={setOpenModal}
         defaultTabValue={defaultModalTabValue}
       />
-      <ModalSkeleton
-        isOpen={openModal}
-        setIsOpen={setOpenModal}
-        activeModal={active}
-      />
+      <ModalSkeleton isOpen={openModal} setIsOpen={setOpenModal} activeModal={active} />
     </div>
   );
 };

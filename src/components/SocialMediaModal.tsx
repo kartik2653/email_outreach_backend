@@ -72,8 +72,10 @@ export default function SocialMediaModal({
   const [hour, setHour] = useState<number>(currentHour % 12 || 12);
   const [minute, setMinute] = useState<number>(currentDate.getMinutes());
   const [ampm, setAmpm] = useState<"AM" | "PM">(currentHour >= 12 ? "PM" : "AM");
- const [defaultModalTabValue, setDefaultModalTabValue] = useState<"content" | "post" | "schedule" | "modal">("content");
- const [active, setActive] = useState<"welcome" | "linkedIn">("linkedIn");
+  const [activeTab, setActiveTabValue] = useState<
+    "content" | "post" | "schedule" | "modal"
+  >("content");
+  const [active, setActive] = useState<"welcome" | "linkedIn">("linkedIn");
   const [caption, setCaption] = useState(description);
   const [hashtags, setHashtags] = useState(postHashtags);
   const [imageUrl, setImageUrl] = useState(image);
@@ -222,12 +224,12 @@ export default function SocialMediaModal({
       console.error("Error updating post:", error);
     }
   };
-  
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden p-0 bg-opacity-0">
         <div className="relative">
-          <Tabs defaultValue={defaultTabValue} className="w-full py-4">
+          <Tabs defaultValue={defaultTabValue} className="w-full py-4" onValueChange={(value :"content" | "post" | "schedule" | "modal" )=>setActiveTabValue(value)}>
             <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-transparent">
               <TabsTrigger
                 value="content"
@@ -308,7 +310,7 @@ export default function SocialMediaModal({
                         e.stopPropagation();
                         handleMagicPrompt({ type: "hashtags" });
                       }}
-                      className="w-28 h-28 rounded-md border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-16 right-4"
+                      className="p-2 rounded-md border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-16 right-4"
                     >
                       <img src="/src/assests/svg/anticlockwiseArrow-black.svg" alt="" />
                     </button>
@@ -345,7 +347,7 @@ export default function SocialMediaModal({
                           e.stopPropagation();
                           handleMagicPrompt({ type: "image" });
                         }}
-                        className="w-28 h-28 rounded-md bg-white border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-2 right-3"
+                        className="p-2 rounded-md bg-white border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-2 right-3"
                       >
                         <img src="/src/assests/svg/anticlockwiseArrow-black.svg" alt="" />
                       </button>
@@ -363,7 +365,7 @@ export default function SocialMediaModal({
                         e.stopPropagation();
                         handleMagicPrompt({ type: "image" });
                       }}
-                      className="w-28 h-28 rounded-md bg-white border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-2 right-3"
+                      className="p-2 rounded-md bg-white border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-2 right-3"
                     >
                       <img src="/src/assests/svg/anticlockwiseArrow-black.svg" alt="" />
                     </button>
@@ -437,8 +439,8 @@ export default function SocialMediaModal({
                             e.stopPropagation();
                             setAmpm("AM");
                           }}
-                          className={`rounded-t-sm w-[27px] h-[19px] font-[Bricolage Grotesque] font-bold text-[#858585] text-[11px] ps-1 ${
-                            ampm === "AM" ? "bg-[#D3F26B]" : "hover:bg-[#D3F26B]"
+                          className={`rounded-t-sm font-bricolage-grotesque font-bold text-dark-charcoal-300 text-xs px-1 ${
+                            ampm === "AM" ? "bg-yellow-green" : "hover:bg-yellow-green"
                           }`}
                         >
                           AM
@@ -449,8 +451,8 @@ export default function SocialMediaModal({
                             e.stopPropagation();
                             setAmpm("PM");
                           }}
-                          className={`rounded-b-sm w-[27px] h-[19px] font-[Bricolage Grotesque] font-bold text-[#858585] text-[11px] ps-1 ${
-                            ampm === "PM" ? "bg-[#D3F26B]" : "hover:bg-[#D3F26B]"
+                          className={`rounded-b-sm font-bricolage-grotesque font-bold text-dark-charcoal-300 text-xs px-1 ${
+                            ampm === "PM" ? "bg-yellow-green" : "hover:bg-yellow-green"
                           }`}
                         >
                           PM
@@ -487,8 +489,14 @@ export default function SocialMediaModal({
         </div>
       </DialogContent>
       {/* {openLinkedInModal && <LinkedInModal code={code} isOpen={openLinkedInModal} setIsOpen={setOpenLinkedInModal} />} */}
-      {openModalSkeleton  && <ModalSkeleton code={code} isOpen={openModalSkeleton} setIsOpen={setOpenModalSkeleton} activeModal={active} />}
-      
+      {openModalSkeleton && (
+        <ModalSkeleton
+          code={code}
+          isOpen={openModalSkeleton}
+          setIsOpen={setOpenModalSkeleton}
+          activeModal={active}
+        />
+      )}
     </Dialog>
   );
 }

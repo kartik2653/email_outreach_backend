@@ -19,9 +19,11 @@ const ModalSkeleton = ({
 }) => {
   switch (activeModal) {
     case "welcome":
-      return<WelcomeModalWrapper key="welcome" setIsOpen={setIsOpen} isOpen = {isOpen} />
+      return <WelcomeModalWrapper key="welcome" setIsOpen={setIsOpen} isOpen={isOpen} />;
     case "linkedIn":
-      return<LinkedInModalWrapper key="linkedIn" setIsOpen={setIsOpen} code = {code} isOpen = {isOpen} />
+      return (
+        <LinkedInModalWrapper key="linkedIn" setIsOpen={setIsOpen} code={code} isOpen={isOpen} />
+      );
     default:
       return null;
   }

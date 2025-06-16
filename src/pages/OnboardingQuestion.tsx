@@ -17,7 +17,6 @@ const OnboardingQuestion = () => {
   const [selectedResponseId, setSelectedResponseId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
 
   const currentQuestion = questionId ? parseInt(questionId) : 1;
   const totalQuestions = 4;
@@ -31,7 +30,6 @@ const OnboardingQuestion = () => {
 
         // Set previously selected answer if exists
         setSelectedResponseId(response?.data?.response?.responseId ?? null);
-
       } catch (error: any) {
         toast({
           title: "Error",
@@ -58,7 +56,6 @@ const OnboardingQuestion = () => {
 
       // Navigate to next question or dashboard
       if (currentQuestion < totalQuestions) {
-
         navigate(`/onboarding-questions/${currentQuestion + 1}`);
       } else {
         // For the 4th question, redirect to appropriate dashboard based on selection
@@ -125,12 +122,13 @@ const OnboardingQuestion = () => {
                 {Array.from({ length: totalQuestions }).map((_, index) => (
                   <div
                     key={index}
-                    className={`h-2 flex-1 rounded ${index < currentQuestion
-                      ? "bg-yellow-green"
-                      : index === currentQuestion - 1
+                    className={`h-2 flex-1 rounded ${
+                      index < currentQuestion
                         ? "bg-yellow-green"
-                        : "bg-gray-200"
-                      }`}
+                        : index === currentQuestion - 1
+                          ? "bg-yellow-green"
+                          : "bg-gray-200"
+                    }`}
                   />
                 ))}
               </div>
@@ -206,7 +204,13 @@ const OnboardingQuestion = () => {
           loading="lazy"
         />
       </div>
-      {true  && <ModalSkeleton isOpen={showWelcomeModal} setIsOpen={setShowWelcomeModal} activeModal="welcome" />}
+      {true && (
+        <ModalSkeleton
+          isOpen={showWelcomeModal}
+          setIsOpen={setShowWelcomeModal}
+          activeModal="welcome"
+        />
+      )}
     </div>
   );
 };
