@@ -27,6 +27,8 @@ import { postServices } from "@/services/api/post";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/store";
 import { formatToUTC, refactorFormData } from "@/lib/utils";
+import ModalSkeleton from "./ModalSkeleton";
+import { any } from "zod";
 import { linkedInService } from "@/services/api/linkedinService";
 
 export default function SocialMediaModal({
@@ -38,7 +40,7 @@ export default function SocialMediaModal({
 }: {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  defaultTabValue?: "content" | "post" | "schedule";
+  defaultTabValue?: "content" | "post" | "schedule" | "modal";
   post: {
     postIndex: number;
     postId: string;
@@ -62,6 +64,7 @@ export default function SocialMediaModal({
   const [code, setCode] = useState(null);
   const { description, postId, hashtags: postHashtags, image, postIndex } = post;
   const [openLinkedInModal, setOpenLinkedInModal] = useState(false);
+  const [openModalSkeleton, setOpenModalSkeleton] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const { linkedInCredentials }: any = useAuthStore();
   const currentDate = new Date();
@@ -69,8 +72,8 @@ export default function SocialMediaModal({
   const [hour, setHour] = useState<number>(currentHour % 12 || 12);
   const [minute, setMinute] = useState<number>(currentDate.getMinutes());
   const [ampm, setAmpm] = useState<"AM" | "PM">(currentHour >= 12 ? "PM" : "AM");
-  const [activeTab, setActiveTab] = useState<"content" | "post" | "schedule">("content");
-
+ const [defaultModalTabValue, setDefaultModalTabValue] = useState<"content" | "post" | "schedule" | "modal">("content");
+ const [active, setActive] = useState<"welcome" | "linkedIn">("linkedIn");
   const [caption, setCaption] = useState(description);
   const [hashtags, setHashtags] = useState(postHashtags);
   const [imageUrl, setImageUrl] = useState(image);
@@ -219,34 +222,28 @@ export default function SocialMediaModal({
       console.error("Error updating post:", error);
     }
   };
-
+  
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden p-0 bg-opacity-0">
         <div className="relative">
-          <Tabs
-            defaultValue={defaultTabValue}
-            className="w-full p-4"
-            onValueChange={(value) => {
-              setActiveTab(value as "content" | "post" | "schedule");
-            }}
-          >
-            <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-transparent h-auto p-0">
+          <Tabs defaultValue={defaultTabValue} className="w-full py-4">
+            <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-transparent">
               <TabsTrigger
                 value="content"
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 font-bricolage-grotesque text-dark-charcoal-500"
+                className="rounded-none border-b-2 p-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 font-bricolage-grotesque text-dark-charcoal-500"
               >
                 Content
               </TabsTrigger>
               <TabsTrigger
                 value="post"
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 text-dark-charcoal-500 font-bricolage-grotesque"
+                className="rounded-none border-b-2 p-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 text-dark-charcoal-500 font-bricolage-grotesque"
               >
                 Post
               </TabsTrigger>
               <TabsTrigger
                 value="schedule"
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 text-dark-charcoal-500 font-bricolage-grotesque"
+                className="rounded-none border-b-2 p-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 text-dark-charcoal-500 font-bricolage-grotesque"
               >
                 Schedule
               </TabsTrigger>
@@ -257,7 +254,7 @@ export default function SocialMediaModal({
                 <div>
                   <Label
                     htmlFor="caption"
-                    className="text-base font-medium mb-3 block text-dark-charcoal-500 font-16 font-manrope text-standard"
+                    className="text-base font-medium mb-3 block text-dark-charcoal-500 font-manrope text-standard"
                   >
                     Caption
                   </Label>
@@ -302,7 +299,7 @@ export default function SocialMediaModal({
                   <div className="flex items-center relative justify-between mb-3">
                     <Label
                       htmlFor="hashtags"
-                      className="text-base font-medium font-16 font-manrope text-standard text-dark-charcoal-500"
+                      className="text-base font-medium font-manrope text-dark-charcoal-500"
                     >
                       Hashtag
                     </Label>
@@ -327,7 +324,7 @@ export default function SocialMediaModal({
 
                 <Button
                   type="submit"
-                  className="bg-black text-white w-standard h-standard font-16 font-manrope hover:bg-gray-800  rounded-full"
+                  className="bg-black text-white w-auto p-6 font-medium font-manrope hover:bg-gray-800 rounded-full"
                 >
                   Save changes
                 </Button>
@@ -356,7 +353,7 @@ export default function SocialMediaModal({
                   </div>
                   <div className="flex-1 relative">
                     <textarea
-                      className="w-full h-full p-4 border border-base-gray-600 font-manrope font-16 rounded-xl text-base-grey-600"
+                      className="w-full h-full p-4 border border-base-gray-600 font-manrope font-medium rounded-xl text-base-grey-600"
                       placeholder="Enter your caption..."
                       value={caption}
                       onChange={(e) => setCaption(e.target.value)}
@@ -374,7 +371,7 @@ export default function SocialMediaModal({
                 </div>
                 <Button
                   type="submit"
-                  className="bg-black text-white w-standard h-standard font-16 font-manrope hover:bg-gray-800  rounded-full"
+                  className="bg-black text-white w-auto p-6 font-medium font-manrope hover:bg-gray-800 rounded-full"
                 >
                   Save changes
                 </Button>
@@ -383,11 +380,11 @@ export default function SocialMediaModal({
               <TabsContent value="schedule" className="space-y-6 mt-0">
                 <div className="flex gap-4">
                   <div className="flex items-center gap-2 px-4 py-2 border border-lime-400 rounded-full">
-                    <CalendarIcon className="w-4 h-4" />
+                    <CalendarIcon className="w-auto" />
                     <span className="text-sm ">{formatDateForDisplay(selectedDate)}</span>
                   </div>
                   <div className="flex items-center gap-2 px-4 py-2 border rounded-full">
-                    <Clock className="w-4 h-4" />
+                    <Clock className="w-auto" />
                     <span className="text-sm font-medium">
                       {hour.toString().padStart(2, "0")}:{minute.toString().padStart(2, "0")} {ampm}
                     </span>
@@ -396,7 +393,7 @@ export default function SocialMediaModal({
 
                 <div className="flex gap-6">
                   <div className="flex-1 rounded-xl border mt-3">
-                    <div className="flex items-center w-auto h-auto justify-between mb-4">
+                    <div className="flex items-center w-auto justify-between mb-4">
                       <Calendar
                         mode="single"
                         selected={selectedDate}
@@ -406,21 +403,21 @@ export default function SocialMediaModal({
                     </div>
                   </div>
 
-                  <div className="border-2 rounded-xl mt-3 p-4 w-223 h-172">
+                  <div className="border-2 rounded-xl mt-3 p-4 w-auto h-[60%]">
                     <p className="text-justify text-left px-3 pt-4">Enter Time</p>
                     <div className="flex p-2">
-                      <div className="w-[46px] h-[38px] me-2">
+                      <div className=" me-2">
                         <input
                           type="number"
                           min="1"
                           max="12"
                           value={hour}
                           onChange={(e) => setHour(parseInt(e.target.value))}
-                          className="rounded-sm border border-gray-400 bg-[#F5F5F5] w-[46px] h-[38px] m-1 text-center"
+                          className="rounded-sm border border-gray-400 bg-base-grey-200 py-1 text-center"
                         />
                       </div>
-                      <div className="absolute font-bold p-2 left-[481px]">:</div>
-                      <div className="w-[46px] h-[38px] ms-2 me-2">
+                      <div className="font-extrabold pt-1">:</div>
+                      <div className="ms-2 me-2">
                         <input
                           type="number"
                           id="minutes"
@@ -428,12 +425,12 @@ export default function SocialMediaModal({
                           value={format(value)}
                           step={step}
                           onChange={handleManualChange}
-                          className="rounded-sm border border-gray-400 bg-[#F5F5F5] w-[46px] h-[38px] m-1 text-center"
+                          className="rounded-sm border border-gray-400 bg-base-grey-200 py-1 text-center"
                           min={min}
                           max={max}
                         />
                       </div>
-                      <div className="w-[27px] h-[38px] mt-1 mx-2 rounded-sm border border-grey-400 p-0">
+                      <div>
                         <div
                           typeof="button"
                           onClick={(e) => {
@@ -460,49 +457,38 @@ export default function SocialMediaModal({
                         </div>
                       </div>
                     </div>
-                    <div className="flex">
-                      <p className="text-xs font-[Bricolage Grotesque] font-bold text-[#858585] px-4">
+                    <div className="flex pb-3">
+                      <p className="text-xs font-[Bricolage Grotesque] font-bold text-dark-charcoal-300 px-2">
                         Hour
                       </p>
-                      <p className="text-xs font-[Bricolage Grotesque] font-bold text-[#858585] px-4">
+                      <p className="text-xs font-[Bricolage Grotesque] font-bold text-dark-charcoal-300 px-8">
                         Minute
                       </p>
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-between mt-6">
-                  <Button
-                    type={linkedInCredentials?.isAccessProvided ? "submit" : "button"}
-                    onClick={() => {
-                      if (linkedInCredentials?.isAccessProvided) {
-                        setCode("true");
-                      }
-                      setOpenLinkedInModal(true);
-                    }}
-                    className="bg-black text-white w-standard h-standard font-16 font-manrope hover:bg-gray-800  rounded-full"
-                  >
-                    Save & schedule
-                  </Button>
-                  <Button
-                    type={"button"}
-                    onClick={() => {
-                      if (linkedInCredentials?.isAccessProvided) {
-                        setCode("true");
-                        handlePublishNow();
-                      }
-                      setOpenLinkedInModal(true);
-                    }}
-                    className="bg-black text-white w-standard h-standard font-16 font-manrope hover:bg-gray-800  rounded-full"
-                  >
-                    Publish Now
-                  </Button>
-                </div>
+                <Button
+                  type={linkedInCredentials?.isAccessProvided ? "submit" : "button"}
+                  onClick={() => {
+                    if (linkedInCredentials?.isAccessProvided) {
+                      setCode("true");
+                    }
+                    setIsOpen(false);
+                    setOpenModalSkeleton(true);
+                    // setOpenLinkedInModal(true);
+                  }}
+                  className="bg-black text-white w-auto p-6 font-medium font-manrope hover:bg-gray-800 rounded-full"
+                >
+                  Save & schedule
+                </Button>
               </TabsContent>
             </form>
           </Tabs>
         </div>
       </DialogContent>
-      <LinkedInModal code={code} isOpen={openLinkedInModal} setIsOpen={setOpenLinkedInModal} />
+      {/* {openLinkedInModal && <LinkedInModal code={code} isOpen={openLinkedInModal} setIsOpen={setOpenLinkedInModal} />} */}
+      {openModalSkeleton  && <ModalSkeleton code={code} isOpen={openModalSkeleton} setIsOpen={setOpenModalSkeleton} activeModal={active} />}
+      
     </Dialog>
   );
 }

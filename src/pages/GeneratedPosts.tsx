@@ -6,6 +6,8 @@ import { useToast } from "@/hooks/use-toast";
 import LinkedInModal from "@/components/LinkedInModal";
 import { linkedInService } from "@/services/api/linkedinService";
 import { postServices } from "@/services/api/post";
+import ModalSkeleton from "@/components/ModalSkeleton";
+import { useAuthStore } from "@/store";
 
 interface GeneratedPost {
   postIndex: number;
@@ -24,20 +26,39 @@ const GeneratedPosts = () => {
   const [activeSection] = useState("create");
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
   const [openLinkedInModal, setOpenLinkedInModal] = useState(false);
+  const [activeModal, setActiveModal] = useState<"welcome" | "linkedIn">(null);
+  const [openModalSkeleton, setOpenModalSkeleton] = useState(false);
   const [generatedPostsResponse, setGeneratedPostsResponse] = useState(null);
   const [posts, setPosts] = useState<GeneratedPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const setAuthData = useAuthStore((state)=>state?.setAuthData)
 
   // Get the form data from navigation state
   const formData = location.state?.formData;
 
-  useEffect(() => {
-    if (code) {
-      const response = linkedInService.linkedInVerifyCode({
+  const verifyLinkedInCode = async(code:string) =>{
+    try {
+      const response =  await linkedInService.linkedInVerifyCode({
         code,
         redirectUri: `${window.location.origin}/dashboard/personal/generated-posts`,
       });
-      setOpenLinkedInModal(true);
+     setOpenModalSkeleton(true);
+       setAuthData({linkedInCredentials:{
+        isAccessProvided : true
+      }})
+    } catch (error) {
+      toast({
+          title: "Error",
+          description: "Error in code verification",
+          variant: "destructive",
+        });
+    }
+
+  }
+
+  useEffect(() => {
+    if (code) {
+      verifyLinkedInCode(code)
     }
   }, [code, navigate]);
 
@@ -151,7 +172,8 @@ const GeneratedPosts = () => {
               <PostCard postsResponse={generatedPostsResponse} key={post.postId} post={post} />
             ))}
       </div>
-      <LinkedInModal code={code} isOpen={openLinkedInModal} setIsOpen={setOpenLinkedInModal} />
+      {/* {openLinkedInModal  && <LinkedInModal code={code} isOpen={openLinkedInModal} setIsOpen={setOpenLinkedInModal} />} */}
+      {openModalSkeleton  && <ModalSkeleton code={code} isOpen={openModalSkeleton} setIsOpen={setOpenModalSkeleton} activeModal={activeModal} />}
     </div>
   );
 };

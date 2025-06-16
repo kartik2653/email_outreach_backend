@@ -4,18 +4,20 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { onboardingService, type OnboardingResponse } from "@/services/api/onboardingService";
 import logo from "@/assests/svg/appLogo.svg";
-import { Check } from "lucide-react";
+import { Check, Code } from "lucide-react";
 import { ThemeLoader } from "@/components/ui/loader";
+import ModalSkeleton from "@/components/ModalSkeleton";
 
 const OnboardingQuestion = () => {
   const { questionId } = useParams<{ questionId: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [questionData, setQuestionData] = useState<OnboardingResponse["data"] | null>(null);
   const [selectedResponseId, setSelectedResponseId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
 
   const currentQuestion = questionId ? parseInt(questionId) : 1;
   const totalQuestions = 4;
@@ -28,9 +30,8 @@ const OnboardingQuestion = () => {
         setQuestionData(response.data);
 
         // Set previously selected answer if exists
-        if (response.data.response) {
-          setSelectedResponseId(response.data.response.responseId);
-        }
+        setSelectedResponseId(response?.data?.response?.responseId ?? null);
+
       } catch (error: any) {
         toast({
           title: "Error",
@@ -57,6 +58,7 @@ const OnboardingQuestion = () => {
 
       // Navigate to next question or dashboard
       if (currentQuestion < totalQuestions) {
+
         navigate(`/onboarding-questions/${currentQuestion + 1}`);
       } else {
         // For the 4th question, redirect to appropriate dashboard based on selection
@@ -66,11 +68,13 @@ const OnboardingQuestion = () => {
           3: "/dashboard/personal/agency",
         };
 
-        // Use first 3 response IDs for dashboard routing, fallback to personal
         const dashboardRoute =
           dashboardRoutes[selectedResponseId as keyof typeof dashboardRoutes] ||
           "/dashboard/personal";
-        navigate(dashboardRoute);
+        setShowWelcomeModal(true);
+        setTimeout(() => {
+          navigate(dashboardRoute);
+        }, 1000);
       }
     } catch (error: any) {
       toast({
@@ -121,13 +125,12 @@ const OnboardingQuestion = () => {
                 {Array.from({ length: totalQuestions }).map((_, index) => (
                   <div
                     key={index}
-                    className={`h-2 flex-1 rounded ${
-                      index < currentQuestion
+                    className={`h-2 flex-1 rounded ${index < currentQuestion
+                      ? "bg-yellow-green"
+                      : index === currentQuestion - 1
                         ? "bg-yellow-green"
-                        : index === currentQuestion - 1
-                          ? "bg-yellow-green"
-                          : "bg-gray-200"
-                    }`}
+                        : "bg-gray-200"
+                      }`}
                   />
                 ))}
               </div>
@@ -203,6 +206,7 @@ const OnboardingQuestion = () => {
           loading="lazy"
         />
       </div>
+      {true  && <ModalSkeleton isOpen={showWelcomeModal} setIsOpen={setShowWelcomeModal} activeModal="welcome" />}
     </div>
   );
 };
