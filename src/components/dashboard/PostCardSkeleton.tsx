@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const PostCardSkeleton = () => {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+    <div className="bg-white max-w-[30%]  rounded-xl border border-gray-200 overflow-hidden shadow-sm">
       {/* Image Skeleton */}
       <div className="aspect-video p-4">
         <Skeleton className="w-full h-full rounded-lg" />
