@@ -72,9 +72,9 @@ export default function SocialMediaModal({
   const [hour, setHour] = useState<number>(currentHour % 12 || 12);
   const [minute, setMinute] = useState<number>(currentDate.getMinutes());
   const [ampm, setAmpm] = useState<"AM" | "PM">(currentHour >= 12 ? "PM" : "AM");
-  const [activeTab, setActiveTabValue] = useState<
-    "content" | "post" | "schedule" | "modal"
-  >("content");
+  const [activeTab, setActiveTabValue] = useState<"content" | "post" | "schedule" | "modal">(
+    "content"
+  );
   const [active, setActive] = useState<"welcome" | "linkedIn">("linkedIn");
   const [caption, setCaption] = useState(description);
   const [hashtags, setHashtags] = useState(postHashtags);
@@ -229,7 +229,13 @@ export default function SocialMediaModal({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden p-0 bg-opacity-0">
         <div className="relative">
-          <Tabs defaultValue={defaultTabValue} className="w-full py-4" onValueChange={(value :"content" | "post" | "schedule" | "modal" )=>setActiveTabValue(value)}>
+          <Tabs
+            defaultValue={defaultTabValue}
+            className="w-full py-4"
+            onValueChange={(value: "content" | "post" | "schedule" | "modal") =>
+              setActiveTabValue(value)
+            }
+          >
             <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-transparent">
               <TabsTrigger
                 value="content"
