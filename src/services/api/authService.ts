@@ -10,6 +10,7 @@ export interface AuthResponse {
     name?: string;
   };
   token?: string;
+  onboardingStep?: number;
 }
 
 export interface SocialAuthResponse extends AuthResponse {

@@ -30,4 +30,15 @@ export const postServices = {
       throw new Error(error?.message || "Failed to update post variant");
     }
   },
+  getPostById : async (data) => {
+    try {
+      const { postId} = data;
+      const response: any = await apiClient.get(
+        `/post/${postId}`,
+      )
+      return response.data;
+    } catch (error) {
+      throw new Error(error?.message || "Failed to fetch post")
+    }
+  }
 };
