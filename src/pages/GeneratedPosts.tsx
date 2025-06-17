@@ -237,13 +237,16 @@ const GeneratedPosts = () => {
   const renderSkeletons = () => {
     const count = formData?.variants ? Number(formData.variants) : 3;
     return (
-      <div className="max-w-[80%] flex flex-wrap gap-6">
+      <div>
         <p className="text-xl font-semibold text-gray-900 mb-4 block font-bricolage-grotesque">
           Lots of clients are creating images right now, so this might take a bit!
         </p>
-        {Array.from({ length: count }, (_, index) => (
+        <div className="flex flex-wrap gap-6">
+          {Array.from({ length: count }, (_, index) => (
           <PostCardSkeleton key={`skeleton-${index}`} />
         ))}
+        </div>
+        
       </div>
     );
   };
