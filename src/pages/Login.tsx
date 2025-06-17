@@ -32,16 +32,13 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  // Check for existing authentication on component mount
   useEffect(() => {
     const checkExistingAuth = () => {
       const accessToken = localStorage.getItem("accessToken");
 
       if (accessToken && isAuthenticated()) {
-        // User is already logged in, redirect to dashboard
         navigate("/dashboard/personal/create", { replace: true });
       } else {
-        // No valid auth, show login form
         setIsCheckingAuth(false);
       }
     };
@@ -49,7 +46,6 @@ const Login = () => {
     checkExistingAuth();
   }, [navigate, isAuthenticated]);
 
-  // Show loader while checking authentication
   if (isCheckingAuth) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -90,8 +86,12 @@ const Login = () => {
         title: "Login successful!",
         description: response.message || "Welcome back to SpotBoi",
       });
-      // Redirect to onboarding flow instead of home
-      navigate("/onboarding-questions/1");
+      const onboardingStep = response?.onboardingStep;
+      const path =
+        onboardingStep >= 4
+          ? "/dashboard/personal/create"
+          : `/onboarding-questions/${onboardingStep + 1}`;
+      navigate(path);
     } catch (error) {
       toast({
         title: "Login failed",
