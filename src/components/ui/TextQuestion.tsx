@@ -47,6 +47,4 @@ const TextQuestion = ({ name, question, control, register }) => {
       }}
     />
   );
-};
-
-export default TextQuestion;
+}
