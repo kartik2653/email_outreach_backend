@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 
-
 /**
  Branding component:
  question initilization
@@ -18,7 +17,7 @@ import { useEffect } from "react";
 
 const QuestionSkeleton = ({ questions, onSubmit, initialValues }) => {
   const schema = buildSchemaFromQuestions(questions);
-  
+
   const {
     register,
     handleSubmit,
@@ -31,17 +30,13 @@ const QuestionSkeleton = ({ questions, onSubmit, initialValues }) => {
     resolver: zodResolver(schema),
     mode: "onChange",
   });
-  console.log('Error',errors);
+  console.log("Error", errors);
 
   useEffect(() => {
-    if(initialValues && Object.keys(initialValues).length > 0){
+    if (initialValues && Object.keys(initialValues).length > 0) {
       reset(initialValues);
     }
-  },[initialValues, reset])
-
-  
-
-
+  }, [initialValues, reset]);
 
   const renderQuestion = (q) => {
     const key = `${q.questionId}`;
@@ -78,10 +73,7 @@ const QuestionSkeleton = ({ questions, onSubmit, initialValues }) => {
               {q.promptText && (
                 <p className="text-md text-base-gray-600 font-manrope">{q.promptText}</p>
               )}
-              <div className="my-6">
-                {renderQuestion(q)}
-              </div>
-              
+              <div className="my-6">{renderQuestion(q)}</div>
             </div>
           );
         })}

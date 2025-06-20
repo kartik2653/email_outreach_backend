@@ -13,8 +13,8 @@ export const brandingServices = {
   },
   updateBrandingQuestion: async (formData) => {
     try {
-        console.log(formData);
-        
+      console.log(formData);
+
       const response: any = await apiClient.put(`/branding/update-responses`, formData);
       return response.formData;
     } catch (error) {
@@ -23,10 +23,6 @@ export const brandingServices = {
   },
 };
 
-"Branding validation failed: responses.0.questionResponse.0.optionLabel: Path `optionLabel` is required., responses.1.questionResponse.0.optionLabel: Path `optionLabel` is required., responses.2.questionResponse.0.optionLabel: Path `optionLabel` is required."
-statusCode
-: 
-500
-success
-: 
-false
+("Branding validation failed: responses.0.questionResponse.0.optionLabel: Path `optionLabel` is required., responses.1.questionResponse.0.optionLabel: Path `optionLabel` is required., responses.2.questionResponse.0.optionLabel: Path `optionLabel` is required.");
+statusCode: 500;
+success: false;

@@ -52,9 +52,7 @@ const McqQuestion = ({ name, question, control, setValue }) => {
 
             <div className="flex flex-wrap gap-3 mt-3">
               {responseOptions
-                .filter(
-                  (opt) =>!value.find((v) => v.optionValue === opt.optionValue)
-                )
+                .filter((opt) => !value.find((v) => v.optionValue === opt.optionValue))
                 .map((option) => (
                   <Button
                     key={option._id}
