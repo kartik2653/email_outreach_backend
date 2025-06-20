@@ -5,14 +5,8 @@ import TextQuestion from "./TextQuestion";
 import { buildSchemaFromQuestions } from "@/lib/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 
-interface ResponeOption {
-  optionId: number;
-  optionLable: string;
-  optionValue: string;
-  isDisabled: boolean;
-  _id: string;
-}
 
 /**
  Branding component:
@@ -22,25 +16,35 @@ interface ResponeOption {
  react hook form
  */
 
-const QuestionSkeleton = ({ questions }) => {
+const QuestionSkeleton = ({ questions, onSubmit, initialValues }) => {
   const schema = buildSchemaFromQuestions(questions);
+  
   const {
     register,
     handleSubmit,
     control,
     setValue,
+    reset,
+    getValues,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
+    mode: "onChange",
   });
-  console.log(errors);
+  console.log('Error',errors);
 
-  const onSubmit = (data) => {
-    console.log("Final Answers:", data);
-  };
+  useEffect(() => {
+    if(initialValues && Object.keys(initialValues).length > 0){
+      reset(initialValues);
+    }
+  },[initialValues, reset])
+
+  
+
+
 
   const renderQuestion = (q) => {
-    const key = `q_${q.questionId}`;
+    const key = `${q.questionId}`;
 
     const commonProps = {
       question: q,
@@ -63,7 +67,7 @@ const QuestionSkeleton = ({ questions }) => {
     }
   };
   return (
-    <div className="bg-white p-6 flex flex-col justify-left">
+    <div className="bg-white py-6 px-12 flex flex-col justify-left">
       <form onSubmit={handleSubmit(onSubmit)}>
         {questions.map((q) => {
           return (
@@ -72,16 +76,19 @@ const QuestionSkeleton = ({ questions }) => {
                 {q.questionText}
               </p>
               {q.promptText && (
-                <p className="text-sm text-base-gray-600 mb-4 font-manrope">{q.promptText}</p>
+                <p className="text-md text-base-gray-600 font-manrope">{q.promptText}</p>
               )}
-              {renderQuestion(q)}
+              <div className="my-6">
+                {renderQuestion(q)}
+              </div>
+              
             </div>
           );
         })}
         <div className="pt-3">
           <Button
             type="submit"
-            className="px-10 bg-black hover:bg-gray-800 text-white font-semibold py-6 rounded-standard text-lg shadow-lg transition-all hover:shadow-xl"
+            className="px-14 bg-black hover:bg-gray-800 text-white font-semibold py-6 rounded-standard text-lg shadow-lg transition-all hover:shadow-xl"
           >
             Next
           </Button>

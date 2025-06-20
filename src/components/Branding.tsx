@@ -1,544 +1,68 @@
+import { postServices } from "@/services/api/post";
 import QuestionSkeleton from "./ui/QuestionSkeleton";
+import { brandingServices } from "@/services/api/brandingServices";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { refactorQuestionResponse } from "@/lib/refactors";
+import { useToast } from "@/hooks/use-toast";
 
-const questions = [
-  {
-    _id: "6853fcf213aedaa8ba1cf225",
-    questionId: 1,
-    brandingStep: 1,
-    defaultVisibility: 1,
-    questionText: "What’s your brand/personal name?",
-    promptText: "We’ll use this in your content and captions",
-    isMultipleSelect: 0,
-    textWithChips: 0,
-    questionType: "text",
-    responseOptions: [],
-    __v: 0,
-    createdAt: "2025-06-19T12:05:06.209Z",
-    updatedAt: "2025-06-19T12:05:06.209Z",
-    matchedResponses: [],
-  },
-  {
-    _id: "6853fcf213aedaa8ba1cf226",
-    questionId: 2,
-    brandingStep: 1,
-    defaultVisibility: 1,
-    questionText: "What does your brand do?",
-    promptText: "Give us a quick one-liner — we’ll handle the rest.",
-    isMultipleSelect: 0,
-    textWithChips: 0,
-    questionType: "text",
-    responseOptions: [],
-    __v: 0,
-    createdAt: "2025-06-19T12:05:06.210Z",
-    updatedAt: "2025-06-19T12:05:06.210Z",
-    matchedResponses: [],
-  },
-  {
-    _id: "6853fcf213aedaa8ba1cf227",
-    questionId: 3,
-    brandingStep: 1,
-    defaultVisibility: 1,
-    questionText: "Who are you trying to reach on LinkedIn?",
-    promptText: "",
-    isMultipleSelect: 1,
-    textWithChips: 0,
-    questionType: "mcq",
-    responseOptions: [
-      {
-        optionId: 1,
-        optionLabel: "Startups",
-        optionValue: "Startups",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf228",
-      },
-      {
-        optionId: 2,
-        optionLabel: "Professionals",
-        optionValue: "Professionals",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf229",
-      },
-      {
-        optionId: 3,
-        optionLabel: "Job Seekers",
-        optionValue: "Job Seekers",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf22a",
-      },
-      {
-        optionId: 4,
-        optionLabel: "Industry Peers",
-        optionValue: "Industry Peers",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf22b",
-      },
-      {
-        optionId: 5,
-        optionLabel: "Clients or Leads",
-        optionValue: "Clients or Leads",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf22c",
-      },
-      {
-        optionId: 6,
-        optionLabel: "Other",
-        optionValue: "Other",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf22d",
-      },
-    ],
-    __v: 0,
-    createdAt: "2025-06-19T12:05:06.210Z",
-    updatedAt: "2025-06-19T12:05:06.210Z",
-    matchedResponses: [],
-  },
-  {
-    _id: "6853fcf213aedaa8ba1cf22e",
-    questionId: 4,
-    brandingStep: 2,
-    defaultVisibility: 1,
-    questionText: "What tone do you want your posts to have?",
-    promptText: "Pick up at least 2 — we’ll match your vibe",
-    isMultipleSelect: 1,
-    textWithChips: 0,
-    questionType: "mcq",
-    responseOptions: [
-      {
-        optionId: 1,
-        optionLabel: "Friendly",
-        optionValue: "Friendly",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf22f",
-      },
-      {
-        optionId: 2,
-        optionLabel: "Thoughtful",
-        optionValue: "Thoughtful",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf230",
-      },
-      {
-        optionId: 3,
-        optionLabel: "Authoritative",
-        optionValue: "Authoritative",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf231",
-      },
-      {
-        optionId: 4,
-        optionLabel: "Conversational",
-        optionValue: "Conversational",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf232",
-      },
-      {
-        optionId: 5,
-        optionLabel: "Promotional",
-        optionValue: "Promotional",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf233",
-      },
-      {
-        optionId: 6,
-        optionLabel: "Empathetic",
-        optionValue: "Empathetic",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf234",
-      },
-      {
-        optionId: 7,
-        optionLabel: "Bold",
-        optionValue: "Bold",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf235",
-      },
-      {
-        optionId: 8,
-        optionLabel: "Playful",
-        optionValue: "Playful",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf236",
-      },
-      {
-        optionId: 9,
-        optionLabel: "Minimalist",
-        optionValue: "Minimalist",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf237",
-      },
-      {
-        optionId: 10,
-        optionLabel: "Socratic",
-        optionValue: "Socratic",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf238",
-      },
-    ],
-    __v: 0,
-    createdAt: "2025-06-19T12:05:06.210Z",
-    updatedAt: "2025-06-19T12:05:06.210Z",
-    matchedResponses: [],
-  },
-  {
-    _id: "6853fcf213aedaa8ba1cf239",
-    questionId: 5,
-    brandingStep: 2,
-    defaultVisibility: 1,
-    questionText: "How often would you like us to post for you?",
-    promptText: "",
-    isMultipleSelect: 0,
-    textWithChips: 0,
-    questionType: "mcq",
-    responseOptions: [
-      {
-        optionId: 1,
-        optionLabel: "1-2 posts/week",
-        optionValue: "1-2 posts/week",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf23a",
-      },
-      {
-        optionId: 2,
-        optionLabel: "3-4 posts/week",
-        optionValue: "3-4 posts/week",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf23b",
-      },
-      {
-        optionId: 3,
-        optionLabel: "Daily",
-        optionValue: "Daily",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf23c",
-      },
-    ],
-    __v: 0,
-    createdAt: "2025-06-19T12:05:06.210Z",
-    updatedAt: "2025-06-19T12:05:06.210Z",
-    matchedResponses: [],
-  },
-  {
-    _id: "6853fcf213aedaa8ba1cf23d",
-    questionId: 6,
-    brandingStep: 2,
-    defaultVisibility: 1,
-    questionText: "What topics or themes matter most to your audience?",
-    promptText: "Just a few words—e.g. design, hiring, leadership, productivity",
-    isMultipleSelect: 1,
-    textWithChips: 1,
-    questionType: "mcq",
-    responseOptions: [
-      {
-        optionId: 1,
-        optionLabel: "Expertise in Design",
-        optionValue: "Expertise in Design",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf23e",
-      },
-      {
-        optionId: 2,
-        optionLabel: "Fun and Lighthearted",
-        optionValue: "Fun and Lighthearted",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf23f",
-      },
-      {
-        optionId: 3,
-        optionLabel: "Engaging and Friendly",
-        optionValue: "Engaging and Friendly",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf240",
-      },
-      {
-        optionId: 4,
-        optionLabel: "Thought-Provoking Questions",
-        optionValue: "Thought-Provoking Questions",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf241",
-      },
-    ],
-    __v: 0,
-    createdAt: "2025-06-19T12:05:06.210Z",
-    updatedAt: "2025-06-19T12:05:06.210Z",
-    matchedResponses: [],
-  },
-  {
-    _id: "6853fcf213aedaa8ba1cf242",
-    questionId: 7,
-    brandingStep: 3,
-    defaultVisibility: 1,
-    questionText: "What’s your main content goal on LinkedIn?",
-    promptText: "This helps Spotboi craft content that aligns with your intent.",
-    isMultipleSelect: 1,
-    textWithChips: 0,
-    questionType: "dropdown",
-    responseOptions: [
-      {
-        optionId: 1,
-        optionLabel: "Technology",
-        optionValue: "Technology",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf243",
-      },
-      {
-        optionId: 2,
-        optionLabel: "Business",
-        optionValue: "Business",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf244",
-      },
-      {
-        optionId: 3,
-        optionLabel: "Health & Wellness",
-        optionValue: "Health & Wellness",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf245",
-      },
-      {
-        optionId: 4,
-        optionLabel: "Finance",
-        optionValue: "Finance",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf246",
-      },
-      {
-        optionId: 5,
-        optionLabel: "Education",
-        optionValue: "Education",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf247",
-      },
-      {
-        optionId: 6,
-        optionLabel: "Lifestyle",
-        optionValue: "Lifestyle",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf248",
-      },
-      {
-        optionId: 7,
-        optionLabel: "Other",
-        optionValue: "Other",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf249",
-      },
-    ],
-    __v: 0,
-    createdAt: "2025-06-19T12:05:06.211Z",
-    updatedAt: "2025-06-19T12:05:06.211Z",
-    matchedResponses: [
-      {
-        _id: "6853f8c22f30950d09099239",
-        userId: "6836a1bc78c5834c58fac072",
-        responses: {
-          questionId: 7,
-          questionType: "mcq",
-          questionResponse: [
-            {
-              optionId: 1,
-              optionValue: "Technology",
-              _id: "6853fbce21c525beb80154e7",
-            },
-            {
-              optionId: 2,
-              optionValue: "Business",
-              _id: "6853fbce21c525beb80154e8",
-            },
-          ],
-          _id: "6853fbce21c525beb80154e6",
-        },
-        createdAt: "2025-06-19T11:47:14.792Z",
-        updatedAt: "2025-06-19T12:00:14.312Z",
-        __v: 0,
-      },
-    ],
-  },
-  {
-    _id: "6853fcf213aedaa8ba1cf24a",
-    questionId: 8,
-    brandingStep: 3,
-    defaultVisibility: 1,
-    questionText: "What are your top 2 content goals right now?",
-    promptText: "",
-    isMultipleSelect: 1,
-    textWithChips: 0,
-    questionType: "mcq",
-    responseOptions: [
-      {
-        optionId: 1,
-        optionLabel: "Grow Followers",
-        optionValue: "Grow Followers",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf24b",
-      },
-      {
-        optionId: 2,
-        optionLabel: "Drive Sales",
-        optionValue: "Drive Sales",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf24c",
-      },
-      {
-        optionId: 3,
-        optionLabel: "Community Engagement",
-        optionValue: "Community Engagement",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf24d",
-      },
-      {
-        optionId: 4,
-        optionLabel: "Thought Leadership",
-        optionValue: "Thought Leadership",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf24e",
-      },
-      {
-        optionId: 5,
-        optionLabel: "Recruitment",
-        optionValue: "Recruitment",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf24f",
-      },
-      {
-        optionId: 6,
-        optionLabel: "Acquire potential customers",
-        optionValue: "Acquire potential customers",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf250",
-      },
-    ],
-    __v: 0,
-    createdAt: "2025-06-19T12:05:06.211Z",
-    updatedAt: "2025-06-19T12:05:06.211Z",
-    matchedResponses: [
-      {
-        _id: "6853f8c22f30950d09099239",
-        userId: "6836a1bc78c5834c58fac072",
-        responses: {
-          questionId: 8,
-          questionType: "mcq",
-          questionResponse: [
-            {
-              optionId: 1,
-              optionValue: "Grow Followers",
-              _id: "6853fbce21c525beb80154ea",
-            },
-            {
-              optionId: 2,
-              optionValue: "Drive Sales",
-              _id: "6853fbce21c525beb80154eb",
-            },
-          ],
-          _id: "6853fbce21c525beb80154e9",
-        },
-        createdAt: "2025-06-19T11:47:14.792Z",
-        updatedAt: "2025-06-19T12:00:14.312Z",
-        __v: 0,
-      },
-    ],
-  },
-  {
-    _id: "6853fcf213aedaa8ba1cf251",
-    questionId: 9,
-    brandingStep: 3,
-    defaultVisibility: 1,
-    questionText: "What types of posts do you want to include?",
-    promptText: "",
-    isMultipleSelect: 1,
-    textWithChips: 0,
-    questionType: "mcq",
-    responseOptions: [
-      {
-        optionId: 1,
-        optionLabel: "Single image",
-        optionValue: "Single image",
-        isDisabled: 0,
-        _id: "6853fcf213aedaa8ba1cf252",
-      },
-      {
-        optionId: 2,
-        optionLabel: "Reels",
-        optionValue: "Reels",
-        isDisabled: 1,
-        _id: "6853fcf213aedaa8ba1cf253",
-      },
-      {
-        optionId: 3,
-        optionLabel: "Text posts",
-        optionValue: "Text posts",
-        isDisabled: 1,
-        _id: "6853fcf213aedaa8ba1cf254",
-      },
-      {
-        optionId: 4,
-        optionLabel: "Carousel",
-        optionValue: "Carousel",
-        isDisabled: 1,
-        _id: "6853fcf213aedaa8ba1cf255",
-      },
-      {
-        optionId: 5,
-        optionLabel: "Memes",
-        optionValue: "Memes",
-        isDisabled: 1,
-        _id: "6853fcf213aedaa8ba1cf256",
-      },
-      {
-        optionId: 6,
-        optionLabel: "Quotes",
-        optionValue: "Quotes",
-        isDisabled: 1,
-        _id: "6853fcf213aedaa8ba1cf257",
-      },
-      {
-        optionId: 7,
-        optionLabel: "Infographics",
-        optionValue: "Infographics",
-        isDisabled: 1,
-        _id: "6853fcf213aedaa8ba1cf258",
-      },
-    ],
-    defaultResponse: {
-      questionId: 9,
-      questionType: "mcq",
-      questionResponse: [
-        {
-          optionId: 1,
-          optionValue: "Single image",
-          _id: "6853fcf213aedaa8ba1cf25a",
-        },
-      ],
-      _id: "6853fcf213aedaa8ba1cf259",
-    },
-    __v: 0,
-    createdAt: "2025-06-19T12:05:06.211Z",
-    updatedAt: "2025-06-19T12:05:06.211Z",
-    matchedResponses: [
-      {
-        _id: "6853f8c22f30950d09099239",
-        userId: "6836a1bc78c5834c58fac072",
-        responses: {
-          questionId: 9,
-          questionType: "mcq",
-          questionResponse: [
-            {
-              optionId: 1,
-              optionValue: "Single image",
-              _id: "6853fbce21c525beb80154ed",
-            },
-          ],
-          _id: "6853fbce21c525beb80154ec",
-        },
-        createdAt: "2025-06-19T11:47:14.792Z",
-        updatedAt: "2025-06-19T12:00:14.312Z",
-        __v: 0,
-      },
-    ],
-  },
-];
 
 const Branding = () => {
-  return <QuestionSkeleton questions={questions} />;
+    const [questions, setQuestions] = useState([]);
+    const location = useLocation();
+    const [initialValues, setInitialValues] = useState({});
+    const {toast}  = useToast();
+
+    const navigate = useNavigate();
+    const fetchQuestion = async () => {
+        const brandingStep = new URLSearchParams(window.location.search).get('brandingStep')
+        const questions = await brandingServices.getBrandingQuestion({ brandingStep })
+        const initialFormValues = {};
+        questions.forEach((q) => {
+            const responseList = q.matchedResponses?.[0]?.responses?.questionResponse || [];
+            const refactoredList = responseList.map((r) => {
+                return {
+                    ...r,
+                    isDisabled: 0,
+                    _id: '-1',
+                }
+            })
+            initialFormValues[`${q.questionId}`] = refactoredList;
+
+        });
+
+        setQuestions(questions);
+        setInitialValues(initialFormValues);
+    }
+    const handleSubmit = async (formData) => {
+        try {
+            const questionResponse = refactorQuestionResponse(formData, questions);
+            let brandingStep: any = new URLSearchParams(window.location.search).get('brandingStep');
+            brandingStep = parseInt(brandingStep)
+            const payload = {
+                responses: questionResponse,
+                brandingStep: brandingStep
+            }
+            await brandingServices.updateBrandingQuestion(payload);
+            toast({
+                title: "Response updated successfully",
+                description: "Response update successful",
+                variant: "default"
+            })
+            navigate(`${location.pathname}?brandingStep=${brandingStep + 1}`)
+        } catch (error) {
+            toast({
+                title: "Response updation failed",
+                description: "An error occured while updating responses",
+                variant:"destructive"
+            });
+        }
+
+    }
+    useEffect(() => {
+        fetchQuestion();
+    }, [location.search])
+    return <QuestionSkeleton questions={questions} onSubmit={(formData) => handleSubmit(formData)} initialValues={initialValues} />;
 };
 
 export default Branding;

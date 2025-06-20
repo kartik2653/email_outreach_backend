@@ -1,5 +1,6 @@
 import React from "react";
 import { Controller } from "react-hook-form";
+import { Input } from "./input";
 
 const TextQuestion = ({ name, question, control, register }) => {
   console.log(name);
@@ -35,12 +36,12 @@ const TextQuestion = ({ name, question, control, register }) => {
         };
 
         return (
-          <input
+          <Input
             type="text"
             value={currentText}
             onChange={handleChange}
             placeholder="Type your answer..."
-            className="w-full border rounded-xl px-4 py-2 mt-2"
+            className="text-base-grey-600 font-manrope text-md"
           />
         );
       }}

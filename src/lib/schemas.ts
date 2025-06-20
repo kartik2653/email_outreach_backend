@@ -11,7 +11,7 @@ const schema = z.object({
 export const buildSchemaFromQuestions = (questions) => {
   const shape = {};
   for (const q of questions) {
-    const key = `q_${q.questionId}`;
+    const key = `${q.questionId}`;
     shape[key] = z.array(schema).min(1, {
       message: "Required",
     });
