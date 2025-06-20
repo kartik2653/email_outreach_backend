@@ -5,6 +5,9 @@ import { ChevronDown, X } from "lucide-react";
 import DropdownQuestion from "./DropdownQuestion";
 import McqQuestion from "./McqQuestion";
 import TextQuestion from "./TextQuestion";
+import { buildSchemaFromQuestions } from "@/lib/schemas";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type QuestionType = "text" | "mcq" | "dropdown";
 
@@ -26,80 +29,6 @@ interface Question {
   responseOptions: ResponeOption[];
 }
 
-const questions = [
-  {
-    _id: "68525105bf759408439dce43",
-    questionId: 1,
-    questionText: "What’s your brand/ personal name?",
-    promptText: "We’ll use this in your content and captions",
-    isMultipleSelect: 0,
-    questionType: "text",
-    responseOptions: [],
-  },
-  {
-    _id: "68525105bf759408439dce45",
-    questionId: 2,
-    questionText: "Who are you trying to reach on LinkedIn?",
-    promptText: "We’ll use this in your content and captions",
-    questionType: "mcq",
-    isMultipleSelect: 1,
-    responseOptions: [
-      {
-        optionId: 1,
-        optionLable: "Startups",
-        optionValue: "Startups",
-        isDisabled: false,
-        _id: "68525105bf759408439dce46",
-      },
-      {
-        optionId: 2,
-        optionLable: "Professionals",
-        optionValue: "Professionals",
-        isDisabled: false,
-        _id: "68525105bf759408439dce47",
-      },
-      {
-        optionId: 3,
-        optionLable: "Job Seekers",
-        optionValue: "Job Seekers",
-        isDisabled: false,
-        _id: "68525105bf759408439dce48",
-      },
-    ],
-  },
-  {
-    _id: "68525105bf759408439dce60",
-    questionId: 3,
-    questionText: "Select your experience level",
-    promptText: "We’ll use this in your content and captions",
-    questionType: "dropdown",
-    isMultipleSelect: 0,
-    responseOptions: [
-      {
-        optionId: 1,
-        optionLable: "Beginner",
-        optionValue: "Beginner",
-        isDisabled: false,
-        _id: "68525105bf759408439dce61",
-      },
-      {
-        optionId: 2,
-        optionLable: "Intermediate",
-        optionValue: "Intermediate",
-        isDisabled: false,
-        _id: "68525105bf759408439dce62",
-      },
-      {
-        optionId: 3,
-        optionLable: "Expert",
-        optionValue: "Expert",
-        isDisabled: false,
-        _id: "68525105bf759408439dce63",
-      },
-    ],
-  },
-];
-
 /**
  Branding component:
  question initilization
@@ -108,32 +37,69 @@ const questions = [
  react hook form
  */
 
-const QuestionSkeleton = () => {
+const QuestionSkeleton = ({ questions }) => {
+  const schema = buildSchemaFromQuestions(questions);
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+  console.log(errors);
 
+  const onSubmit = (data) => {
+    console.log("Final Answers:", data);
+  };
 
+  const renderQuestion = (q) => {
+    const key = `q_${q.questionId}`;
+
+    const commonProps = {
+      question: q,
+      name: key,
+      register,
+      control,
+      error: errors[key],
+    };
+
+    switch (q.questionType) {
+      case "text":
+        return <TextQuestion key={key} {...commonProps} />;
+      case "mcq":
+        return <McqQuestion key={key} {...commonProps} />;
+      case "dropdown":
+        return <DropdownQuestion key={key} {...commonProps} />;
+      default:
+        return null;
+    }
+  };
   return (
     <div className="bg-white p-6 flex flex-col justify-left">
-      {questions.map((ques) => {
-        const questionId = ques._id;
-
-        return (
-          <div key={questionId} className="mb-6">
-            <p className="text-xl font-semibold text-dark-charcoal-500 mb-2 font-bricolage-grotesque">
-              {ques.questionText}
-            </p>
-            {ques.promptText && (
-              <p className="text-sm text-base-gray-600 mb-4 font-manrope">{ques.promptText}</p>
-            )}
-
-            {ques.questionType === "text" && <TextQuestion />}
-
-            {ques.questionType === "mcq" && <McqQuestion />}
-
-            {ques.questionType === "dropdown" && <DropdownQuestion />}
-          </div>
-        );
-      })}
-      
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {questions.map((q) => {
+          return (
+            <div key={q.questionId}>
+              <p className="text-xl font-semibold text-dark-charcoal-500 mb-2 font-bricolage-grotesque">
+                {q.questionText}
+              </p>
+              {q.promptText && (
+                <p className="text-sm text-base-gray-600 mb-4 font-manrope">{q.promptText}</p>
+              )}
+              {renderQuestion(q)}
+            </div>
+          );
+        })}
+        <div className="pt-3">
+          <Button
+            type="submit"
+            className="px-10 bg-black hover:bg-gray-800 text-white font-semibold py-6 rounded-standard text-lg shadow-lg transition-all hover:shadow-xl"
+          >
+            Next
+          </Button>
+        </div>
+      </form>
     </div>
   );
 };
