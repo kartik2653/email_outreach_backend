@@ -1,42 +1,41 @@
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import RightSidebar from "@/components/dashboard/RightSidebar";
+import QuestionSkeleton from "@/components/ui/QuestionSkeleton";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import React, { useState } from "react";
+import arrowLogo from "@/assests/svg/arrow.svg";
+import { Outlet } from "react-router-dom";
 
 const AgencyDashboard = () => {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    navigate("/login");
-  };
+  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
 
   return (
-    <div className="min-h-screen p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900">Agency Dashboard</h1>
-          <Button onClick={handleLogout} variant="outline">
-            Logout
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-lg border">
-            <h3 className="text-xl font-semibold mb-4">Client Management</h3>
-            <p className="text-gray-600">Manage multiple client accounts</p>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg border">
-            <h3 className="text-xl font-semibold mb-4">Team Collaboration</h3>
-            <p className="text-gray-600">Collaborate with your agency team</p>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg border">
-            <h3 className="text-xl font-semibold mb-4">Reporting</h3>
-            <p className="text-gray-600">Generate reports for your clients</p>
+    <SidebarProvider defaultOpen={true}>
+      <div className="min-h-screen flex flex-row w-full bg-white">
+        <DashboardSidebar />
+        <div className="flex-1 flex flex-col h-full">
+          <DashboardHeader
+            isRightSidebarOpen={isRightSidebarOpen}
+            onToggleRightSidebar={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
+          />
+          <div className="flex flex-1">
+            <div className="flex-1">
+              <Outlet />
+            </div>
+            {isRightSidebarOpen && <RightSidebar onClose={() => setIsRightSidebarOpen(false)} />}
+            {!isRightSidebarOpen && (
+              <div
+                onClick={() => setIsRightSidebarOpen(true)}
+                className="cursor-pointer w-[32px] h-[40px] bg-gray-100 flex justify-center items-center rounded-tl-md rounded-bl-md"
+              >
+                <img src={arrowLogo} alt="expand" className="rotate-180 w-[6px] h-[12px]" />
+              </div>
+            )}
           </div>
         </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 

@@ -15,10 +15,25 @@ import GeneratedPosts from "./pages/GeneratedPosts";
 import ContentCreation from "@/components/dashboard/ContentCreation";
 import { CalendarView } from "./components/CalendarView";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import CalenderViewAgency from "./pages/CalenderViewAgency";
+import QuestionSkeleton from "./components/ui/QuestionSkeleton";
+import Branding from "./components/Branding";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+interface GeneratedPost {
+  postIndex: number;
+  postId: string;
+  image: string;
+  description: string;
+  hashtags: string;
+}
+interface PostCardProps {
+  post: GeneratedPost;
+  postsResponse: any;
+}
+
+const App = ({ postsResponse, post }: PostCardProps) => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
@@ -115,14 +130,33 @@ const App = () => (
               }
             />
           </Route>
+
           <Route
-            path="/dashboard/personal/agency"
+            path="/dashboard/agency"
             element={
               <ProtectedRoute>
                 <AgencyDashboard />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route
+              path="create"
+              element={
+                <ProtectedRoute>
+                  <Branding />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="generated-posts"
+              element={
+                <ProtectedRoute>
+                  <GeneratedPosts />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

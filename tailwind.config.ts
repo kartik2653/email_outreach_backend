@@ -26,6 +26,7 @@ export default {
       colors: {
         "light-gray":"#FAFAFA",
         "yellow-green":'#D3F26B',
+        "green-100":'#F6FCE1',
         "light-yellow-green": '#EDFAC4',
         "light-green": '#F6FCE1',
         "dark-charcoal-300": '#858585',
@@ -33,7 +34,9 @@ export default {
         "base-grey-600": '#B7B7B7',
         "base-grey-200": '#F5F5F5',
         "base-grey-300": '#EFEFEF',
+        "base-grey-100": '#FAFAFA',
         "primary-white":"#ffffff",
+        "black-500": "#1A1A1A",
         "green-400":"#DCF589",
         "little-black": "#21272A",
         cloud: '#F2F4F8',

@@ -35,12 +35,14 @@ export default function SocialMediaModal({
   isOpen,
   setIsOpen,
   defaultTabValue = "content",
+  allowedTabs = ["content", "post", "schedule"],
   post,
   postsResponse,
 }: {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   defaultTabValue?: "content" | "post" | "schedule" | "modal";
+  allowedTabs?: ("content" | "post" | "schedule" | "modal")[];
   post: {
     postIndex: number;
     postId: string;
@@ -62,7 +64,7 @@ export default function SocialMediaModal({
 }) {
   const { toast } = useToast();
   const [code, setCode] = useState(null);
-  const { description, postId, hashtags: postHashtags, image, postIndex } = post;
+  const { description, postId, hashtags: postHashtags, image, postIndex } = post ?? {};
   const [openLinkedInModal, setOpenLinkedInModal] = useState(false);
   const [openModalSkeleton, setOpenModalSkeleton] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
@@ -227,7 +229,7 @@ export default function SocialMediaModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden p-0 bg-opacity-0">
+      <DialogContent className="max-w-[60%] max-h-[90vh] overflow-hidden p-0 bg-opacity-0">
         <div className="relative">
           <Tabs
             defaultValue={defaultTabValue}
@@ -237,24 +239,30 @@ export default function SocialMediaModal({
             }
           >
             <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-transparent">
-              <TabsTrigger
-                value="content"
-                className="rounded-none border-b-2 p-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 font-bricolage-grotesque text-dark-charcoal-500"
-              >
-                Content
-              </TabsTrigger>
-              <TabsTrigger
-                value="post"
-                className="rounded-none border-b-2 p-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 text-dark-charcoal-500 font-bricolage-grotesque"
-              >
-                Post
-              </TabsTrigger>
-              <TabsTrigger
-                value="schedule"
-                className="rounded-none border-b-2 p-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 text-dark-charcoal-500 font-bricolage-grotesque"
-              >
-                Schedule
-              </TabsTrigger>
+              {allowedTabs.includes("content") && (
+                <TabsTrigger
+                  value="content"
+                  className="rounded-none border-b-2 p-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 font-bricolage-grotesque text-dark-charcoal-500"
+                >
+                  Content
+                </TabsTrigger>
+              )}
+              {allowedTabs.includes("post") && (
+                <TabsTrigger
+                  value="post"
+                  className="rounded-none border-b-2 p-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 text-dark-charcoal-500 font-bricolage-grotesque"
+                >
+                  Post
+                </TabsTrigger>
+              )}
+              {allowedTabs.includes("schedule") && (
+                <TabsTrigger
+                  value="schedule"
+                  className="rounded-none border-b-2 p-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 text-dark-charcoal-500 font-bricolage-grotesque"
+                >
+                  Schedule
+                </TabsTrigger>
+              )}
             </TabsList>
 
             <form onSubmit={handleOnSubmit} className="p-6">
@@ -387,7 +395,7 @@ export default function SocialMediaModal({
 
               <TabsContent value="schedule" className="space-y-6 mt-0">
                 <div className="flex gap-4">
-                  <div className="flex items-center gap-2 px-4 py-2 border border-lime-400 rounded-full">
+                  <div className="flex items-center gap-2 px-2 py-2 border border-lime-400 rounded-full">
                     <CalendarIcon className="w-auto" />
                     <span className="text-sm ">{formatDateForDisplay(selectedDate)}</span>
                   </div>
@@ -406,7 +414,7 @@ export default function SocialMediaModal({
                         mode="single"
                         selected={selectedDate}
                         onSelect={setSelectedDate}
-                        className="ps-12 pt-8"
+                        className="p-8"
                       />
                     </div>
                   </div>
