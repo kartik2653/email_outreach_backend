@@ -1,14 +1,51 @@
-export default function TextQuestion({ name, register, error }) {
+import React from "react";
+import { Controller } from "react-hook-form";
+
+const TextQuestion = ({ name, question, control, register }) => {
+  console.log(name);
+
   return (
-    <>
-      <div className="w-full h-[56px] rounded-full border-2 border-base-grey-300">
-        <input
-          type="text"
-          className="rounded-full h-full px-4 w-full outline-none"
-          {...register(name)}
-        />
-      </div>
-      <div>{error && <p style={{ color: "red" }}>{error.message}</p>}</div>
-    </>
+    <Controller
+      name={name}
+      control={control}
+      defaultValue={[
+        {
+          optionId: 0,
+          optionLabel: "",
+          optionValue: "",
+          _id: `text-response-${question.questionId}`,
+          isDisabled: 0,
+        },
+      ]}
+      render={({ field: { value, onChange } }) => {
+        // Ensure fallback if somehow value is undefined or not an array
+
+        const currentText = Array.isArray(value) && value.length > 0 ? value[0].optionValue : "";
+
+        const handleChange = (e) => {
+          const inputValue = e.target.value;
+          const responseObject = {
+            optionId: 0,
+            optionLabel: inputValue,
+            optionValue: inputValue,
+            _id: `text-response-${question.questionId}`,
+            isDisabled: 0,
+          };
+          onChange([responseObject]); // Wrap in array to match schema
+        };
+
+        return (
+          <input
+            type="text"
+            value={currentText}
+            onChange={handleChange}
+            placeholder="Type your answer..."
+            className="w-full border rounded-xl px-4 py-2 mt-2"
+          />
+        );
+      }}
+    />
   );
-}
+};
+
+export default TextQuestion;

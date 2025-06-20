@@ -1,100 +1,78 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Controller } from "react-hook-form";
 
-interface Option {
-  optionId: number;
-  optionLabel: string;
-  optionValue: string;
-  _id: string;
-}
+const McqQuestion = ({ name, question, control, setValue }) => {
+  const { responseOptions, isMultipleSelect } = question;
 
-interface McqQuestionProps {
-  name: string;
-  control: any;
-  error?: any;
-  question: any;
-}
-
-const McqQuestion: React.FC<McqQuestionProps> = ({ name, control, error, question }) => {
-  const [isMultiple, _] = useState(question?.isMultipleSelect);
-  const [options, __] = useState(question?.responseOptions);
   return (
-    <div className="mb-4">
-      <Controller
-        control={control}
-        name={name}
-        render={({ field: { value = [], onChange } }) => {
-          const selected = value;
-
-          const handleSelect = (val: string) => {
-            if (isMultiple) {
-              if (!value.includes(val)) {
-                onChange([...value, val]);
-              }
+    <Controller
+      name={name}
+      control={control}
+      defaultValue={[]}
+      render={({ field: { value, onChange } }) => {
+        const handleSelect = (option) => {
+          const alreadySelected = value.find((v) => v.optionValue === option.optionValue);
+          if (isMultipleSelect) {
+            if (alreadySelected) {
+              onChange(value.filter((v) => v.optionValue !== option.optionValue));
             } else {
-              onChange([val]);
+              onChange([...value, option]);
             }
-          };
+          } else {
+            onChange([option]);
+          }
+        };
 
-          const handleRemove = (val: string) => {
-            if (isMultiple) {
-              onChange(value.filter((v: string) => v !== val));
-            } else {
-              onChange([]);
-            }
-          };
+        const handleRemove = (optionValue) => {
+          onChange(value.filter((v) => v.optionValue !== optionValue));
+        };
 
-          return (
-            <>
-              {selected.length > 0 && (
-                <div className="flex flex-wrap gap-2 p-2 h-auto min-h-[56px] border rounded-xl border-gray-300 mt-2">
-                  {selected.map((val: string) => {
-                    const opt = options.find((o) => o.optionValue === val);
-                    return (
-                      <div
-                        key={val}
-                        className="flex items-center bg-green-100 text-green-800 border-yellow-green px-3 py-1 rounded-full text-sm"
-                      >
-                        {opt?.optionLabel}
-                        <button
-                          className="ml-2 text-sm font-bold"
-                          onClick={() => handleRemove(val)}
-                          type="button"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              <div className="flex flex-wrap gap-3 mt-3">
-                {options
-                  .filter((opt) => !isMultiple || !selected.includes(opt.optionValue))
-                  .map((opt) => (
-                    <Button
-                      key={opt._id}
+        return (
+          <>
+            {value.length > 0 && (
+              <div className="flex flex-wrap gap-2 p-2 border rounded-xl border-gray-300 mt-2">
+                {value.map((option) => (
+                  <div
+                    key={option.optionValue}
+                    className="flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm"
+                  >
+                    {option.optionLabel}
+                    <button
+                      className="ml-2 text-sm font-bold"
+                      onClick={() => handleRemove(option.optionValue)}
                       type="button"
-                      onClick={() => handleSelect(opt.optionValue)}
-                      className={`${
-                        selected.includes(opt.optionValue)
-                          ? "bg-green-200 text-green-800"
-                          : "bg-base-grey-100 text-dark-charcoal-300"
-                      } border border-base-grey-300 hover:bg-base-grey-200 rounded-full px-4 py-2 text-sm`}
                     >
-                      {opt.optionLabel}
-                    </Button>
-                  ))}
+                      ×
+                    </button>
+                  </div>
+                ))}
               </div>
+            )}
 
-              {error && <p className="text-red-600 text-sm mt-1">{error.message}</p>}
-            </>
-          );
-        }}
-      />
-    </div>
+            <div className="flex flex-wrap gap-3 mt-3">
+              {responseOptions
+                .filter(
+                  (opt) =>
+                    isMultipleSelect ||
+                    value.length === 0 ||
+                    !value.find((v) => v.optionValue === opt.optionValue)
+                )
+                .map((option) => (
+                  <Button
+                    key={option._id}
+                    type="button"
+                    onClick={() => handleSelect(option)}
+                    className="bg-base-grey-100 border border-base-grey-300 text-dark-charcoal-300 hover:bg-base-grey-200 hover:text-dark-charcoal-500 rounded-full px-4 py-2 text-sm"
+                  >
+                    {option.optionLabel}
+                  </Button>
+                ))}
+            </div>
+          </>
+        );
+      }}
+    />
   );
 };
 

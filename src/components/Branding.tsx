@@ -1,8 +1,4 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import QuestionSkeleton from "./ui/QuestionSkeleton";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { Button } from "./ui/button";
 
 const questions = [
   {
@@ -542,18 +538,7 @@ const questions = [
 ];
 
 const Branding = () => {
-  const navigate = useNavigate();
-
-  const { handleSubmit } = useForm();
-  const onSubmit = () => {
-    navigate("/dashboard/personal/generated-posts", {});
-  };
-  return (
-   
-      <QuestionSkeleton questions = {questions}/>
-    
-    
-  );
+  return <QuestionSkeleton questions={questions} />;
 };
 
 export default Branding;

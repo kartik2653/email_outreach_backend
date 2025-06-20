@@ -33,7 +33,7 @@ interface PostCardProps {
   postsResponse: any;
 }
 
-const App = ({ postsResponse, post }: PostCardProps) => (
+const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />

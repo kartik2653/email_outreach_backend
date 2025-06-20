@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, X } from "lucide-react";
 import DropdownQuestion from "./DropdownQuestion";
 import McqQuestion from "./McqQuestion";
 import TextQuestion from "./TextQuestion";
@@ -9,24 +6,12 @@ import { buildSchemaFromQuestions } from "@/lib/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-type QuestionType = "text" | "mcq" | "dropdown";
-
 interface ResponeOption {
   optionId: number;
   optionLable: string;
   optionValue: string;
   isDisabled: boolean;
   _id: string;
-}
-
-interface Question {
-  _id: string;
-  questionId: number;
-  questionText: string;
-  promptText?: string;
-  questionType: string;
-  isMultipleSelect: number;
-  responseOptions: ResponeOption[];
 }
 
 /**
@@ -43,6 +28,7 @@ const QuestionSkeleton = ({ questions }) => {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -59,9 +45,10 @@ const QuestionSkeleton = ({ questions }) => {
     const commonProps = {
       question: q,
       name: key,
-      register,
       control,
+      setValue,
       error: errors[key],
+      register,
     };
 
     switch (q.questionType) {
