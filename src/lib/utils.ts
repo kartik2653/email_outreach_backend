@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -49,3 +50,17 @@ export const refactorFormData = ({ formData, postsResponse, postIndex }) => {
   };
   return refactoredData;
 };
+
+export function formatDate(date: Date | string | number, dateFormat: string): string {
+  try {
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      throw new Error("Invalid date input");
+    }
+
+    return format(parsedDate, dateFormat);
+  } catch (error) {
+    console.error("Date formatting error:", error);
+    return "";
+  }
+}

@@ -10,7 +10,7 @@ const modalBackground = (WrappedComponent: React.ComponentType<any>) => {
       setIsOpen(false);
     };
     return (
-      <Modal open={isOpen}>
+      <Modal open={isOpen} className="z-100000">
         <Box>
           <div className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl w-[45%] h-[60%] shadow-xl z-100000 flex items-center justify-center">
             <div className="relative bg-green-400 rounded-xl w-full h-full overflow-hidden">

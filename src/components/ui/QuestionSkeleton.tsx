@@ -6,6 +6,7 @@ import { buildSchemaFromQuestions } from "@/lib/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
+import { ThemeLoader } from "./loader";
 
 /**
  Branding component:
@@ -15,7 +16,7 @@ import { useEffect } from "react";
  react hook form
  */
 
-const QuestionSkeleton = ({ questions, onSubmit, initialValues }) => {
+const QuestionSkeleton = ({ questions, onSubmit, initialValues, isSubmitting }) => {
   const schema = buildSchemaFromQuestions(questions);
 
   const {
@@ -66,23 +67,31 @@ const QuestionSkeleton = ({ questions, onSubmit, initialValues }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         {questions.map((q) => {
           return (
-            <div key={q.questionId}>
-              <p className="text-xl font-semibold text-dark-charcoal-500 mb-2 font-bricolage-grotesque">
+            <div key={q.questionId} className="mb-10">
+              <p className="text-xl font-semibold text-dark-charcoal-500 font-bricolage-grotesque">
                 {q.questionText}
               </p>
               {q.promptText && (
-                <p className="text-md text-base-gray-600 font-manrope">{q.promptText}</p>
+                <p className="py-[8px] text-md text-base-gray-600 font-manrope">{q.promptText}</p>
               )}
-              <div className="my-6">{renderQuestion(q)}</div>
+              <div className="">{renderQuestion(q)}</div>
             </div>
           );
         })}
         <div className="pt-3">
           <Button
             type="submit"
+            disabled={isSubmitting}
             className="px-14 bg-black hover:bg-gray-800 text-white font-semibold py-6 rounded-standard text-lg shadow-lg transition-all hover:shadow-xl"
           >
-            Next
+            {isSubmitting ? (
+              <div className="flex items-center space-x-2">
+                <ThemeLoader size={16} />
+                <span>Submitting...</span>
+              </div>
+            ) : (
+              "Next"
+            )}
           </Button>
         </div>
       </form>

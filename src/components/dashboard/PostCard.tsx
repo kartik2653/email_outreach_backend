@@ -6,6 +6,7 @@ import ModalSkeleton from "../ModalSkeleton";
 import Modal from "@mui/material/Modal";
 import { useToast } from "@/hooks/use-toast";
 import { postServices } from "@/services/api/post";
+import { formatDate } from "@/lib/utils";
 
 interface PostCardProps {
   post: {
@@ -14,6 +15,8 @@ interface PostCardProps {
     image: string;
     description: string;
     hashtags: string;
+    dateOfPublication?: string;
+    clusterId?: string;
   };
   postsResponse: {
     _id: string;
@@ -104,12 +107,14 @@ const PostCard = ({ postsResponse, post, handleSelectionChange, isSelected }: Po
               <img src="/src/assests/svg/tick.svg" alt="" />
             </div>
           )}
-          <p>Date</p>
+          <p className="font-bricolage-grotesque font-[600] text-xl">
+            {post?.dateOfPublication ? formatDate(post?.dateOfPublication, "dd MMM yyyy") : ""}
+          </p>
         </div>
       )}
       <div
         onClick={() => handleSelectionChange(post)}
-        className="bg-white w-[100%] p-4 rounded-xl border border-2 border-base-grey-300 overflow-hidden  hover:shadow-md transition-shadow w-[120%]"
+        className={`bg-white w-[100%] p-4 rounded-xl border border-1 border-base-grey-300 overflow-hidden  hover:shadow-md transition-shadow ${isSelected ? "border-yellow-green" : ""}`}
       >
         {/* Image Container */}
         <div className="relative aspect-video bg-gray-100 rounded-xl overflow-hidden">

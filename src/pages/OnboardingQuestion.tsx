@@ -61,7 +61,7 @@ const OnboardingQuestion = () => {
         // For the 4th question, redirect to appropriate dashboard based on selection
         const dashboardRoutes = {
           1: "/dashboard/personal/create",
-          2: "/dashboard/personal/professional",
+          2: "/dashboard/agency/create?brandingStep=1",
           3: "/dashboard/personal/agency",
         };
 

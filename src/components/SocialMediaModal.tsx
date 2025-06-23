@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,6 +30,7 @@ import { formatToUTC, refactorFormData } from "@/lib/utils";
 import ModalSkeleton from "./ModalSkeleton";
 import { any } from "zod";
 import { linkedInService } from "@/services/api/linkedinService";
+import { useLocation } from "react-router-dom";
 
 export default function SocialMediaModal({
   isOpen,
@@ -38,18 +39,20 @@ export default function SocialMediaModal({
   allowedTabs = ["content", "post", "schedule"],
   post,
   postsResponse,
+  isCalendarDisabled,
 }: {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   defaultTabValue?: "content" | "post" | "schedule" | "modal";
   allowedTabs?: ("content" | "post" | "schedule" | "modal")[];
-  post: {
+  post?: {
     postIndex: number;
     postId: string;
     image: string;
     description: string;
     hashtags: string;
     promptText?: string;
+    clusterId?: string;
   };
   postsResponse?: {
     _id: string;
@@ -60,7 +63,9 @@ export default function SocialMediaModal({
     variantsCount: number;
     secureAssetUrl: string[];
     assetType: string;
+    dateOfPublication?: string[];
   };
+  isCalendarDisabled?: boolean;
 }) {
   const { toast } = useToast();
   const [code, setCode] = useState(null);
@@ -81,6 +86,10 @@ export default function SocialMediaModal({
   const [caption, setCaption] = useState(description);
   const [hashtags, setHashtags] = useState(postHashtags);
   const [imageUrl, setImageUrl] = useState(image);
+  const location = useLocation();
+  const [isAgency, _] = useState(location?.pathname?.includes("agecy"));
+
+  console.log(post, postsResponse);
 
   const writingTools = [
     {
@@ -211,7 +220,8 @@ export default function SocialMediaModal({
       hashtags: hashtags,
       assetUrl: imageUrl,
       secureAssetUrl: imageUrl,
-      dateOfPublication: activeTab === "schedule" ? dateOfPublication : null,
+      dateOfPublication:
+        activeTab === "schedule" ? dateOfPublication : postsResponse?.dateOfPublication || null,
       assetIndexForPublication: postIndex,
     };
 
@@ -226,137 +236,156 @@ export default function SocialMediaModal({
       console.error("Error updating post:", error);
     }
   };
+  console.log(openModalSkeleton);
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="max-w-[60%] max-h-[90vh] overflow-hidden p-0 bg-opacity-0">
-        <div className="relative">
-          <Tabs
-            defaultValue={defaultTabValue}
-            className="w-full py-4"
-            onValueChange={(value: "content" | "post" | "schedule" | "modal") =>
-              setActiveTabValue(value)
-            }
-          >
-            <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-transparent">
-              {allowedTabs.includes("content") && (
+    <>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="max-w-[60%] max-h-[90vh] overflow-hidden p-0 bg-opacity-0">
+          <div className="relative">
+            <Tabs
+              defaultValue={defaultTabValue}
+              className="w-full py-4"
+              onValueChange={(value: "content" | "post" | "schedule" | "modal") =>
+                setActiveTabValue(value)
+              }
+            >
+              <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-transparent">
                 <TabsTrigger
                   value="content"
+                  disabled={!allowedTabs.includes("content")}
                   className="rounded-none border-b-2 p-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 font-bricolage-grotesque text-dark-charcoal-500"
                 >
                   Content
                 </TabsTrigger>
-              )}
-              {allowedTabs.includes("post") && (
+
                 <TabsTrigger
                   value="post"
+                  disabled={!allowedTabs.includes("post")}
                   className="rounded-none border-b-2 p-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 text-dark-charcoal-500 font-bricolage-grotesque"
                 >
                   Post
                 </TabsTrigger>
-              )}
-              {allowedTabs.includes("schedule") && (
+
                 <TabsTrigger
                   value="schedule"
+                  disabled={!allowedTabs.includes("schedule")}
                   className="rounded-none border-b-2 p-2 border-transparent data-[state=active]:border-yellow-green data-[state=active]:bg-transparent bg-transparent font-20 text-dark-charcoal-500 font-bricolage-grotesque"
                 >
                   Schedule
                 </TabsTrigger>
-              )}
-            </TabsList>
+              </TabsList>
 
-            <form onSubmit={handleOnSubmit} className="p-6">
-              <TabsContent value="content" className="space-y-6 mt-0">
-                <div>
-                  <Label
-                    htmlFor="caption"
-                    className="text-base font-medium mb-3 block text-dark-charcoal-500 font-manrope text-standard"
-                  >
-                    Caption
-                  </Label>
-                  <div className="space-y-4 relative">
-                    <Textarea
-                      id="caption"
-                      value={caption}
-                      onChange={(e) => setCaption(e.target.value)}
-                      className="min-h-32 resize-none border-base-grey-300 rounded-2xl text-base-grey-600 font-manrope text-standard"
-                      placeholder="Write your caption here..."
-                    />
-                    <Button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleMagicPrompt({ type: "caption" });
-                      }}
-                      className="bg-yellow-green hover:bg-light-yellow-green font-14 w-125 h-35 rounded-full font-manrope text-black font-medium absolute bottom-4 right-4"
-                    >
-                      Magic Prompt
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {writingTools.map((tool, index) => (
-                    <Badge
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCaptionEnhance({ action: tool.label.toLowerCase() });
-                      }}
-                      key={index}
-                      variant="outline"
-                      className={`${tool.color} cursor-pointer hover:opacity-80 px-3 py-1`}
-                    >
-                      {tool.label}
-                    </Badge>
-                  ))}
-                </div>
-
-                <div>
-                  <div className="flex items-center relative justify-between mb-3">
+              <form onSubmit={handleOnSubmit} className="p-6">
+                <TabsContent value="content" className="space-y-6 mt-0">
+                  <div>
                     <Label
-                      htmlFor="hashtags"
-                      className="text-base font-medium font-manrope text-dark-charcoal-500"
+                      htmlFor="caption"
+                      className="text-base font-medium mb-3 block text-dark-charcoal-500 font-manrope text-standard"
                     >
-                      Hashtag
+                      Caption
                     </Label>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleMagicPrompt({ type: "hashtags" });
-                      }}
-                      className="p-2 rounded-md border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-16 right-4"
-                    >
-                      <img src="/src/assests/svg/anticlockwiseArrow-black.svg" alt="" />
-                    </button>
+                    <div className="space-y-4 relative">
+                      <Textarea
+                        id="caption"
+                        value={caption}
+                        onChange={(e) => setCaption(e.target.value)}
+                        className="min-h-32 resize-none border-base-grey-300 rounded-2xl text-base-grey-600 font-manrope text-standard"
+                        placeholder="Write your caption here..."
+                      />
+                      <Button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleMagicPrompt({ type: "caption" });
+                        }}
+                        className="bg-yellow-green hover:bg-light-yellow-green font-14 w-125 h-35 rounded-full font-manrope text-black font-medium absolute bottom-4 right-4"
+                      >
+                        Magic Prompt
+                      </Button>
+                    </div>
                   </div>
-                  <Textarea
-                    id="hashtags"
-                    value={hashtags}
-                    onChange={(e) => setHashtags(e.target.value)}
-                    className="min-h-20 resize-none border-base-grey-300 text-sm rounded-2xl font-manrope text-base-grey-600 text-standard "
-                    placeholder="Add your hashtags..."
-                  />
-                </div>
 
-                <Button
-                  type="submit"
-                  className="bg-black text-white w-auto p-6 font-medium font-manrope hover:bg-gray-800 rounded-full"
-                >
-                  Save changes
-                </Button>
-              </TabsContent>
+                  <div className="flex flex-wrap gap-2">
+                    {writingTools.map((tool, index) => (
+                      <Badge
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCaptionEnhance({ action: tool.label.toLowerCase() });
+                        }}
+                        key={index}
+                        variant="outline"
+                        className={`${tool.color} cursor-pointer hover:opacity-80 px-3 py-1`}
+                      >
+                        {tool.label}
+                      </Badge>
+                    ))}
+                  </div>
 
-              <TabsContent value="post" className="space-y-6 mt-0">
-                <div className="flex gap-4">
-                  <div className="flex-1 relative">
-                    <div className="bg-gray-100 rounded-lg overflow-hidden aspect-square relative">
-                      <img
-                        src={imageUrl}
-                        alt="Post Preview"
-                        className="w-full h-full object-contain"
+                  <div>
+                    <div className="flex items-center relative justify-between mb-3">
+                      <Label
+                        htmlFor="hashtags"
+                        className="text-base font-medium font-manrope text-dark-charcoal-500"
+                      >
+                        Hashtag
+                      </Label>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleMagicPrompt({ type: "hashtags" });
+                        }}
+                        className="p-2 rounded-md border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-16 right-4"
+                      >
+                        <img src="/src/assests/svg/anticlockwiseArrow-black.svg" alt="" />
+                      </button>
+                    </div>
+                    <Textarea
+                      id="hashtags"
+                      value={hashtags}
+                      onChange={(e) => setHashtags(e.target.value)}
+                      className="min-h-20 resize-none border-base-grey-300 text-sm rounded-2xl font-manrope text-base-grey-600 text-standard "
+                      placeholder="Add your hashtags..."
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="bg-black text-white w-auto p-6 font-medium font-manrope hover:bg-gray-800 rounded-full"
+                  >
+                    Save changes
+                  </Button>
+                </TabsContent>
+
+                <TabsContent value="post" className="space-y-6 mt-0">
+                  <div className="flex gap-4">
+                    <div className="flex-1 relative">
+                      <div className="bg-gray-100 rounded-lg overflow-hidden aspect-square relative">
+                        <img
+                          src={imageUrl}
+                          alt="Post Preview"
+                          className="w-full h-full object-contain"
+                        />
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMagicPrompt({ type: "image" });
+                          }}
+                          className="p-2 rounded-md bg-white border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-2 right-3"
+                        >
+                          <img src="/src/assests/svg/anticlockwiseArrow-black.svg" alt="" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex-1 relative">
+                      <textarea
+                        className="w-full h-full p-4 border border-base-gray-600 font-manrope font-medium rounded-xl text-base-grey-600"
+                        placeholder="Enter your caption..."
+                        value={caption}
+                        onChange={(e) => setCaption(e.target.value)}
                       />
                       <button
-                        type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleMagicPrompt({ type: "image" });
@@ -367,150 +396,134 @@ export default function SocialMediaModal({
                       </button>
                     </div>
                   </div>
-                  <div className="flex-1 relative">
-                    <textarea
-                      className="w-full h-full p-4 border border-base-gray-600 font-manrope font-medium rounded-xl text-base-grey-600"
-                      placeholder="Enter your caption..."
-                      value={caption}
-                      onChange={(e) => setCaption(e.target.value)}
-                    />
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleMagicPrompt({ type: "image" });
-                      }}
-                      className="p-2 rounded-md bg-white border border-base-grey-300 flex items-center justify-center hover:bg-gray-200 transition-colors ml-auto absolute mt-1 top-2 right-3"
-                    >
-                      <img src="/src/assests/svg/anticlockwiseArrow-black.svg" alt="" />
-                    </button>
-                  </div>
-                </div>
-                <Button
-                  type="submit"
-                  className="bg-black text-white w-auto p-6 font-medium font-manrope hover:bg-gray-800 rounded-full"
-                >
-                  Save changes
-                </Button>
-              </TabsContent>
+                  <Button
+                    type="submit"
+                    className="bg-black text-white w-auto p-6 font-medium font-manrope hover:bg-gray-800 rounded-full"
+                  >
+                    Save changes
+                  </Button>
+                </TabsContent>
 
-              <TabsContent value="schedule" className="space-y-6 mt-0">
-                <div className="flex gap-4">
-                  <div className="flex items-center gap-2 px-2 py-2 border border-lime-400 rounded-full">
-                    <CalendarIcon className="w-auto" />
-                    <span className="text-sm ">{formatDateForDisplay(selectedDate)}</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 border rounded-full">
-                    <Clock className="w-auto" />
-                    <span className="text-sm font-medium">
-                      {hour.toString().padStart(2, "0")}:{minute.toString().padStart(2, "0")} {ampm}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex gap-6">
-                  <div className="flex-1 rounded-xl border mt-3">
-                    <div className="flex items-center w-auto justify-between mb-4">
-                      <Calendar
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={setSelectedDate}
-                        className="p-8"
-                      />
+                <TabsContent value="schedule" className="space-y-6 mt-0">
+                  <div className="flex gap-4">
+                    <div className="flex items-center gap-2 px-2 py-2 border border-lime-400 rounded-full">
+                      <CalendarIcon className="w-auto" />
+                      <span className="text-sm ">{formatDateForDisplay(selectedDate)}</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-4 py-2 border rounded-full">
+                      <Clock className="w-auto" />
+                      <span className="text-sm font-medium">
+                        {hour.toString().padStart(2, "0")}:{minute.toString().padStart(2, "0")}{" "}
+                        {ampm}
+                      </span>
                     </div>
                   </div>
 
-                  <div className="border-2 rounded-xl mt-3 p-4 w-auto h-[60%]">
-                    <p className="text-justify text-left px-3 pt-4">Enter Time</p>
-                    <div className="flex p-2">
-                      <div className=" me-2">
-                        <input
-                          type="number"
-                          min="1"
-                          max="12"
-                          value={hour}
-                          onChange={(e) => setHour(parseInt(e.target.value))}
-                          className="rounded-sm border border-gray-400 bg-base-grey-200 py-1 text-center"
+                  <div className="flex gap-6">
+                    <div className="flex-1 rounded-xl border mt-3">
+                      <div className="flex items-center w-auto justify-between mb-4">
+                        <Calendar
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={setSelectedDate}
+                          className="p-8"
+                          disabled={!!isCalendarDisabled}
                         />
                       </div>
-                      <div className="font-extrabold pt-1">:</div>
-                      <div className="ms-2 me-2">
-                        <input
-                          type="number"
-                          id="minutes"
-                          name="minutes"
-                          value={format(value)}
-                          step={step}
-                          onChange={handleManualChange}
-                          className="rounded-sm border border-gray-400 bg-base-grey-200 py-1 text-center"
-                          min={min}
-                          max={max}
-                        />
-                      </div>
-                      <div>
-                        <div
-                          typeof="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setAmpm("AM");
-                          }}
-                          className={`rounded-t-sm font-bricolage-grotesque font-bold text-dark-charcoal-300 text-xs px-1 ${
-                            ampm === "AM" ? "bg-yellow-green" : "hover:bg-yellow-green"
-                          }`}
-                        >
-                          AM
-                        </div>
-                        <div
-                          typeof="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setAmpm("PM");
-                          }}
-                          className={`rounded-b-sm font-bricolage-grotesque font-bold text-dark-charcoal-300 text-xs px-1 ${
-                            ampm === "PM" ? "bg-yellow-green" : "hover:bg-yellow-green"
-                          }`}
-                        >
-                          PM
-                        </div>
-                      </div>
                     </div>
-                    <div className="flex pb-3">
-                      <p className="text-xs font-[Bricolage Grotesque] font-bold text-dark-charcoal-300 px-2">
-                        Hour
-                      </p>
-                      <p className="text-xs font-[Bricolage Grotesque] font-bold text-dark-charcoal-300 px-8">
-                        Minute
-                      </p>
+
+                    <div className="border-2 rounded-xl mt-3 p-4 w-auto h-[60%]">
+                      <p className="text-justify text-left px-3 pt-4">Enter Time</p>
+                      <div className="flex p-2">
+                        <div className=" me-2">
+                          <input
+                            type="number"
+                            min="1"
+                            max="12"
+                            value={hour}
+                            onChange={(e) => setHour(parseInt(e.target.value))}
+                            className="rounded-sm border border-gray-400 bg-base-grey-200 py-1 text-center"
+                          />
+                        </div>
+                        <div className="font-extrabold pt-1">:</div>
+                        <div className="ms-2 me-2">
+                          <input
+                            type="number"
+                            id="minutes"
+                            name="minutes"
+                            value={format(value)}
+                            step={step}
+                            onChange={handleManualChange}
+                            className="rounded-sm border border-gray-400 bg-base-grey-200 py-1 text-center"
+                            min={min}
+                            max={max}
+                          />
+                        </div>
+                        <div>
+                          <div
+                            typeof="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAmpm("AM");
+                            }}
+                            className={`rounded-t-sm font-bricolage-grotesque font-bold text-dark-charcoal-300 text-xs px-1 ${
+                              ampm === "AM" ? "bg-yellow-green" : "hover:bg-yellow-green"
+                            }`}
+                          >
+                            AM
+                          </div>
+                          <div
+                            typeof="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAmpm("PM");
+                            }}
+                            className={`rounded-b-sm font-bricolage-grotesque font-bold text-dark-charcoal-300 text-xs px-1 ${
+                              ampm === "PM" ? "bg-yellow-green" : "hover:bg-yellow-green"
+                            }`}
+                          >
+                            PM
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex pb-3">
+                        <p className="text-xs font-[Bricolage Grotesque] font-bold text-dark-charcoal-300 px-2">
+                          Hour
+                        </p>
+                        <p className="text-xs font-[Bricolage Grotesque] font-bold text-dark-charcoal-300 px-8">
+                          Minute
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <Button
-                  type={linkedInCredentials?.isAccessProvided ? "submit" : "button"}
-                  onClick={() => {
-                    if (linkedInCredentials?.isAccessProvided) {
-                      setCode("true");
-                    }
-                    setIsOpen(false);
-                    setOpenModalSkeleton(true);
-                    // setOpenLinkedInModal(true);
-                  }}
-                  className="bg-black text-white w-auto p-6 font-medium font-manrope hover:bg-gray-800 rounded-full"
-                >
-                  Save & schedule
-                </Button>
-              </TabsContent>
-            </form>
-          </Tabs>
-        </div>
-      </DialogContent>
-      {/* {openLinkedInModal && <LinkedInModal code={code} isOpen={openLinkedInModal} setIsOpen={setOpenLinkedInModal} />} */}
-      {openModalSkeleton && (
-        <ModalSkeleton
-          code={code}
-          isOpen={openModalSkeleton}
-          setIsOpen={setOpenModalSkeleton}
-          activeModal={active}
-        />
-      )}
-    </Dialog>
+                  <Button
+                    type={linkedInCredentials?.isAccessProvided ? "submit" : "button"}
+                    onClick={() => {
+                      if (linkedInCredentials?.isAccessProvided) {
+                        setCode("true");
+                      }
+                      setIsOpen(false);
+                      setOpenModalSkeleton(true);
+                      // setOpenLinkedInModal(true);
+                    }}
+                    className="bg-black text-white w-auto p-6 font-medium font-manrope hover:bg-gray-800 rounded-full"
+                  >
+                    Save & schedule
+                  </Button>
+                </TabsContent>
+              </form>
+            </Tabs>
+          </div>
+        </DialogContent>
+        {/* {openLinkedInModal && <LinkedInModal code={code} isOpen={openLinkedInModal} setIsOpen={setOpenLinkedInModal} />} */}
+      </Dialog>
+
+      <ModalSkeleton
+        code={code}
+        isOpen={openModalSkeleton}
+        setIsOpen={setOpenModalSkeleton}
+        activeModal={active}
+      />
+    </>
   );
 }

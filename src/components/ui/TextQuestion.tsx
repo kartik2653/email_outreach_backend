@@ -41,7 +41,7 @@ const TextQuestion = ({ name, question, control, register }) => {
             value={currentText}
             onChange={handleChange}
             placeholder="Type your answer..."
-            className="text-base-grey-600 font-manrope text-md"
+            className="font-manrope text-md"
           />
         );
       }}

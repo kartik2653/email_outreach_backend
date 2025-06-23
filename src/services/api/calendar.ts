@@ -12,4 +12,16 @@ export const calendarService = {
       throw new Error(error.response?.data?.message || "Failed to fetch calendar data");
     }
   },
+
+  generateCalendarAndPosts: async ({ month, timeZone = "UTC" }) => {
+    try {
+      const response: any = await apiClient.post(`/calendar/bulk/create-calendar-and-posts`, {
+        month,
+        timeZone,
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || "Failed to fetch calendar data");
+    }
+  },
 };

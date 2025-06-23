@@ -11,8 +11,8 @@ export const postServices = {
   },
   updatePost: async (data) => {
     try {
-      const { postId, ...rest } = data;
-      const resposne: any = await apiClient.put(`/post/${postId}`, rest);
+      const { _id, ...rest } = data;
+      const resposne: any = await apiClient.put(`/post/${_id}`, rest);
       return resposne.data;
     } catch (error) {
       throw new Error(error?.message || "Failed to enchance prompt");

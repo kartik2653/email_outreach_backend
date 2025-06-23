@@ -114,5 +114,5 @@ class ApiClient {
 }
 
 // Create and export a default instance
-const apiClient = new ApiClient("https://spotboi.demandtech.org/backend/api/v1");
+const apiClient = new ApiClient("http://localhost:3000/api/v1");
 export default apiClient;
