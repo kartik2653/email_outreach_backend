@@ -64,7 +64,7 @@ const Branding = () => {
         variant: "default",
       });
       if (brandingStep === 3) {
-        navigate("/dashboard/agency/generated-posts", {
+        navigate("/create/generated-calendar", {
           state: { month: "june" },
         });
       } else {

@@ -39,7 +39,7 @@ const GeneratedPosts = () => {
   const [isLoading, setIsLoading] = useState(true);
   const setAuthData = useAuthStore((state) => state?.setAuthData);
   const postId = searchParams.get("postId");
-  const isAgency = location.pathname === "/" || location.pathname.includes("agency");
+  const isCalendarView = location.pathname.includes("generated-calendar");
   const [selectedPosts, setSelectedPosts] = useState<GeneratedPost[] | []>([]);
 
   // Get the form data from navigation state
@@ -73,59 +73,61 @@ const GeneratedPosts = () => {
 
   const getPosts = async (postId) => {
     try {
+      console.log("fomrdata", formData);
+
       setIsLoading(true);
       const payload = {
-        promptText: formData.prompt,
-        variantsCount: Number(formData.variants || 1),
+        promptText: formData?.prompt,
+        variantsCount: Number(formData?.variants || 1),
         assetType: "image",
         tone: formData?.selectedTones || [],
       };
 
-      const response = postId
-        ? await postServices?.getPostById({ postId })
-        : await postServices.generatePost(payload);
-      // const response = {
-      //   userId: "6836a1bc78c5834c58fac072",
-      //   promptText: "Fish in a bowl",
-      //   variantsCount: 2,
-      //   tone: ["infomative"],
-      //   assetsData: [
-      //     {
-      //       assetUrl:
-      //         "http://res.cloudinary.com/dhvsscmw8/image/upload/v1750055251/ogxx67nbgg3gvqzmpfm0.png",
-      //       secureAssetUrl:
-      //         "https://res.cloudinary.com/dhvsscmw8/image/upload/v1750055251/ogxx67nbgg3gvqzmpfm0.png",
-      //       assetType: "image",
-      //       caption:
-      //         "Did you know? A fishbowl requires regular cleaning to keep your aquatic friend healthy and happy.",
-      //       hashtags: "#FishCare, #AquariumTips, #PetFish, #HealthyFish, #FishBowlFacts",
-      //       isLiked: false,
-      //       isDisliked: false,
-      //       _id: "684fb9559c79079b8faaaa37",
-      //     },
-      //     {
-      //       assetUrl:
-      //         "http://res.cloudinary.com/dhvsscmw8/image/upload/v1750055251/uqthjyc28zevokt3jcht.png",
-      //       secureAssetUrl:
-      //         "https://res.cloudinary.com/dhvsscmw8/image/upload/v1750055251/uqthjyc28zevokt3jcht.png",
-      //       assetType: "image",
-      //       caption:
-      //         "Keeping fish in a bowl? Ensure proper oxygen levels and avoid overcrowding for a balanced ecosystem.",
-      //       hashtags: "#FishTankCare, #AquariumLife, #PetCareTips, #FishBowl, #CleanWater",
-      //       isLiked: false,
-      //       isDisliked: false,
-      //       _id: "684fb9559c79079b8faaaa38",
-      //     },
-      //   ],
-      //   assetType: "image",
-      //   isPublished: false,
-      //   dateOfPublication: null,
-      //   assetIndexForPublication: 0,
-      //   _id: "684fb9559c79079b8faaaa36",
-      //   createdAt: "2025-06-16T06:27:33.711Z",
-      //   updatedAt: "2025-06-16T06:27:33.711Z",
-      //   __v: 0,
-      // };
+      // const response = postId
+      //   ? await postServices?.getPostById({ postId })
+      //   : await postServices.generatePost(payload);
+      const response = {
+        userId: "6836a1bc78c5834c58fac072",
+        promptText: "Fish in a bowl",
+        variantsCount: 2,
+        tone: ["infomative"],
+        assetsData: [
+          {
+            assetUrl:
+              "http://res.cloudinary.com/dhvsscmw8/image/upload/v1750055251/ogxx67nbgg3gvqzmpfm0.png",
+            secureAssetUrl:
+              "https://res.cloudinary.com/dhvsscmw8/image/upload/v1750055251/ogxx67nbgg3gvqzmpfm0.png",
+            assetType: "image",
+            caption:
+              "Did you know? A fishbowl requires regular cleaning to keep your aquatic friend healthy and happy.",
+            hashtags: "#FishCare, #AquariumTips, #PetFish, #HealthyFish, #FishBowlFacts",
+            isLiked: false,
+            isDisliked: false,
+            _id: "684fb9559c79079b8faaaa37",
+          },
+          {
+            assetUrl:
+              "http://res.cloudinary.com/dhvsscmw8/image/upload/v1750055251/uqthjyc28zevokt3jcht.png",
+            secureAssetUrl:
+              "https://res.cloudinary.com/dhvsscmw8/image/upload/v1750055251/uqthjyc28zevokt3jcht.png",
+            assetType: "image",
+            caption:
+              "Keeping fish in a bowl? Ensure proper oxygen levels and avoid overcrowding for a balanced ecosystem.",
+            hashtags: "#FishTankCare, #AquariumLife, #PetCareTips, #FishBowl, #CleanWater",
+            isLiked: false,
+            isDisliked: false,
+            _id: "684fb9559c79079b8faaaa38",
+          },
+        ],
+        assetType: "image",
+        isPublished: false,
+        dateOfPublication: null,
+        assetIndexForPublication: 0,
+        _id: "6857aba75e8c40f277d8097b",
+        createdAt: "2025-06-16T06:27:33.711Z",
+        updatedAt: "2025-06-16T06:27:33.711Z",
+        __v: 0,
+      };
       setGeneratedPostsResponse(response);
       const postsInfo: GeneratedPost[] = Array.from(
         { length: response?.variantsCount },
@@ -142,7 +144,7 @@ const GeneratedPosts = () => {
 
       toast({
         title: "Posts Generated Successfully",
-        description: `Generated ${formData.variants} post variant(s)`,
+        description: `Generated ${formData?.variants ?? ""} post variant(s)`,
       });
       if (!postId) {
         const newParams = new URLSearchParams(searchParams);
@@ -150,6 +152,8 @@ const GeneratedPosts = () => {
         navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
       }
     } catch (error) {
+      console.log(error);
+
       toast({
         title: "Generation Failed",
         description: "Failed to generate posts. Please try again.",
@@ -203,7 +207,7 @@ const GeneratedPosts = () => {
   };
   useEffect(() => {
     if (code) return;
-    if (isAgency) {
+    if (isCalendarView) {
       const startDate = searchParams.get("startDate");
       const endDate = searchParams.get("endDate");
       console.log(startDate, endDate);
@@ -273,6 +277,11 @@ const GeneratedPosts = () => {
   };
 
   const handleSelectionChange = (selectedPost: GeneratedPost) => {
+    //for single post generation
+    if (postId) {
+      return;
+    }
+
     const isAlreadySelected = selectedPosts?.filter(
       (post: GeneratedPost) => post?.postId == selectedPost?.postId
     );
@@ -311,7 +320,7 @@ const GeneratedPosts = () => {
   return (
     <div className="p-6">
       {/* Top Bar */}
-      {isAgency && (
+      {isCalendarView && (
         <div className="flex items-center justify-between px-8 py-4">
           <div className="flex items-center gap-2">
             <Button

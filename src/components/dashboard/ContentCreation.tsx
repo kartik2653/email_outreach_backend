@@ -96,7 +96,7 @@ const ContentCreation = () => {
     console.log("Generate clicked", data);
 
     // Navigate to generated posts page with form data
-    navigate("/dashboard/personal/generated-posts", {
+    navigate("/create/generated-posts", {
       state: { formData: data },
     });
   };

@@ -60,14 +60,13 @@ const OnboardingQuestion = () => {
       } else {
         // For the 4th question, redirect to appropriate dashboard based on selection
         const dashboardRoutes = {
-          1: "/dashboard/personal/create",
-          2: "/dashboard/agency/create?brandingStep=1",
+          1: "/create/single-post",
+          2: "/create/content-plan?brandingStep=1",
           3: "/dashboard/personal/agency",
         };
 
         const dashboardRoute =
-          dashboardRoutes[selectedResponseId as keyof typeof dashboardRoutes] ||
-          "/dashboard/personal";
+          dashboardRoutes[selectedResponseId as keyof typeof dashboardRoutes] || "/dashboard";
         setShowWelcomeModal(true);
         setTimeout(() => {
           navigate(dashboardRoute);
@@ -204,13 +203,12 @@ const OnboardingQuestion = () => {
           loading="lazy"
         />
       </div>
-      {true && (
-        <ModalSkeleton
-          isOpen={showWelcomeModal}
-          setIsOpen={setShowWelcomeModal}
-          activeModal="welcome"
-        />
-      )}
+
+      <ModalSkeleton
+        isOpen={showWelcomeModal}
+        setIsOpen={setShowWelcomeModal}
+        activeModal="welcome"
+      />
     </div>
   );
 };

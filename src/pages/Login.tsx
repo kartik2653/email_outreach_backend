@@ -37,7 +37,7 @@ const Login = () => {
       const accessToken = localStorage.getItem("accessToken");
 
       if (accessToken && isAuthenticated()) {
-        navigate("/dashboard/personal/create", { replace: true });
+        navigate("/create/single-post", { replace: true });
       } else {
         setIsCheckingAuth(false);
       }
@@ -88,9 +88,7 @@ const Login = () => {
       });
       const onboardingStep = response?.onboardingStep;
       const path =
-        onboardingStep >= 4
-          ? "/dashboard/personal/create"
-          : `/onboarding-questions/${onboardingStep + 1}`;
+        onboardingStep >= 4 ? "/create/single-post" : `/onboarding-questions/${onboardingStep + 1}`;
       navigate(path);
     } catch (error) {
       toast({

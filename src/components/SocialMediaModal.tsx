@@ -239,7 +239,7 @@ export default function SocialMediaModal({
   console.log(openModalSkeleton);
 
   return (
-    <>
+    <div onClick={(e) => e.stopPropagation()}>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="max-w-[60%] max-h-[90vh] overflow-hidden p-0 bg-opacity-0">
           <div className="relative">
@@ -524,6 +524,6 @@ export default function SocialMediaModal({
         setIsOpen={setOpenModalSkeleton}
         activeModal={active}
       />
-    </>
+    </div>
   );
 }

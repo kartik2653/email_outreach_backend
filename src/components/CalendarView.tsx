@@ -69,7 +69,7 @@ function CalendarView() {
         year,
         isCurrentMonth: true,
         hasEvent: !!event,
-        imageUrl: event ? event.assetUrl[0] : null,
+        imageUrl: event ? event.assetUrl?.[0] : null,
       });
     }
 

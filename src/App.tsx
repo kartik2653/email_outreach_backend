@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -15,9 +15,6 @@ import GeneratedPosts from "./pages/GeneratedPosts";
 import ContentCreation from "@/components/dashboard/ContentCreation";
 import { CalendarView } from "./components/CalendarView";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import CalenderViewAgency from "./pages/CalenderViewAgency";
-import QuestionSkeleton from "./components/ui/QuestionSkeleton";
-import Branding from "./components/Branding";
 import CalenderViewAgency from "./pages/CalenderViewAgency";
 import QuestionSkeleton from "./components/ui/QuestionSkeleton";
 import Branding from "./components/Branding";
@@ -55,37 +52,47 @@ const App = () => (
             }
           />
           <Route
-            path="/dashboard/personal"
+            path="/"
             element={
               <ProtectedRoute>
                 <PersonalDashboard />
               </ProtectedRoute>
             }
           >
-            <Route
-              index
-              element={
-                <ProtectedRoute>
-                  <ContentCreation />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="create"
-              element={
-                <ProtectedRoute>
-                  <ContentCreation />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="generated-posts"
-              element={
-                <ProtectedRoute>
-                  <GeneratedPosts />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/create" element={<Outlet />}>
+              <Route
+                path="single-post"
+                element={
+                  <ProtectedRoute>
+                    <ContentCreation />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="content-plan"
+                element={
+                  <ProtectedRoute>
+                    <Branding />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="generated-posts"
+                element={
+                  <ProtectedRoute>
+                    <GeneratedPosts />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="generated-calendar"
+                element={
+                  <ProtectedRoute>
+                    <GeneratedPosts />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
             <Route
               path="calendar"
               element={
@@ -96,7 +103,17 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route
+            {/* <Route
+              path="calendar"
+              element={
+                <ProtectedRoute>
+                  <div className="flex-1 pr-6">
+                    <CalendarView />
+                  </div>
+                </ProtectedRoute>
+              }
+            /> */}
+            {/* <Route
               path="profile"
               element={
                 <div className="flex-1 p-8">
@@ -104,8 +121,8 @@ const App = () => (
                   <p className="text-gray-600 mt-4">Profile management coming soon...</p>
                 </div>
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path="spot-plan"
               element={
                 <div className="flex-1 p-8">
@@ -113,8 +130,8 @@ const App = () => (
                   <p className="text-gray-600 mt-4">Planning tools coming soon...</p>
                 </div>
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path="drafts"
               element={
                 <div className="flex-1 p-8">
@@ -122,8 +139,8 @@ const App = () => (
                   <p className="text-gray-600 mt-4">Saved drafts coming soon...</p>
                 </div>
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path="settings"
               element={
                 <div className="flex-1 p-8">
@@ -131,8 +148,18 @@ const App = () => (
                   <p className="text-gray-600 mt-4">Account settings coming soon...</p>
                 </div>
               }
-            />
+            /> */}
           </Route>
+          <Route
+            path="calendar"
+            element={
+              <ProtectedRoute>
+                <div className="flex-1 pr-6">
+                  <CalendarView />
+                </div>
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/dashboard/agency"

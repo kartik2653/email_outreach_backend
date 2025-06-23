@@ -48,6 +48,7 @@ export const refactorFormData = ({ formData, postsResponse, postIndex }) => {
     assetUrl: assetUrl || "",
     secureAssetUrl: secureAssetUrl || "",
   };
+  debugger;
   return refactoredData;
 };
 

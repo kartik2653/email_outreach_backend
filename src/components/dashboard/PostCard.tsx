@@ -113,7 +113,9 @@ const PostCard = ({ postsResponse, post, handleSelectionChange, isSelected }: Po
         </div>
       )}
       <div
-        onClick={() => handleSelectionChange(post)}
+        onClick={() => {
+          handleSelectionChange(post);
+        }}
         className={`bg-white w-[100%] p-4 rounded-xl border border-1 border-base-grey-300 overflow-hidden  hover:shadow-md transition-shadow ${isSelected ? "border-yellow-green" : ""}`}
       >
         {/* Image Container */}
